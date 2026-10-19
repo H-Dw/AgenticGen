@@ -1,0 +1,52 @@
+{
+  "selected_pose_id": null,
+  "route_validated_pose_id": null,
+  "pose_index": {
+    "0": "proposal_01/graph_0000",
+    "1": "proposal_01/fragment_0000"
+  },
+  "primary": {
+    "policy": "skill_sa_binding",
+    "selected_proposal_index": null,
+    "eligible_proposal_indices": [],
+    "excluded": [
+      {
+        "proposal_index": 0,
+        "reason": "vina_loss_budget"
+      },
+      {
+        "proposal_index": 1,
+        "reason": "vina_loss_budget"
+      }
+    ],
+    "settings": {
+      "policy": "skill_sa_binding",
+      "similarity_threshold": 0.2,
+      "similarity_bits": 2048,
+      "vina_loss_budget": 1.0,
+      "require_verified_route": true
+    },
+    "selection_timing": "after_fixed_pass_k_proposals_and_external_evaluation"
+  },
+  "route_validated": {
+    "policy": "skill_sa_binding",
+    "selected_proposal_index": null,
+    "eligible_proposal_indices": [],
+    "excluded": [
+      {
+        "proposal_index": 1,
+        "reason": "vina_loss_budget"
+      }
+    ],
+    "settings": {
+      "policy": "skill_sa_binding",
+      "similarity_threshold": 0.2,
+      "similarity_bits": 2048,
+      "vina_loss_budget": 1.0,
+      "require_verified_route": true
+    },
+    "selection_timing": "after_fixed_pass_k_proposals_and_external_evaluation"
+  },
+  "binding_comparison": "source and generated coordinates, both Vina score_only",
+  "geometry_quality_scope": "reported separately; native SynCraft policy has no MMFF gate"
+}

@@ -55,6 +55,8 @@ Vina 等系统工具从实例预先配置的 Ubuntu Noble 软件源安装，APT 
 
 材料均放 Git 仓库之外；最终 checkout 的 ignored checkpoints 可使用链接复用权重。未下载训练语料，没有检索其他生物相关知识库。
 
+另已复制原先获取的官方发布参考语料 `/workspace/materials/syncraft/cliff_pairs.json`（3,332 对，SHA-256 `3e2d92d6eb6843e1fc02a6b29e9a4c122c900d8f72a9512f79008406c22b3a52`），可通过 `syncraft.examples_file` 显式选用。本次可移植示例实际使用上游仓库内的 3,272 条可用参考语料，未在验收后替换检索池；实验应固定其版本。
+
 ## 网络与后续验收
 
 实例原生外网不可达。任务期间使用仅监听远端 localhost 的临时反向代理，已实测 PyPI 与 GitHub HTTP 200；没有改写系统全局代理配置。该隧道关闭后需按实际网络重新配置，不能作为永久运行条件。
@@ -73,3 +75,5 @@ SimpRetro 固定版本源码已在 `/workspace/AgenticGen/external/SimpRetro` �
 搜索预算为 120 s；总耗时包括完整模型/模板初始化及单独的路线验证，不能将总耗时等同于搜索求解时间。非零控制是此前已冻结的工程目标，不是 CK2 优化结果，也不证明实验反应条件或产率。
 
 summary、results、protocol 和两个 route 验证 JSON 已同步到本地 `outputs/remote_environment_20261019/retro_controls_cpu/`。CPU 实际包清单与盘点亦在该本地目录上一级；与此前 Docker 的 190 个包 URL 比对，仅 ca-certificates、libsqlite 和 xorg-libxtst 三个底层包滚动更新，核心化学/数值模型包相同。项目 CK2 example 的实际 FLOWR/LLM 运行记录另行保存，不将工具控制与真实优化收益混合报告。
+
+本机路径已写入 ignored 的 `/workspace/AgenticGen/configs/ksai.local.sh`，可在交互 shell 中 `source configs/ksai.local.sh` 加载主环境、两类 worker、权重与库存位置；不包含 API key、登录密码或永久代理设置。真实 CK2 全流程验收见 [REMOTE_EXAMPLE_VALIDATION_20261019.md](REMOTE_EXAMPLE_VALIDATION_20261019.md)。后续 API/下载若仍无原生外网，需要重新建立代理，离线 FLOWR 与逆合成不需要该隧道。
