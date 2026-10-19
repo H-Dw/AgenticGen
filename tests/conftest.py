@@ -17,11 +17,7 @@ def repo():
 
 @pytest.fixture(scope="session")
 def syncraft_root():
-    path = Path(
-        os.environ.get(
-            "SYNCRAFT_ROOT", REPO / "external/SynCraft-Core"
-        )
-    )
+    path = Path(os.environ.get("SYNCRAFT_ROOT", REPO / "external/SynCraft-Core"))
     if not (path / "src/utils.py").is_file():
         pytest.skip("External SynCraft checkout unavailable; set SYNCRAFT_ROOT")
     return path

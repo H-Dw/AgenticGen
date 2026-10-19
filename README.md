@@ -4,6 +4,8 @@ AgenticGen 研究分子生成过程中的信息，能否帮助冻结参数的 LL
 
 本项目是独立 Git 仓库。通过适配器复用 MolSteer、SynCraft、FLOWR.ROOT 和 SimpRetro；三个官方依赖以固定版本 Git 子模块提供，权重、库存和运行输出独立配置。
 
+2026-10-20：新增原始 Steer 构象的 CK2 TOP20 high-reasoning 实验控制器：同提示最多六次化学提案、独立图/坐标条件、常驻 FLOWR worker、CE/Brier 梯度消融、真实 checkpoint 预检、统一终态 affinity/Vina score-only 评价和可恢复账本。引导区间固定为 `0.1 ≤ t < 0.9`。[配置与运行](examples/ck2_original_pose_high/README.md) · [冻结实验协议](docs/CK2_ORIGINAL_POSE_CAMPAIGN.md) · [远端部署](docs/REMOTE_CK2_CAMPAIGN.md)。
+
 2026-10-19：新增完整的“SynCraft 设计 → Graph / Fragment inpainting → 实际生成结构评价”入口，以及不依赖兄弟项目路径的 `deepseek-flash` API。不可解析的图默认跳过并记录；互作替换规则与 SynCraft 一致。[可移植 CK2 示例](examples/ck2_inpainting/README.md) · [适配架构](docs/FLOWR_INPAINTING.md) · [远端环境](docs/REMOTE_ENVIRONMENT_20261019.md)。
 
 远端真实示例已完成：两条 API 设计、一条有效图、两种原生结构生成及完整评价。Fragment 找到经验证的库存路线，但未得到同时保留结合与低应力的改进候选。[实际结果与失败记录](docs/REMOTE_EXAMPLE_VALIDATION_20261019.md) · [少量结构文件](examples/ck2_inpainting/results_20261019/README.md)。

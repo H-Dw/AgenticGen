@@ -84,7 +84,10 @@ def test_fixed_wire_contract_and_secret_free_native_receipts(tmp_path, monkeypat
     assert len(calls) == 1
 
 
-def test_transient_http_retry_is_bounded_and_does_not_change_prompt_or_model(tmp_path, monkeypatch):
+@pytest.mark.parametrize("reasoning_effort", [None, "high"])
+def test_transient_http_retry_is_bounded_and_does_not_change_prompt_or_model(
+    tmp_path, monkeypatch, reasoning_effort
+):
     monkeypatch.setenv("DEEPSEEK_API_KEY", KEY)
     bodies, delays = [], []
 
@@ -95,9 +98,11 @@ def test_transient_http_retry_is_bounded_and_does_not_change_prompt_or_model(tmp
         return httpx.Response(200, json=response())
 
     output = tmp_path / "proposal_0.json"
-    result = DeepSeekNative(settings(), httpx.MockTransport(handler), sleep=delays.append).generate(
-        MESSAGES, "case", 0, output
-    )
+    result = DeepSeekNative(
+        settings(reasoning_effort=reasoning_effort),
+        httpx.MockTransport(handler),
+        sleep=delays.append,
+    ).generate(MESSAGES, "case", 0, output)
     assert result == NATIVE and len(set(bodies)) == 1
     assert delays == [5, 10]
     assert read_json(output.with_suffix(".receipt.json"))["attempts"] == 3
@@ -222,8 +227,155 @@ def test_api_key_in_prompt_is_blocked_before_storage_or_network(tmp_path, monkey
 
 @pytest.mark.parametrize(
     "change",
-    [{"model": "other"}, {"temperature": 1}, {"reasoning_effort": "high"}, {"network_attempts": 0}],
+    [
+        {"model": "other"},
+        {"temperature": 1},
+        {"reasoning_effort": "medium"},
+        {"reasoning_effort": "max"},
+        {"network_attempts": 0},
+    ],
 )
 def test_constructor_refuses_silent_protocol_changes(change):
     with pytest.raises(ValueError):
         DeepSeekNative(settings(**change))
+
+
+@pytest.mark.parametrize("reasoning_tokens", [0, 27])
+def test_high_thinking_uses_final_content_and_keeps_only_safe_usage_metadata(
+    tmp_path, monkeypatch, reasoning_tokens
+):
+    monkeypatch.setenv("DEEPSEEK_API_KEY", KEY)
+    private_reasoning = "Private provider thought: " + KEY
+    calls = []
+
+    def handler(request):
+        body = json.loads(request.content)
+        calls.append(body)
+        assert body["thinking"] == {"type": "enabled"}
+        assert body["reasoning_effort"] == "high"
+        assert "temperature" not in body
+        assert body["max_tokens"] == 65536
+        assert body["messages"][:-1] == MESSAGES
+        assert "native_output" in body["messages"][-1]["content"]
+        assert request.extensions["timeout"]["read"] == 1200
+        wire = response(
+            usage={
+                "prompt_tokens": 31,
+                "completion_tokens": 44,
+                "total_tokens": 75,
+                "completion_tokens_details": {
+                    "reasoning_tokens": reasoning_tokens,
+                    "unsafe_text": KEY,
+                },
+                "prompt_tokens_details": {"cached_tokens": 11, "unsafe_text": KEY},
+                "unsafe_text": KEY,
+            },
+            system_fingerprint="mock-fingerprint",
+        )
+        wire["choices"][0]["message"]["reasoning_content"] = private_reasoning
+        return httpx.Response(200, json=wire)
+
+    output = tmp_path / "high.json"
+    result = DeepSeekNative(
+        settings(reasoning_effort="high", max_output_tokens=65536, timeout_seconds=1200),
+        httpx.MockTransport(handler),
+    ).generate(MESSAGES, "case", 0, output)
+    assert result == NATIVE and len(calls) == 1
+    receipt = read_json(output.with_suffix(".receipt.json"))
+    assert receipt["thinking"] == "enabled" and receipt["reasoning_effort"] == "high"
+    assert receipt["temperature"] is None
+    assert receipt["reasoning_content_present"] is True
+    assert receipt["reasoning_content_persisted"] is False
+    assert receipt["reasoning_tokens"] == reasoning_tokens
+    assert receipt["usage"]["completion_tokens_details"] == {"reasoning_tokens": reasoning_tokens}
+    assert receipt["usage"]["prompt_tokens_details"] == {"cached_tokens": 11}
+    assert receipt["system_fingerprint"] == "mock-fingerprint"
+    assert KEY not in artifacts_text(tmp_path)
+    assert private_reasoning not in artifacts_text(tmp_path)
+
+
+@pytest.mark.parametrize("final_content", [None, "not JSON", ""])
+def test_high_reasoning_is_never_used_as_a_fallback_edit_answer(
+    tmp_path, monkeypatch, final_content
+):
+    monkeypatch.setenv("DEEPSEEK_API_KEY", KEY)
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        wire = response()
+        wire["choices"][0]["message"] = {
+            "content": final_content,
+            "reasoning_content": json.dumps({"native_output": NATIVE}),
+        }
+        return httpx.Response(200, json=wire)
+
+    output = tmp_path / "high_failure.json"
+    with pytest.raises(ValueError):
+        DeepSeekNative(settings(reasoning_effort="high"), httpx.MockTransport(handler)).generate(
+            MESSAGES, "case", 0, output
+        )
+    assert len(calls) == 1 and not output.exists()
+    assert not list(tmp_path.glob("*.txt"))
+    receipt = read_json(output.with_suffix(".receipt.json"))
+    assert receipt["reasoning_content_present"] is True
+    assert receipt["reasoning_tokens"] is None
+
+
+def test_high_rejection_never_retries_with_disabled_thinking(tmp_path, monkeypatch):
+    monkeypatch.setenv("DEEPSEEK_API_KEY", KEY)
+    calls = []
+
+    def handler(request):
+        calls.append(json.loads(request.content))
+        return httpx.Response(400, text="Thinking unavailable " + KEY)
+
+    with pytest.raises(RuntimeError, match="HTTP 400"):
+        DeepSeekNative(settings(reasoning_effort="high"), httpx.MockTransport(handler)).generate(
+            MESSAGES, "case", 0, tmp_path / "high.json"
+        )
+    assert len(calls) == 1 and calls[0]["reasoning_effort"] == "high"
+    assert KEY not in artifacts_text(tmp_path)
+
+
+def test_high_length_failure_keeps_token_counts_without_persisting_reasoning(tmp_path, monkeypatch):
+    monkeypatch.setenv("DEEPSEEK_API_KEY", KEY)
+    wire = response(finish="length", usage={"completion_tokens_details": {"reasoning_tokens": 99}})
+    wire["choices"][0]["message"]["reasoning_content"] = "Private unfinished thought"
+    output = tmp_path / "truncated.json"
+    with pytest.raises(ValueError, match="Incomplete"):
+        DeepSeekNative(
+            settings(reasoning_effort="high"),
+            httpx.MockTransport(lambda _: httpx.Response(200, json=wire)),
+        ).generate(MESSAGES, "case", 0, output)
+    receipt = read_json(output.with_suffix(".receipt.json"))
+    assert receipt["reasoning_tokens"] == 99 and receipt["attempts"] == 1
+    assert not list(tmp_path.glob("*.txt"))
+
+
+def test_reasoning_usage_drops_invalid_counters_and_untrusted_nested_metadata(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setenv("DEEPSEEK_API_KEY", KEY)
+    wire = response(
+        usage={
+            "prompt_tokens": True,
+            "completion_tokens": -1,
+            "total_tokens": 17,
+            "reasoning_tokens": 3,
+            "completion_tokens_details": {"reasoning_tokens": KEY, "unsafe": KEY},
+            "prompt_tokens_details": {"cached_tokens": False, "unsafe": KEY},
+            "unsafe": KEY,
+        },
+        system_fingerprint="reflected-" + KEY,
+    )
+    output = tmp_path / "metadata.json"
+    DeepSeekNative(
+        settings(reasoning_effort="high"),
+        httpx.MockTransport(lambda _: httpx.Response(200, json=wire)),
+    ).generate(MESSAGES, "case", 0, output)
+    receipt = read_json(output.with_suffix(".receipt.json"))
+    assert receipt["usage"] == {"total_tokens": 17, "reasoning_tokens": 3}
+    assert receipt["reasoning_tokens"] == 3
+    assert receipt["system_fingerprint"] == "reflected-[REDACTED]"
+    assert KEY not in artifacts_text(tmp_path)

@@ -9,6 +9,31 @@ from pydantic import Field, field_validator
 from agenticgen.contracts import GraphEditResult, Record
 
 InpaintingMode = Literal["graph", "fragment"]
+CampaignMode = Literal["graph", "fragment_graph", "fragment_graph_pose", "gradient", "unguided"]
+
+
+class CampaignTask(Record):
+    """One physical native batch; all requested particles remain in the output ledger."""
+
+    schema_version: Literal["agenticgen.flowr-campaign-task.v1"] = (
+        "agenticgen.flowr-campaign-task.v1"
+    )
+    flowr_root: str
+    checkpoint: str
+    pocket_pdb: str
+    source_pose_sdf: str
+    product_pose_sdf: str | None = None
+    conditions_file: str
+    mode: CampaignMode
+    output_dir: str
+    seed: int = Field(ge=0, le=2147483647)
+    sample_count: int = Field(default=4, ge=1, le=4)
+    integration_steps: Literal[100] = 100
+    guidance: dict | None = None
+    particle_ids: list[str] | None = None
+    score_affinity: bool = True
+    guidance_probe: bool = False
+    probe_epsilon: float = Field(default=0.001, gt=0, le=0.1)
 
 
 class InpaintingConfig(Record):

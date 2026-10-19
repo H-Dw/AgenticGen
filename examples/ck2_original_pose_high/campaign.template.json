@@ -1,0 +1,20 @@
+{
+  "schema_version": "agenticgen.ck2-campaign.v1",
+  "foundation_config": "@RUN_ROOT@/foundation.high.json",
+  "flowr_root": "@FLOWR_ROOT@",
+  "flowr_python": "@PYTHON@",
+  "checkpoint": "@CHECKPOINT@",
+  "pocket_pdb": "@INPUT_ROOT@/receptor.pdb",
+  "checkpoint_sha256": "f28e863b2b208718f3d3f85f09837c2f907a71123436db6f98a25d2f1858b6a0",
+  "flowr_revision": "739a33c2aab74d074dd24605b9a2e34dc809ae9c",
+  "seed": 20261020,
+  "chemical_retries": 5,
+  "samples_per_arm": 100,
+  "microbatch_size": 4,
+  "integration_steps": 100,
+  "guidance_window": [0.1, 0.9],
+  "guidance_weights": [0.25, 1.0, 4.0],
+  "guidance_families": ["ce", "brier"],
+  "geometry_workers": 4,
+  "design_workers": 2
+}

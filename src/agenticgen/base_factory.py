@@ -78,7 +78,17 @@ def build_foundation(config: FoundationConfiguration, dataset: CaseDataset) -> F
         provenance["transport"] = {
             "backend": "deepseek_api",
             "wire_format": "json_envelope_for_native_output",
-            "protocol": "deepseek-flash, thinking disabled, temperature 0; EvoMolSteer-compatible",
+            "protocol": (
+                "deepseek-flash, thinking enabled, reasoning_effort high; temperature omitted"
+                if llm.reasoning_effort == "high"
+                else "deepseek-flash, thinking disabled, temperature 0; EvoMolSteer-compatible"
+            ),
+            "thinking": provider.thinking,
+            "reasoning_effort": llm.reasoning_effort,
+            "temperature": None if llm.reasoning_effort else 0,
+            "max_output_tokens": llm.max_output_tokens,
+            "timeout_seconds": llm.timeout_seconds,
+            "network_attempts": llm.network_attempts,
         }
     elif llm.backend == "evomolsteer_deepseek":
         provider = EvoNativeLLM(config.resolve(llm.evomolsteer_root), llm)

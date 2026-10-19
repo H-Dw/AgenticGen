@@ -1,0 +1,41 @@
+{
+  "schema_version": "agenticgen.syncraft.v1",
+  "dataset": "@INPUT_ROOT@/cases.json",
+  "mode": "interaction_aware",
+  "pass_k": 1,
+  "editor": "syncraft",
+  "syncraft": {
+    "root": "@SYNCRAFT_ROOT@",
+    "expected_revision": "557703e110b26a354afed2955ded5217837f6692",
+    "few_shot_count": 5,
+    "examples_file": "@INPUT_ROOT@/cliff_pairs.json"
+  },
+  "llm": {
+    "backend": "deepseek_api",
+    "model": "deepseek-flash",
+    "temperature": 0,
+    "reasoning_effort": "high",
+    "max_output_tokens": 65536,
+    "timeout_seconds": 1200,
+    "network_attempts": 3
+  },
+  "geometry": {
+    "backend": "syncraft_worker",
+    "execution": "python",
+    "python": "@PYTHON@",
+    "receptor_pdbqt": "@INPUT_ROOT@/receptor.pdbqt",
+    "receptor_pdb": "@INPUT_ROOT@/receptor.pdb",
+    "vina_config": "@INPUT_ROOT@/vina.cfg",
+    "vina_binary": "/usr/bin/vina",
+    "seed": 42,
+    "exhaustiveness": 8,
+    "cpu_threads": 1,
+    "timeout_seconds": 1200
+  },
+  "selection": {
+    "policy": "proposal_only",
+    "require_verified_route": false
+  },
+  "retro": {"backend": "disabled"},
+  "enhancements": {"enabled": false}
+}

@@ -47,9 +47,20 @@ def test_native_pass_k_uses_upstream_prompt_and_cache_before_selection(
     assert len(decisions["proposals"]) == 5
     assert all("properties" not in p and "graph" not in p for p in decisions["proposals"])
     saved = read_json(folder / "result.json")
+    manifest = read_json(output / "manifest.json")
+    assert manifest["executed_case_ids"] == [c.case_id for c in dataset.cases]
     assert saved["candidates"][1]["cache_hits"] == {"retro": True, "binding": True}
     assert saved["source_binding"]["status"] == "not_run"
     assert saved["route_rescue"] is None
+
+
+def test_unknown_case_subset_fails_before_output_creation(repo, tmp_path):
+    config = configuration(repo, tmp_path)
+    dataset = load_dataset(config.resolve(config.value.dataset))
+    output = tmp_path / "invalid_subset"
+    with pytest.raises(ValueError, match="unknown case"):
+        foundation_run(config, dataset, None, output, case_ids=["absent"])
+    assert not output.exists()
 
 
 @pytest.mark.integration

@@ -6,6 +6,7 @@ This worker helper deliberately has no controller-package imports.
 from __future__ import annotations
 
 import math
+import re
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -63,6 +64,7 @@ def pose_atoms(text, source):
     if set(serial_to_map.values()) != set(source_atoms) or len(serial_to_map) != len(source_atoms):
         raise ValueError("Pose omits or duplicates a source heavy atom")
     atoms = []
+    ignored_closure_serials = []
     for line in lines:
         if not line.startswith(("ATOM  ", "HETATM")):
             continue
@@ -71,6 +73,12 @@ def pose_atoms(text, source):
         if not all(math.isfinite(v) for v in coords):
             raise ValueError("Nonfinite docking coordinates")
         atom_map = serial_to_map.get(serial)
+        # Meeko adds virtual G0..G3 glue points when opening a macrocycle for
+        # docking. They are not molecular atoms and must not enter the PLIP
+        # complex. CG0..CG3 are real carbons and still require a source map.
+        if atom_map is None and re.fullmatch(r"G[0-3]", line.split()[-1]):
+            ignored_closure_serials.append(serial)
+            continue
         element = source_atoms[atom_map].GetSymbol() if atom_map is not None else "H"
         if atom_map is None and not line.split()[-1].startswith("H"):
             raise ValueError("Unmapped heavy atom in docking output")
@@ -79,6 +87,10 @@ def pose_atoms(text, source):
         raise ValueError("Duplicate docked atom serial")
     if {a["serial"] for a in atoms if a["map"] is not None} != set(serial_to_map):
         raise ValueError("Pose coordinates and Meeko mapping disagree")
+    if ignored_closure_serials:
+        print(
+            f"Excluded Meeko virtual macrocycle closure points from PLIP: {ignored_closure_serials}"
+        )
     return atoms
 
 

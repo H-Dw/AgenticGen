@@ -70,3 +70,22 @@ def test_plip_selects_requested_ligand_and_only_ligand_side_indices(tmp_path):
     }
     with pytest.raises(ValueError, match="exactly one"):
         contacts_from_xml(path, {102: 1}, "Y")
+
+
+def test_macrocycle_glue_points_are_not_real_ligand_atoms(capsys):
+    source = Chem.MolFromSmiles("[CH3:1][CH2:2][OH:3]")
+    lines = [
+        "REMARK SMILES [CH3:1][CH2:2][OH:3]",
+        "REMARK SMILES IDX 1 1 2 2 3 3",
+        atom_line(1, "C", 1, "CG0"),
+        atom_line(2, "C", 2, "CG0"),
+        atom_line(3, "O", 3, "OA"),
+        atom_line(4, "G", 2, "G0"),
+        atom_line(5, "G", 1, "G0"),
+    ]
+    assert [a["map"] for a in pose_atoms("\n".join(lines), source)] == [1, 2, 3]
+    assert "[4, 5]" in capsys.readouterr().out
+    # Unknown physical atoms and unsupported pseudo-types are not silently lost.
+    for atom_type in ("OA", "CG0", "G4"):
+        with pytest.raises(ValueError, match="Unmapped heavy atom"):
+            pose_atoms("\n".join([*lines, atom_line(6, "X", 4, atom_type)]), source)

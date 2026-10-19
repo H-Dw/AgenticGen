@@ -2,6 +2,7 @@
 
 There is no model fallback, format retry, chemistry repair or EvoMolSteer import.
 Provider error bodies and authorization headers are never persisted or reported.
+Only final message.content is parsed; provider reasoning_content is never stored.
 """
 
 from __future__ import annotations
@@ -41,12 +42,29 @@ def _safe_usage(value):
         "total_tokens",
         "prompt_cache_hit_tokens",
         "prompt_cache_miss_tokens",
+        "reasoning_tokens",
     )
-    return {
+    result = {
         k: value[k]
         for k in keys
-        if isinstance(value.get(k), int) and not isinstance(value[k], bool)
+        if isinstance(value.get(k), int) and not isinstance(value[k], bool) and value[k] >= 0
     }
+    for name, allowed in (
+        ("completion_tokens_details", ("reasoning_tokens",)),
+        ("prompt_tokens_details", ("cached_tokens",)),
+    ):
+        detail = value.get(name)
+        if isinstance(detail, dict):
+            counts = {
+                key: detail[key]
+                for key in allowed
+                if isinstance(detail.get(key), int)
+                and not isinstance(detail[key], bool)
+                and detail[key] >= 0
+            }
+            if counts:
+                result[name] = counts
+    return result
 
 
 class DeepSeekNative:
@@ -55,11 +73,11 @@ class DeepSeekNative:
     def __init__(self, settings, transport=None, sleep=time.sleep):
         if settings.model != MODEL:
             raise ValueError("DeepSeekNative requires exactly deepseek-flash; no fallback")
-        if (
-            getattr(settings, "temperature", 0) != 0
-            or getattr(settings, "reasoning_effort", None) is not None
-        ):
-            raise ValueError("DeepSeekNative requires temperature=0 and disabled thinking")
+        if getattr(settings, "temperature", 0) != 0:
+            raise ValueError("DeepSeekNative requires configured temperature=0")
+        effort = getattr(settings, "reasoning_effort", None)
+        if effort is not None and effort != "high":
+            raise ValueError("DeepSeekNative supports explicit high or legacy disabled thinking")
         if not 1 <= settings.network_attempts <= 5:
             raise ValueError("DeepSeekNative requires between one and five network attempts")
         if not 512 <= settings.max_output_tokens <= 65536:
@@ -67,6 +85,8 @@ class DeepSeekNative:
         if not 0 < settings.timeout_seconds <= 1200:
             raise ValueError("DeepSeekNative requires a bounded request timeout")
         self.settings, self.transport, self.sleep = settings, transport, sleep
+        self.reasoning_effort = effort
+        self.thinking = "enabled" if effort == "high" else "disabled"
 
     def generate(self, messages, case_id: str, index: int, output: Path) -> str:
         output = Path(output)
@@ -89,8 +109,10 @@ class DeepSeekNative:
             "proposal_index": index,
             "requested_model": MODEL,
             "format_policy": FORMAT_POLICY,
-            "thinking": "disabled",
-            "temperature": 0,
+            "thinking": self.thinking,
+            "reasoning_effort": self.reasoning_effort,
+            "temperature": None if self.reasoning_effort else 0,
+            "reasoning_content_persisted": False,
             "max_output_tokens": self.settings.max_output_tokens,
             "network_attempt_budget": self.settings.network_attempts,
             "format_repair_budget": 0,
@@ -129,11 +151,14 @@ class DeepSeekNative:
         body = {
             "model": MODEL,
             "messages": [*messages, {"role": "user", "content": ENVELOPE_INSTRUCTION}],
-            "thinking": {"type": "disabled"},
-            "temperature": 0,
+            "thinking": {"type": self.thinking},
             "max_tokens": self.settings.max_output_tokens,
             "response_format": {"type": "json_object"},
         }
+        if self.reasoning_effort:
+            body["reasoning_effort"] = self.reasoning_effort
+        else:
+            body["temperature"] = 0
         write_json(
             request_path,
             {
@@ -185,19 +210,31 @@ class DeepSeekNative:
         if not isinstance(choices, list) or len(choices) != 1 or not isinstance(choices[0], dict):
             fail("DeepSeek returned an invalid choice list")
         choice = choices[0]
+        message = choice.get("message")
+        reasoning = message.get("reasoning_content") if isinstance(message, dict) else None
+        usage = _safe_usage(wire.get("usage"))
+        reasoning_tokens = None
+        if usage:
+            reasoning_tokens = usage.get("completion_tokens_details", {}).get("reasoning_tokens")
+            if reasoning_tokens is None:
+                reasoning_tokens = usage.get("reasoning_tokens")
         receipt.update(
             returned_model=safe(wire.get("model")) if isinstance(wire.get("model"), str) else None,
             provider_request_id=safe(wire.get("id")) if isinstance(wire.get("id"), str) else None,
             finish_reason=safe(choice.get("finish_reason"))
             if isinstance(choice.get("finish_reason"), str)
             else None,
-            usage=_safe_usage(wire.get("usage")),
+            usage=usage,
+            reasoning_tokens=reasoning_tokens,
+            reasoning_content_present=isinstance(reasoning, str) and bool(reasoning),
+            system_fingerprint=safe(wire.get("system_fingerprint"))
+            if isinstance(wire.get("system_fingerprint"), str)
+            else None,
         )
         if wire.get("model") != MODEL:
             fail("Provider returned a different model; fallback is prohibited")
         if choice.get("finish_reason") != "stop":
             fail("Incomplete DeepSeek answer; no format retry or chemical resampling")
-        message = choice.get("message")
         content = message.get("content") if isinstance(message, dict) else None
         if not isinstance(content, str):
             fail("DeepSeek content is not text")

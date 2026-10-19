@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 
 from agenticgen import __version__
+from agenticgen.affinity_cohort import prepare_ck2_affinity
 from agenticgen.base_config import load_foundation
 from agenticgen.base_factory import build_foundation
 from agenticgen.base_reporting import rebuild_foundation_summary
@@ -40,6 +41,12 @@ def parser() -> argparse.ArgumentParser:
         )
         if name in {"run", "design"}:
             child.add_argument("--output", type=Path, required=True)
+        if name == "run":
+            child.add_argument(
+                "--case-id",
+                action="append",
+                help="Execute a subset; keep full cohort RAG exclusions",
+            )
     inpaint = commands.add_parser("inpaint")
     inpaint.add_argument("--run", type=Path, required=True)
     inpaint.add_argument("--config", type=Path, required=True)
@@ -56,6 +63,10 @@ def parser() -> argparse.ArgumentParser:
     cohort.add_argument("--workspace", type=Path, required=True)
     cohort.add_argument("--output", type=Path, required=True)
     cohort.add_argument("--count-per-stratum", type=int, default=3)
+    affinity = commands.add_parser("prepare-ck2-affinity")
+    affinity.add_argument("--workspace", type=Path, required=True)
+    affinity.add_argument("--output", type=Path, required=True)
+    affinity.add_argument("--count", type=int, default=20)
     retro = commands.add_parser("screen-retro")
     retro.add_argument("--config", type=Path, required=True)
     retro.add_argument("--targets", type=Path, required=True)
@@ -145,6 +156,12 @@ def main(argv: list[str] | None = None) -> int:
             )
             print(json.dumps({"case_ids": [c.case_id for c in dataset.cases]}, indent=2))
             return 0
+        if args.command == "prepare-ck2-affinity":
+            dataset = prepare_ck2_affinity(
+                args.workspace.resolve(), args.output.resolve(), args.count
+            )
+            print(json.dumps({"case_ids": [c.case_id for c in dataset.cases]}, indent=2))
+            return 0
         if args.command == "screen-retro":
             config = (
                 load_foundation(args.config)
@@ -188,12 +205,18 @@ def main(argv: list[str] | None = None) -> int:
                 return 0 if ready else 2
             if not ready:
                 raise ValueError("DEEPSEEK_API_KEY is absent")
-            runner = design_run if args.command == "design" else foundation_run
-            summary = runner(config, dataset, components, args.output)
+            if args.command == "design":
+                summary = design_run(config, dataset, components, args.output)
+            else:
+                summary = foundation_run(
+                    config, dataset, components, args.output, case_ids=args.case_id
+                )
             print(json.dumps(summary, ensure_ascii=False, indent=2))
             return 0 if read_json(args.output / "manifest.json")["status"] == "completed" else 2
         if args.command == "design":
             raise ValueError("design requires a SynCraft foundation profile")
+        if args.command == "run" and args.case_id:
+            raise ValueError("Case subsets require a SynCraft foundation profile")
         config = load_configuration(args.config, args.backend)
         dataset = load_dataset(config.resolve(config.value.dataset))
         components = build_components(config, dataset)

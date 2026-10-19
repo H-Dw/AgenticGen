@@ -18,7 +18,16 @@ def foundation_run(
     dataset: CaseDataset,
     components: FoundationComponents,
     output: Path,
+    *,
+    case_ids: list[str] | None = None,
 ) -> dict:
+    cases = dataset.cases
+    if case_ids is not None:
+        if not case_ids or len(set(case_ids)) != len(case_ids):
+            raise ValueError("Case subset must be nonempty and distinct")
+        if set(case_ids) - {c.case_id for c in cases}:
+            raise ValueError("Case subset references an unknown case")
+        cases = [c for c in cases if c.case_id in case_ids]
     output = output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     settings = config.value
@@ -28,20 +37,22 @@ def foundation_run(
         "status": "running",
         "effective_config": settings.model_dump(mode="json"),
         "dataset_sha256": sha256(config.resolve(settings.dataset)),
+        "dataset_case_ids": [c.case_id for c in dataset.cases],
+        "executed_case_ids": [c.case_id for c in cases],
         "dependencies": components.provenance,
         "budget": {
-            "logical_proposals": len(dataset.cases) * settings.total_pass_k,
+            "logical_proposals": len(cases) * settings.total_pass_k,
             "proposal_modes": list(settings.proposal_modes),
             "pass_k_per_mode": settings.pass_k,
-            "maximum_http_attempts": len(dataset.cases)
+            "maximum_http_attempts": len(cases)
             * settings.total_pass_k
             * settings.llm.network_attempts
             if settings.llm.backend != "replay"
             else 0,
-            "max_geometry_jobs": len(dataset.cases) * (1 + settings.total_pass_k)
+            "max_geometry_jobs": len(cases) * (1 + settings.total_pass_k)
             if settings.geometry.backend != "disabled"
             else 0,
-            "max_retro_jobs": len(dataset.cases) * (1 + settings.total_pass_k)
+            "max_retro_jobs": len(cases) * (1 + settings.total_pass_k)
             if settings.retro.backend != "disabled"
             else 0,
         },
@@ -55,6 +66,7 @@ def foundation_run(
             "config": manifest["effective_config"],
             "dataset": manifest["dataset_sha256"],
             "dependencies": manifest["dependencies"],
+            "executed_case_ids": manifest["executed_case_ids"],
         }
     )
     write_json(output / "manifest.json", manifest)
@@ -78,7 +90,7 @@ def foundation_run(
         return binding_cache[key], hit
 
     try:
-        for case in dataset.cases:
+        for case in cases:
             folder = output / "cases" / case.case_id
             folder.mkdir(parents=True)
             maps = mapped_smiles(case.smiles)

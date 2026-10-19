@@ -1,0 +1,542 @@
+{
+  "schema_version": "agenticgen.cases.v1",
+  "purpose": "engineering_example",
+  "selection_rule": "Top 20 canonical isomeric graphs among all valid single-Steer particles; retain each graph's highest pic50_on_rescore, exact ties by particle ID. No PB, strain or SA gate. No tautomer/protonation merging. Frozen before API calls.",
+  "source_files": {
+    "outputs/ck2_original_steer_analysis_20261013/tables/terminal_all_features.csv": "89ca9f2089be6f63e985836036a44f4e4cc4a71f98613d3b4b2913ffaee7edf5",
+    "outputs/ck2_top10_process_analysis_20261014/actual_generation_seed_map.csv": "581ffa2ea41b90d8bef10046c5ca9436daf70c95e873e8ffd86dc50d7b829547",
+    "outputs/ck2_final_spatial_analysis_20261014/extracted/valid_final_000.sdf": "d61fe755e5c437f03d6a1fa07ab5fb3f33c08007a7c7129fe8262cec95eb1358",
+    "outputs/ck2_final_spatial_analysis_20261014/extracted/valid_final_003.sdf": "ec3d82c5df2e465fe9156a9e96c26c46c9880705999d9dd5efdcd921529264b9",
+    "outputs/ck2_final_spatial_analysis_20261014/extracted/valid_final_004.sdf": "a4ac9dd02e76b24c1d804a7784cfccdf2cdb2629d20c30d438e1071aa77ac038",
+    "outputs/ck2_final_spatial_analysis_20261014/extracted/valid_final_007.sdf": "3871476c043dc2ef4316d5f7dd7552af5d54850adb9147e891271cfd7a476c73",
+    "outputs/ck2_final_spatial_analysis_20261014/extracted/valid_final_009.sdf": "f49740ea58c1d5c29fab5f8fe2e01d392bb69f41766db01f6fc91306eae451fe",
+    "outputs/ck2_final_spatial_analysis_20261014/extracted/valid_final_011.sdf": "b97f9f6c22ff64c953486bca2620136da55f0b605bef3822ddba2d69db9651a5",
+    "outputs/ck2_final_spatial_analysis_20261014/extracted/valid_final_013.sdf": "380c4189883f83179d9e9b527a95945a0efa81d96d0ccd58e9e3ee240ab1e41d",
+    "outputs/ck2_final_spatial_analysis_20261014/extracted/valid_final_015.sdf": "1b56a5691671a8932bb44ef9f801a0b1449ec27c04d07ecbead858695f7fa5fe",
+    "outputs/ck2_final_spatial_analysis_20261014/extracted/valid_final_017.sdf": "8e82cdfa28fe13f43270f06f4ee9c89cda757bc7416dfa44a3355a230d30e8e4"
+  },
+  "sdf_file": "candidates.sdf",
+  "sdf_sha256": "1496fe5e6cbcf4eb69696d0aca6a3ab69762f253ce3a642d7c7585b60d094713",
+  "cases": [
+    {
+      "case_id": "single_b011_final_030",
+      "target": "CK2",
+      "smiles": "Nc1ncc2cc3c4ccccc4[nH]c3c3cc(C(=O)O)ccc3c1-2",
+      "selection_rank": 1,
+      "source_metrics": {
+        "pic50_on_rescore": 8.704806327819824,
+        "pic50_off_rescore": 5.819533824920654,
+        "sa_score": 2.382333928484334,
+        "mmff_relief_per_heavy": 5.892297098388078,
+        "mmff_relief_kcal_mol": 147.30742745970196,
+        "strain_MMFF94s_kcal_mol": 40035.0680729088,
+        "quality_tail": false,
+        "pb_full_pass": false,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 11,
+        "actual_sampler_seed": 1100075,
+        "root_slot": 31,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 0
+    },
+    {
+      "case_id": "single_b004_final_027",
+      "target": "CK2",
+      "smiles": "Cc1cccc2c1[nH]c1c3ccncc3c(=O)c3c(C(N)=O)nc2c31",
+      "selection_rank": 2,
+      "source_metrics": {
+        "pic50_on_rescore": 8.62588882446289,
+        "pic50_off_rescore": 7.293275833129883,
+        "sa_score": 2.8661266424605003,
+        "mmff_relief_per_heavy": 0.6313176660484686,
+        "mmff_relief_kcal_mol": 15.782941651211717,
+        "strain_MMFF94s_kcal_mol": 18.044877458609704,
+        "quality_tail": true,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 4,
+        "actual_sampler_seed": 400054,
+        "root_slot": 25,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 1
+    },
+    {
+      "case_id": "single_b017_final_021",
+      "target": "CK2",
+      "smiles": "NC(=O)c1cc2c3c(nc4cnccc4c3n1)-c1cccc(Cl)c1N2",
+      "selection_rank": 3,
+      "source_metrics": {
+        "pic50_on_rescore": 8.58439826965332,
+        "pic50_off_rescore": 6.863951206207275,
+        "sa_score": 2.978316620792027,
+        "mmff_relief_per_heavy": 0.3892330476689301,
+        "mmff_relief_kcal_mol": 9.730826191723253,
+        "strain_MMFF94s_kcal_mol": 13.538419870385567,
+        "quality_tail": true,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 17,
+        "actual_sampler_seed": 1700093,
+        "root_slot": 14,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 2
+    },
+    {
+      "case_id": "single_b011_final_027",
+      "target": "CK2",
+      "smiles": "O=C(O)c1ccc2c(c1)c1cc3ccccc3c-1nc1cnccc12",
+      "selection_rank": 4,
+      "source_metrics": {
+        "pic50_on_rescore": 8.575342178344727,
+        "pic50_off_rescore": 6.333090782165527,
+        "sa_score": 2.2758339548278546,
+        "mmff_relief_per_heavy": 7.68697314016437,
+        "mmff_relief_kcal_mol": 192.17432850410924,
+        "strain_MMFF94s_kcal_mol": 9047.624105981766,
+        "quality_tail": false,
+        "pb_full_pass": false,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 11,
+        "actual_sampler_seed": 1100075,
+        "root_slot": 31,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 3
+    },
+    {
+      "case_id": "single_b004_final_002",
+      "target": "CK2",
+      "smiles": "Cc1cccc2c1[nH]c1c3ccncc3c(=O)c3c(C(=O)O)nc2c31",
+      "selection_rank": 5,
+      "source_metrics": {
+        "pic50_on_rescore": 8.379874229431152,
+        "pic50_off_rescore": 7.054680824279785,
+        "sa_score": 2.8582011820054625,
+        "mmff_relief_per_heavy": 0.8079248440243998,
+        "mmff_relief_kcal_mol": 20.198121100609995,
+        "strain_MMFF94s_kcal_mol": 24.97595974631595,
+        "quality_tail": false,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 4,
+        "actual_sampler_seed": 400054,
+        "root_slot": 25,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 4
+    },
+    {
+      "case_id": "single_b011_final_005",
+      "target": "CK2",
+      "smiles": "Nc1nccc2c1-c1ccc(C(=O)O)cc1C1Nc3ccccc3C21",
+      "selection_rank": 6,
+      "source_metrics": {
+        "pic50_on_rescore": 8.35571002960205,
+        "pic50_off_rescore": 5.995354175567627,
+        "sa_score": 3.3676037427115606,
+        "mmff_relief_per_heavy": 3.988422209887952,
+        "mmff_relief_kcal_mol": 99.7105552471988,
+        "strain_MMFF94s_kcal_mol": 214.3898301454752,
+        "quality_tail": false,
+        "pb_full_pass": false,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 11,
+        "actual_sampler_seed": 1100075,
+        "root_slot": 31,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 5
+    },
+    {
+      "case_id": "single_b007_final_026",
+      "target": "CK2",
+      "smiles": "O=C(O)c1ccc2c(c1)c1ccncc1c1ccc3cccnc3c12",
+      "selection_rank": 7,
+      "source_metrics": {
+        "pic50_on_rescore": 8.354063034057617,
+        "pic50_off_rescore": 6.133155822753906,
+        "sa_score": 2.328472100244083,
+        "mmff_relief_per_heavy": 0.5674686422729639,
+        "mmff_relief_kcal_mol": 14.186716056824096,
+        "strain_MMFF94s_kcal_mol": 23.13514892885577,
+        "quality_tail": true,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 7,
+        "actual_sampler_seed": 700063,
+        "root_slot": 49,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 6
+    },
+    {
+      "case_id": "single_b013_final_014",
+      "target": "CK2",
+      "smiles": "O=C(O)c1ccc2c3cnccc3c3nc4ccccc4nc3c2c1",
+      "selection_rank": 8,
+      "source_metrics": {
+        "pic50_on_rescore": 8.349286079406738,
+        "pic50_off_rescore": 6.669220924377441,
+        "sa_score": 2.2589738916034072,
+        "mmff_relief_per_heavy": 0.3799644333770254,
+        "mmff_relief_kcal_mol": 9.499110834425636,
+        "strain_MMFF94s_kcal_mol": 15.526478091787313,
+        "quality_tail": true,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 13,
+        "actual_sampler_seed": 1300081,
+        "root_slot": 3,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 7
+    },
+    {
+      "case_id": "single_b011_final_040",
+      "target": "CK2",
+      "smiles": "N=C1N=Cc2c1c1ccc(C(=O)O)cc1c1nc3ccccc3nc21",
+      "selection_rank": 9,
+      "source_metrics": {
+        "pic50_on_rescore": 8.339442253112793,
+        "pic50_off_rescore": 6.033073425292969,
+        "sa_score": 2.835041620792028,
+        "mmff_relief_per_heavy": 0.4499427351699836,
+        "mmff_relief_kcal_mol": 11.24856837924959,
+        "strain_MMFF94s_kcal_mol": 17.85535536614563,
+        "quality_tail": true,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 11,
+        "actual_sampler_seed": 1100075,
+        "root_slot": 31,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 8
+    },
+    {
+      "case_id": "single_b017_final_043",
+      "target": "CK2",
+      "smiles": "O=c1c2ccccc2oc2c3cc(Cl)c(O)cc3c3ccncc3c12",
+      "selection_rank": 10,
+      "source_metrics": {
+        "pic50_on_rescore": 8.335076332092285,
+        "pic50_off_rescore": 7.724618911743164,
+        "sa_score": 2.5118858515612583,
+        "mmff_relief_per_heavy": 0.6294217124871966,
+        "mmff_relief_kcal_mol": 15.735542812179917,
+        "strain_MMFF94s_kcal_mol": 22.36385535658914,
+        "quality_tail": true,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 17,
+        "actual_sampler_seed": 1700093,
+        "root_slot": 14,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 9
+    },
+    {
+      "case_id": "single_b011_final_017",
+      "target": "CK2",
+      "smiles": "O=C(O)C1=CC2=c3[nH]c4ccccc4c3=Nc3cnncc3C2C=C1",
+      "selection_rank": 11,
+      "source_metrics": {
+        "pic50_on_rescore": 8.32453727722168,
+        "pic50_off_rescore": 6.725730895996094,
+        "sa_score": 4.051180018371027,
+        "mmff_relief_per_heavy": 3.0988894169871544,
+        "mmff_relief_kcal_mol": 77.47223542467886,
+        "strain_MMFF94s_kcal_mol": 108.52732731150186,
+        "quality_tail": false,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 11,
+        "actual_sampler_seed": 1100075,
+        "root_slot": 31,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 10
+    },
+    {
+      "case_id": "single_b007_final_028",
+      "target": "CK2",
+      "smiles": "OC(O)c1ccc2c(c1)c1ccncc1c1ccc3ccccc3c12",
+      "selection_rank": 12,
+      "source_metrics": {
+        "pic50_on_rescore": 8.306039810180664,
+        "pic50_off_rescore": 6.01128625869751,
+        "sa_score": 2.3366033963452413,
+        "mmff_relief_per_heavy": 3.415032478254284,
+        "mmff_relief_kcal_mol": 85.3758119563571,
+        "strain_MMFF94s_kcal_mol": 275.74954087733136,
+        "quality_tail": false,
+        "pb_full_pass": false,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 7,
+        "actual_sampler_seed": 700063,
+        "root_slot": 49,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 11
+    },
+    {
+      "case_id": "single_b015_final_048",
+      "target": "CK2",
+      "smiles": "NC1=NC(=O)c2c1c1ccc(C(=O)O)cc1c1c2[nH]c2ccccc21",
+      "selection_rank": 13,
+      "source_metrics": {
+        "pic50_on_rescore": 8.300063133239746,
+        "pic50_off_rescore": 6.026500225067139,
+        "sa_score": 2.6822263174334147,
+        "mmff_relief_per_heavy": 0.7577160991572356,
+        "mmff_relief_kcal_mol": 18.94290247893089,
+        "strain_MMFF94s_kcal_mol": 37.90777480508251,
+        "quality_tail": false,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 15,
+        "actual_sampler_seed": 1500087,
+        "root_slot": 0,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 12
+    },
+    {
+      "case_id": "single_b003_final_025",
+      "target": "CK2",
+      "smiles": "Cc1ccc(Cl)cc1Nc1nc2cc(C(=O)O)ccc2n2cncc12",
+      "selection_rank": 14,
+      "source_metrics": {
+        "pic50_on_rescore": 8.295059204101562,
+        "pic50_off_rescore": 6.639682769775391,
+        "sa_score": 2.357760228592676,
+        "mmff_relief_per_heavy": 0.4799905586124221,
+        "mmff_relief_kcal_mol": 11.999763965310551,
+        "strain_MMFF94s_kcal_mol": 15.706688319673969,
+        "quality_tail": true,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 3,
+        "actual_sampler_seed": 300051,
+        "root_slot": 1,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 13
+    },
+    {
+      "case_id": "single_b011_final_000",
+      "target": "CK2",
+      "smiles": "O=C(O)c1ccc2c3cnncc3c3nc4ccccc4nc3c2c1",
+      "selection_rank": 15,
+      "source_metrics": {
+        "pic50_on_rescore": 8.292597770690918,
+        "pic50_off_rescore": 6.724701881408691,
+        "sa_score": 2.4753797925517738,
+        "mmff_relief_per_heavy": 0.5294216913676428,
+        "mmff_relief_kcal_mol": 13.23554228419107,
+        "strain_MMFF94s_kcal_mol": 17.87564864119213,
+        "quality_tail": true,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 11,
+        "actual_sampler_seed": 1100075,
+        "root_slot": 31,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 14
+    },
+    {
+      "case_id": "single_b009_final_001",
+      "target": "CK2",
+      "smiles": "O=C(O)c1ccc2c3cncnc3c3nc4ccccc4nc3c2c1",
+      "selection_rank": 16,
+      "source_metrics": {
+        "pic50_on_rescore": 8.284553527832031,
+        "pic50_off_rescore": 6.236067771911621,
+        "sa_score": 2.378716568104988,
+        "mmff_relief_per_heavy": 0.5616840793873837,
+        "mmff_relief_kcal_mol": 14.042101984684592,
+        "strain_MMFF94s_kcal_mol": 18.63616521530281,
+        "quality_tail": true,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 9,
+        "actual_sampler_seed": 900069,
+        "root_slot": 43,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 15
+    },
+    {
+      "case_id": "single_b004_final_010",
+      "target": "CK2",
+      "smiles": "Cc1cccc2c1Cc1c3ccncc3c(O)c3c(C(=O)O)cn-2c13",
+      "selection_rank": 17,
+      "source_metrics": {
+        "pic50_on_rescore": 8.281106948852539,
+        "pic50_off_rescore": 6.696419715881348,
+        "sa_score": 2.994517541702104,
+        "mmff_relief_per_heavy": 1.3954840760304874,
+        "mmff_relief_kcal_mol": 34.88710190076218,
+        "strain_MMFF94s_kcal_mol": 45.43260402484039,
+        "quality_tail": false,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 4,
+        "actual_sampler_seed": 400054,
+        "root_slot": 25,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 16
+    },
+    {
+      "case_id": "single_b011_final_043",
+      "target": "CK2",
+      "smiles": "Nc1nccc2c1c1ccc(C(=O)O)cc1c1nc3ccccc3n21",
+      "selection_rank": 18,
+      "source_metrics": {
+        "pic50_on_rescore": 8.279810905456543,
+        "pic50_off_rescore": 6.045537948608398,
+        "sa_score": 2.4163377746381816,
+        "mmff_relief_per_heavy": 0.7072312992390158,
+        "mmff_relief_kcal_mol": 17.680782480975395,
+        "strain_MMFF94s_kcal_mol": 116.65478629882249,
+        "quality_tail": true,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 11,
+        "actual_sampler_seed": 1100075,
+        "root_slot": 31,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 17
+    },
+    {
+      "case_id": "single_b011_final_016",
+      "target": "CK2",
+      "smiles": "Nc1nccc2c1=C1C=CC(C(=O)O)=CC1C1=Nc3ccccc3C=21",
+      "selection_rank": 19,
+      "source_metrics": {
+        "pic50_on_rescore": 8.27881908416748,
+        "pic50_off_rescore": 5.859982490539551,
+        "sa_score": 3.9816600763267695,
+        "mmff_relief_per_heavy": 2.658808670640623,
+        "mmff_relief_kcal_mol": 66.47021676601558,
+        "strain_MMFF94s_kcal_mol": 142.60723844690256,
+        "quality_tail": false,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 11,
+        "actual_sampler_seed": 1100075,
+        "root_slot": 31,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 18
+    },
+    {
+      "case_id": "single_b000_final_034",
+      "target": "CK2",
+      "smiles": "O=C(O)c1ccc2c(c1)c1c(c3ccncc32)=NC2C=CC=CC2N=1",
+      "selection_rank": 20,
+      "source_metrics": {
+        "pic50_on_rescore": 8.27705192565918,
+        "pic50_off_rescore": 6.67719841003418,
+        "sa_score": 4.022102372848545,
+        "mmff_relief_per_heavy": 4.047212903271101,
+        "mmff_relief_kcal_mol": 101.18032258177752,
+        "strain_MMFF94s_kcal_mol": 105.93311622767078,
+        "quality_tail": false,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 0,
+        "actual_sampler_seed": 42,
+        "root_slot": 20,
+        "cohort": "global_affinity_unique_graphs",
+        "pose": "original source SDF bytes unchanged",
+        "representative": "highest pIC50 of the graph across all valid single-Steer particles"
+      },
+      "sdf_record_index": 19
+    }
+  ]
+}

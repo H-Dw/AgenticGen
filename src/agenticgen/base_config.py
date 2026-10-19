@@ -30,10 +30,11 @@ class FoundationLLM(Record):
         if self.backend == "deepseek_api" and (
             self.model != "deepseek-flash"
             or self.temperature != 0
-            or self.reasoning_effort is not None
+            or self.reasoning_effort not in {None, "high"}
         ):
             raise ValueError(
-                "DeepSeek API requires deepseek-flash, temperature=0, disabled thinking"
+                "DeepSeek API requires deepseek-flash, configured temperature=0, "
+                "and explicit high or legacy disabled thinking"
             )
         if self.backend == "evomolsteer_deepseek" and (
             not self.evomolsteer_root
