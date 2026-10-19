@@ -235,7 +235,9 @@ def test_raw_output_is_retained_and_new_fragment_atoms_get_new_identity(tmp_path
     assert sha256(raw) == raw_sha
     product = Chem.SDMolSupplier(result.poses[0].sdf_path, removeHs=True)[0]
     assert [a.GetAtomMapNum() for a in product.GetAtoms()][:3] == [91, 7, 501]
-    assert product.GetAtomWithIdx(3).GetAtomMapNum() not in {7, 44, 91, 501}
+    assert product.GetAtomWithIdx(3).GetAtomMapNum() == 501 + 1000 + 3
+    assert "V3000" in Path(result.poses[0].sdf_path).read_text(encoding="utf-8")
+    assert len({a.GetAtomMapNum() for a in product.GetAtoms()}) == product.GetNumAtoms()
     assert result.poses[0].coordinate_frame == "pocket_input"
 
 
@@ -307,3 +309,35 @@ def test_deletion_boundary_remains_hard_even_when_also_an_interaction_atom():
     assert {b["atom_map"] for b in report["checked_optimized_boundaries"]} == {7}
     assert not report["passed"]
     assert any("Optimized boundary attachment differs at map 7" in e for e in report["errors"])
+
+
+def test_prepared_pose_roundtrip_preserves_large_map_ids_and_mapped_graph(tmp_path):
+    high_maps = "[CH3:1501][CH2:1502][OH:7777]"
+    incoming = pose(high_maps)
+    # The external pose is already V3000; the adapter must not downgrade it.
+    source = tmp_path / "large_maps.sdf"
+    with Chem.SDWriter(str(source)) as writer:
+        writer.SetForceV3000(True)
+        writer.write(Chem.RenumberAtoms(incoming, [2, 0, 1]))
+    req = request(source=high_maps, product=high_maps, product_pose_sdf=str(source))
+    prepared = prepare_product_pose(req, tmp_path / "prepared.sdf")
+    loaded = Chem.SDMolSupplier(str(prepared), removeHs=True)[0]
+    assert [a.GetAtomMapNum() for a in loaded.GetAtoms()] == [1501, 1502, 7777]
+    assert Chem.MolToSmiles(loaded) == Chem.MolToSmiles(incoming)
+    assert "V3000" in prepared.read_text(encoding="utf-8")
+
+
+def test_multiple_regenerated_atoms_keep_distinct_large_namespace_ids(tmp_path):
+    source = "[CH3:1][CH2:2][CH2:3][CH2:4][OH:5]"
+    product = "[CH3:1][CH2:2][CH2:3][CH2:4][F:5]"
+    _, fragment = plan_masks(
+        request(source=source, product=product, interaction_atom_maps=(2, 3)), config()
+    )
+    reference = write_sdf(tmp_path / "reference.sdf", pose(product))
+    generated = _native_ordered_pose(product, pose(product), fragment)
+    raw = write_sdf(tmp_path / "native.sdf", generated)
+    result = collect_outputs(fragment, reference, raw, tmp_path / "collected", config())
+    loaded = Chem.SDMolSupplier(result.poses[0].sdf_path, removeHs=True)[0]
+    assert [a.GetAtomMapNum() for a in loaded.GetAtoms()] == [2, 3, 5, 1008, 1009]
+    assert len({a.GetAtomMapNum() for a in loaded.GetAtoms()}) == loaded.GetNumAtoms()
+    assert Chem.MolToSmiles(loaded) == result.poses[0].mapped_smiles

@@ -124,3 +124,20 @@ def test_new_atom_embedding_failure_is_explicit(tmp_path, monkeypatch):
         initialize_product_pose(source, edit(source, product), sdf, output)
     assert not output.exists()
     assert "ETKDG" in read_json(output.with_suffix(".initialization.json"))["reason"]
+
+
+def test_initialization_preserves_large_source_and_product_atom_maps(tmp_path):
+    source = "[CH3:1501][CH:1502]([CH3:1503])[OH:7777]"
+    product = "[CH3:1501][CH2:1502][OH:7777]"
+    mol = Chem.AddHs(Chem.MolFromSmiles(source))
+    assert AllChem.EmbedMolecule(mol, randomSeed=7) == 0
+    mol = Chem.RemoveHs(mol)
+    sdf = tmp_path / "source.sdf"
+    with Chem.SDWriter(str(sdf)) as writer:
+        writer.SetForceV3000(True)
+        writer.write(mol)
+    output = initialize_product_pose(source, edit(source, product), sdf, tmp_path / "product.sdf")
+    loaded = Chem.SDMolSupplier(str(output), removeHs=True)[0]
+    assert [a.GetAtomMapNum() for a in loaded.GetAtoms()] == [1501, 1502, 7777]
+    assert Chem.MolToSmiles(loaded) == Chem.MolToSmiles(Chem.MolFromSmiles(product))
+    assert "V3000" in output.read_text(encoding="utf-8")

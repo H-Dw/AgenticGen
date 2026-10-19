@@ -233,6 +233,7 @@ def initialize_product_pose(
         if max_deviation > 1e-9:
             raise ValueError("Initialization moved a surviving source heavy atom")
         with Chem.SDWriter(str(output)) as writer:
+            writer.SetForceV3000(True)
             writer.write(initialized)
         reloaded = Chem.SDMolSupplier(str(output), removeHs=True)[0]
         if reloaded is None:

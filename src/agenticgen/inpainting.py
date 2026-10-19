@@ -270,6 +270,7 @@ def prepare_product_pose(request: InpaintingRequest, output: Path) -> Path:
         raise ValueError("Pose atom-map assignment is inconsistent with product connectivity")
     output.parent.mkdir(parents=True, exist_ok=True)
     with Chem.SDWriter(str(output)) as writer:
+        writer.SetForceV3000(True)
         writer.write(ordered_pose)
     return output
 
@@ -470,6 +471,7 @@ def collect_outputs(
                 generated.GetAtomWithIdx(slot.flowr_output_slot).SetAtomMapNum(slot.atom_map)
         sdf_path = output / f"pose_{index:04d}.sdf"
         with Chem.SDWriter(str(sdf_path)) as writer:
+            writer.SetForceV3000(True)
             writer.write(generated)
         poses.append(
             PoseArtifact(

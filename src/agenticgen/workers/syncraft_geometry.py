@@ -191,6 +191,7 @@ def run_job(job):
     original.RemoveAllConformers()
     original.AddConformer(conf)
     with Chem.SDWriter(str(out / "docked_pose.sdf")) as writer:
+        writer.SetForceV3000(any(a.GetAtomMapNum() > 999 for a in original.GetAtoms()))
         writer.write(original)
     (out / "atom_alignment.json").write_text(
         json.dumps(
