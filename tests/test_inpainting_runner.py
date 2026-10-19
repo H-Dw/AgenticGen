@@ -17,6 +17,12 @@ class ForbiddenEvaluator:
         raise AssertionError("Product property/route evaluator ran before inpainting")
 
 
+def test_portable_case_manifests_bind_exact_sdf_record_sets(repo):
+    root = repo / "examples/ck2_inpainting"
+    assert len(load_dataset(root / "live_cases.json").cases) == 1
+    assert len(load_dataset(root / "cases.json").cases) == 2
+
+
 def test_design_stage_never_scores_edited_products(repo, tmp_path, syncraft_root):
     config = configuration(repo, tmp_path)
     dataset = load_dataset(config.resolve(config.value.dataset))

@@ -8,7 +8,8 @@
     "receptor.pdbqt": "b3625b317d275859e17920578f95733b6d853239837959bd85d159056595ef17",
     "single_b004_final_027_source_docked.sdf": "92ca6d82b86fc7e0481481b1ba945928094db7cda0df39bd674d15f66cea2fa2",
     "single_b011_final_017_source_docked.sdf": "d31387f3e4e9d494f3eda127266ae7b3bb0cdb162572c414e14c866522af1fdd",
-    "vina.cfg": "086a960e972040ec541091b79befe77333f705b21e945ed19b01a80a9596f75f"
+    "vina.cfg": "086a960e972040ec541091b79befe77333f705b21e945ed19b01a80a9596f75f",
+    "live_case.sdf": "fc80ac391903a0f69c094f0803d6d1f7d85750ac8472f74eea5a4d1904da212e"
   },
   "design_replay": "All saved proposals are engineering replay, including one intentional invalid-graph regression case."
 }

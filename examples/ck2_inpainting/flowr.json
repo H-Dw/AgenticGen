@@ -16,5 +16,5 @@
   "batch_cost": 200,
   "gpus": 1,
   "timeout_seconds": 1800,
-  "graph_initialization": "random"
+  "graph_initialization": "harmonic"
 }

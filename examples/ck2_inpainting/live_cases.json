@@ -12,8 +12,8 @@
     "outputs/ck2_final_spatial_analysis_20261014/extracted/valid_final_011.sdf": "b97f9f6c22ff64c953486bca2620136da55f0b605bef3822ddba2d69db9651a5",
     "outputs/ck2_final_spatial_analysis_20261014/extracted/valid_final_017.sdf": "8e82cdfa28fe13f43270f06f4ee9c89cda757bc7416dfa44a3355a230d30e8e4"
   },
-  "sdf_file": "inputs/cases.sdf",
-  "sdf_sha256": "43cfbe9788ceb27a4e6e070ae5093df3dc7e19ded98cefc3b82bf987d034d3a3",
+  "sdf_file": "inputs/live_case.sdf",
+  "sdf_sha256": "fc80ac391903a0f69c094f0803d6d1f7d85750ac8472f74eea5a4d1904da212e",
   "cases": [
     {
       "case_id": "single_b004_final_027",

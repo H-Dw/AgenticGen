@@ -20,6 +20,10 @@ flowchart LR
 
 原子 map 与 RDKit 索引、FLOWR 输入 slot、输出 slot 明确区分。片段模式会把固定原子重排至输出前部；可生成区域的原子不得继承旧 map 身份，新原子分配独立命名空间。Graph 模式保留整个编辑图。两种模式均启用原生最终 inpaint；之后检查实际输出，不使用后处理伪造保留结果。
 
+固定区内部连接、原子身份和片段坐标必须保留。与可生成区的外部连接，只有实际 LLM 修改原子及删除边界要求保持，以免撤销编辑；仅固定原互作原子的其他外部连接变化单独报告，允许由可生成区重建产生。互作是否恢复仍由 PLIP 评价。
+
+Graph 默认使用官方 harmonic prior。固定上游版本的 random graph prior 在没有 hybridization 特征时会引用未赋值变量；此处只选择已提供的原生初始化路径，子模块保持原始版本。
+
 两种方式默认从同一初始化结构平行采样。Fragment 固定 LLM 编辑区域的初始坐标，不能用它修复该区域自身的几何；Graph 分支才会重新生成该区域坐标。若以后采用 Graph 输出再接 Fragment，应单列为另一实验设置。
 
 SynCraft `src/extract_interaction.py::format_interactions_for_llm` 允许为合成修复替换方向性互作原子，要求预期恢复互作几何；疏水等为软偏好。故默认 `interaction_policy=syncraft_compatible`，在 LLM 编辑完成后固定仍存活的互作原子和实际编辑区域。原互作删除/改变只记录，不触发默认硬拒绝。`strict` 是显式可选研究设置，不是默认值。片段采样期间的固定条件仍需保持。
