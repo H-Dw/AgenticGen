@@ -30,4 +30,6 @@ SynCraft `src/extract_interaction.py::format_interactions_for_llm` 允许为合�
 
 `pose_initialization.py` 只负责初始条件：复制存活原子坐标，必要时为新增原子生成受约束初始坐标，并保存来源哈希。此步骤和 FLOWR 采样、最终合理性检查分别记录。生成后 `SynCraftGeometry.evaluate_pose` 直接处理 SDF；默认 score-only 不重嵌入或松弛重原子。其 protocol ID 包含 pose 哈希和评价模式，避免与普通 redocking 混用。MMFF 测量在副本上进行，原始坐标保持。
 
+逐样本 SDF 使用 V3000，避免 V2000 的三位 atom-map 字段截断新原子身份。移除 map 后重新清理立体标记，避免两个化学等价的磺酰氧因不同 map 被误认为手性差异；真实手性仍需保留。对应图哈希采用 `canonical-isomeric-clean-stereo-after-unmapping-v2`；旧版增强包需要按新规范重新导出，不能直接混用旧图哈希。
+
 单个工程例子只验证接口可运行。正式实验需要等预算无 inpainting 对照、固定掩码策略、多个采样种子，以及把结构有效率、可接受保留率、Vina/互作、SA 和固定库存路线结果分别报告。未配置库存时不能宣称完成逆合成验证。

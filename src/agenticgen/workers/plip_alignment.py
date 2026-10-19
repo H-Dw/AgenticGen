@@ -34,6 +34,7 @@ def pose_atoms(text, source):
         copy = Chem.Mol(mol)
         for atom in copy.GetAtoms():
             atom.SetAtomMapNum(0)
+        Chem.AssignStereochemistry(copy, cleanIt=True, force=True)
         return Chem.MolToSmiles(copy, isomericSmiles=True)
 
     if identity(template) != identity(source):

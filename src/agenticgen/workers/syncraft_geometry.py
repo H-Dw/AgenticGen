@@ -173,6 +173,7 @@ def run_job(job):
         copy = Chem.Mol(m)
         for atom in copy.GetAtoms():
             atom.SetAtomMapNum(0)
+        Chem.AssignStereochemistry(copy, cleanIt=True, force=True)
         return Chem.MolToSmiles(copy, isomericSmiles=True)
 
     upstream_contacts = [

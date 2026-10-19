@@ -20,6 +20,9 @@ def canonical_smiles(mol_or_smiles: Chem.Mol | str, *, maps: bool = False) -> st
     if not maps:
         for atom in mol.GetAtoms():
             atom.SetAtomMapNum(0)
+        # Atom-map labels distinguish otherwise equivalent substituents. Recompute
+        # stereo after removing them (e.g. two equivalent sulfonyl oxygens).
+        Chem.AssignStereochemistry(mol, cleanIt=True, force=True)
     return Chem.MolToSmiles(mol, canonical=True, isomericSmiles=True)
 
 
@@ -38,7 +41,7 @@ def graph_hash(smiles: str) -> str:
         {
             "smiles": canonical_smiles(smiles),
             "rdkit": rdBase.rdkitVersion,
-            "normalization": "canonical-isomeric-preserve-charge-isotope-v1",
+            "normalization": "canonical-isomeric-clean-stereo-after-unmapping-v2",
         }
     )
 
