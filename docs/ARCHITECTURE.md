@@ -1,8 +1,8 @@
 # AgenticGen 项目架构
 
-版本：架构设计 2.1。初稿日期：2026-10-14。更新日期：2026-10-18。需求依据：[完整项目计划](PROJECT_PLAN.md)。
+版本：架构设计 2.2。初稿日期：2026-10-14。更新日期：2026-10-19。需求依据：[完整项目计划](PROJECT_PLAN.md)。
 
-当前运行底座是 `FoundationConfig → base_factory → NativeSynCraftAgent → 固定 pass-K → graph/retro/geometry → SelectionPolicy → base_reporting`，完整覆盖 SynCraft 标准与结合约束模式。Flow 历史属于可选的 EvidenceInjector 输入。模块清单、运行 profile 和已执行范围以[SynCraft 底座说明](SYNCRAFT_FOUNDATION.md)为准。旧 `agenticgen.run.v1` 单轮局部编辑路径保留兼容；以下 H/E 数据采集、inpainting、共享动作池、经验记忆和 worker 集群仍为后续研究契约。
+当前运行底座是 `FoundationConfig → base_factory → NativeSynCraftAgent → 固定 pass-K → graph/retro/geometry → SelectionPolicy → base_reporting`，覆盖 SynCraft 标准与结合约束模式。Flow 历史属于可选的 EvidenceInjector 输入。2026-10-19 新增 `design → 原生 Graph / Fragment inpainting → 实际 pose 评价`，实现与可运行边界见 [FLOWR_INPAINTING.md](FLOWR_INPAINTING.md)。旧 `agenticgen.run.v1` 单轮局部编辑路径保留兼容；以下 H/E 自动数据采集、共享动作池、经验记忆和 worker 集群仍为后续研究契约。
 
 ## 1. 架构目标
 
@@ -213,7 +213,7 @@ class MemoryPort:
 
 L3 独立进程使用专门 graph-inpainting 路径，支持 conformer/random/harmonic 初始化，并明确终态回填、feature keys、词表和 checkpoint 对该模式的兼容性。对最终 RDKit 图核对元素、形式电荷、连接/键级、stereo、连通性与映射；核对失败则拒绝样本。
 
-MolSteer 当前 FlowrRootAdapter 的恢复配方不支持 inpainting，因此本端口需要单独实现。使用 mask-aware API 与现场的约定，不复用不支持 mask 的连续梯度适配器来“近似”该功能。
+AgenticGen 已独立实现该端口，直接调用固定官方版本的 `generate_from_pdb.py`，不复用 MolSteer 不支持 mask 的恢复适配器。Graph 使用官方 harmonic prior，Fragment 使用原生 substructure keep-mask；实际映射、边界规则与模型兼容性以新增适配文档为准。
 
 ### 5.5 SimpRetro 适配器
 
@@ -486,6 +486,6 @@ mock/小样本工程检查仅验证接线；真实后端集成验证与正式研
 
 ## 13. 下一阶段实现边界
 
-M0 首先实现契约、依赖登记、SynCraftEditor、SimpRetro worker、基础 T 策略与预算账本；M1 再接 MolReader 与原始历史。L2 原生探索和 L3 mask-aware inpainting/记忆属于后续模块，其未实现状态不能由现有接口名称掩盖。
+契约、依赖登记、SynCraftEditor、SimpRetro worker、基础 T 策略及原生 mask-aware inpainting 已有实现。L2 原生探索自动采集、L3 迭代策略与经验累计仍需后续实施和等预算对照，其研究效果不能由现有工程接口或单个示例代替。
 
 正式比较前锁定 dataset/split、原料库、模板、LLM/生成器版本、prompt、编辑约束、预算与统计方案。研究发现应回到 H1/H2/H3 对应的对照，不以一个汇总分数替代各机制的证据。

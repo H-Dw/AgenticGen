@@ -20,7 +20,7 @@ def main() -> None:
     checks = {}
     modules = ["rdkit", "pydantic", "httpx", "jsonschema", "meeko", "gemmi", "openbabel", "plip"]
     if args.require_retro:
-        modules.extend(["rdchiral", "syntheseus", "torch", "omegaconf", "networkx"])
+        modules.extend(["rdchiral", "syntheseus", "torch", "omegaconf", "networkx", "graphviz"])
     for name in modules:
         try:
             module = importlib.import_module(name)

@@ -56,7 +56,7 @@ Graph 显式采用官方 `harmonic` 初始化。固定版本中 `random` 路径�
 export SYNCRAFT_STOCK=/workspace/materials/simpretro/emolecules.txt
 export SYNCRAFT_STOCK_INDEX=/workspace/materials/simpretro/stock.sqlite
 export SYNCRAFT_FINGERPRINT_CACHE=/workspace/materials/simpretro/fingerprint_base.pkl
-export SIMP_RETRO_PYTHON=/workspace/envs/simpretro-py310/bin/python
+export SIMP_RETRO_PYTHON=/workspace/envs/agenticgen-simpretro/bin/python
 bash scripts/run_inpainting_example.sh live outputs/ck2_live_with_retro retro
 ```
 

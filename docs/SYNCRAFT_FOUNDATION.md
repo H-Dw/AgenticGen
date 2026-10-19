@@ -2,7 +2,9 @@
 
 2026-10-18 更新：独立严格编辑器已移除，所有运行入口统一采用 `SynCraftEditor` 和原版执行语义；编辑范围只用于提示。裁片不再被二次否决，原始返回值与失败阶段单独保存。当前接口和复测见 [NATIVE_SYNCRAFT_VALIDATION.md](NATIVE_SYNCRAFT_VALIDATION.md)。以下 2026-10-16/17 的严格审计说明及结果属于历史协议。
 
-2026-10-17 更新：已补齐完整发布语料、官方 eMolecules 库存、全模板的内存适配与双模式合并；真实 CK2 示例和非零路线检查的当前记录见 [OFFICIAL_EXAMPLE_VALIDATION.md](OFFICIAL_EXAMPLE_VALIDATION.md)。下文保留 2026-10-16 的实现和验证历史，其“尚未跑通”状态不替代新记录。
+2026-10-19 更新：新增可独立克隆的三个官方子模块、独立 DeepSeek API、设计后延迟评价和两种原生 FLOWR inpainting，详见 [FLOWR_INPAINTING.md](FLOWR_INPAINTING.md)；当前服务器环境与完整模板验收见 [REMOTE_ENVIRONMENT_20261019.md](REMOTE_ENVIRONMENT_20261019.md)。
+
+2026-10-17 更新：已补齐完整发布语料、官方 eMolecules 库存、全模板的内存适配与双模式合并；真实 CK2 示例和非零路线检查的当时记录见 [OFFICIAL_EXAMPLE_VALIDATION.md](OFFICIAL_EXAMPLE_VALIDATION.md)。下文保留 2026-10-16 的实现和验证历史，其“尚未跑通”状态不替代新记录。
 
 更新：2026-10-16。适用范围：CK2 小分子候选的计算方法评估。本文是当前底座的实现与运行说明；2026-10-15 的 `agenticgen.run.v1` 属于保留的旧版局部编辑工程基线。
 

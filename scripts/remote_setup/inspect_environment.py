@@ -10,7 +10,7 @@ import platform
 import shutil
 import subprocess
 import sys
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 MODULES = (
@@ -57,7 +57,8 @@ def collect() -> dict:
         except (ImportError, ValueError) as error:
             modules[name] = {"available": False, "error": str(error)}
     result = {
-        "created_at_utc": datetime.now(UTC).isoformat(),
+        # Also run in the standalone Python 3.10 retrosynthesis worker.
+        "created_at_utc": datetime.now(timezone.utc).isoformat(),  # noqa: UP017
         "python_executable": sys.executable,
         "python_prefix": sys.prefix,
         "python_version": sys.version,

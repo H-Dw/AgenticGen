@@ -30,7 +30,7 @@ mkdir -p -- "$audit_dir"
   'pydantic>=2.8,<3' 'httpx>=0.27' 'jsonschema>=4.21' \
   'loguru>=0.7' 'tqdm>=4.66' 'openai>=1' 'litellm==1.53.1' \
   'more-itertools>=10' 'networkx>=3' 'omegaconf>=2.3' 'pyyaml>=6' \
-  'pandas>=2' rdchiral
+  'pandas>=2' 'graphviz==0.20.3' rdchiral
 
 if ((install_chemistry)); then
   # Do not install a second OpenBabel distribution over an existing conda package.
@@ -51,7 +51,7 @@ if ((install_system)); then
     exit 1
   fi
   apt-get update
-  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-remove --no-install-recommends \
     autodock-vina graphviz libxrender1 libxext6 libsm6
 fi
 
