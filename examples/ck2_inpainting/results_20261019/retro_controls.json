@@ -1,0 +1,74 @@
+{
+  "ok": true,
+  "engineering_controls_only": true,
+  "agent_calls": 0,
+  "inventory_identity": "SimpRetro official eMolecules, not Enamine",
+  "worker_python": "/workspace/envs/agenticgen-simpretro/bin/python",
+  "runtime_note": "Worker package versions are recorded in the environment audit",
+  "controls": {
+    "stock_zero_step": {
+      "smiles": "CCO",
+      "retrosynthesis": {
+        "status": "route_found",
+        "protocol_id": "bd883bac5354184b5be84fa519a68e33949d0238b5d7a74ad1813787e34588a1",
+        "route_verified": true,
+        "elapsed_seconds": 48.09334562346339,
+        "search_statistics": {
+          "index": 0,
+          "smiles": "CCO",
+          "rxn_model_calls_used": 0,
+          "num_nodes_in_final_tree": 1,
+          "soln_time_rxn_model_calls": 0,
+          "soln_time_wallclock": 0.0
+        },
+        "artifact_paths": [
+          "route.json",
+          "worker.log",
+          "route_validation.log",
+          "targets.smi",
+          "request.json",
+          "runtime/emolecules.txt",
+          "runtime/fast_filter/model.py",
+          "runtime/fast_filter/model_smoothbce.pth",
+          "runtime/fast_filter/fingerprint_base.pkl",
+          "runtime/fast_filter/compute_all_fingerprint.py",
+          "search/SimpRetro_2026-10-19T21:24:27/graph.pkl",
+          "search/SimpRetro_2026-10-19T21:24:27/stats.json"
+        ],
+        "reason": "Route graph, inventory leaves and template replay checked"
+      }
+    },
+    "nonzero_route": {
+      "smiles": "CC(C)(C)c1cc(C(=O)Nc2cc(Cl)cc(C(F)(F)F)c2)cc(C(C)(C)C)c1",
+      "retrosynthesis": {
+        "status": "route_found",
+        "protocol_id": "bd883bac5354184b5be84fa519a68e33949d0238b5d7a74ad1813787e34588a1",
+        "route_verified": true,
+        "elapsed_seconds": 151.00139531865716,
+        "search_statistics": {
+          "index": 0,
+          "smiles": "CC(C)(C)c1cc(C(=O)Nc2cc(Cl)cc(C(F)(F)F)c2)cc(C(C)(C)C)c1",
+          "rxn_model_calls_used": 13,
+          "num_nodes_in_final_tree": 1486,
+          "soln_time_rxn_model_calls": 1,
+          "soln_time_wallclock": 5.316577
+        },
+        "artifact_paths": [
+          "route.json",
+          "worker.log",
+          "route_validation.log",
+          "targets.smi",
+          "request.json",
+          "runtime/emolecules.txt",
+          "runtime/fast_filter/model.py",
+          "runtime/fast_filter/model_smoothbce.pth",
+          "runtime/fast_filter/fingerprint_base.pkl",
+          "runtime/fast_filter/compute_all_fingerprint.py",
+          "search/SimpRetro_2026-10-19T21:25:15/graph.pkl",
+          "search/SimpRetro_2026-10-19T21:25:15/stats.json"
+        ],
+        "reason": "Route graph, inventory leaves and template replay checked"
+      }
+    }
+  }
+}

@@ -1,0 +1,567 @@
+{
+  "schema_version": "agenticgen.reference-example.v1",
+  "purpose": "engineering_execution_not_efficacy_benchmark",
+  "source_case": "single_b004_final_027",
+  "execution_kind": "real_api",
+  "api_calls": 2,
+  "api_receipts": [
+    {
+      "provider": "DeepSeek",
+      "provider_request_id": "8e7550a5-aeca-42f3-b620-18ec20cc711b",
+      "requested_model": "deepseek-flash",
+      "returned_model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 3076,
+        "completion_tokens": 386,
+        "total_tokens": 3462,
+        "prompt_cache_hit_tokens": 1536,
+        "prompt_cache_miss_tokens": 1540
+      },
+      "attempts": 1,
+      "finish_reason": "stop",
+      "request_sha256": "78a9211698feed106235d3e38d5acce05be9fab7190ae034c0ba1fb8b8ff3dcc",
+      "response_sha256": "9be830d04f3cc5cdea97d1264deca2b6282f0a547ee178adac4e798f89f8db17"
+    },
+    {
+      "provider": "DeepSeek",
+      "provider_request_id": "1a918ccb-ef44-44e2-8e45-f7faec6c1ec1",
+      "requested_model": "deepseek-flash",
+      "returned_model": "deepseek-flash",
+      "usage": {
+        "prompt_tokens": 3686,
+        "completion_tokens": 434,
+        "total_tokens": 4120,
+        "prompt_cache_hit_tokens": 2560,
+        "prompt_cache_miss_tokens": 1126
+      },
+      "attempts": 1,
+      "finish_reason": "stop",
+      "request_sha256": "aa89e351cd44148b5b56205a1bb963ca368e92fa84771bdedc0cfd68c0fdf365",
+      "response_sha256": "4bed576bd9a44ad3aaf29865b622c1711756ceaaea8a39444254a92e09df803f"
+    }
+  ],
+  "generation_settings": {
+    "flowr_revision": "739a33c2aab74d074dd24605b9a2e34dc809ae9c",
+    "checkpoint": "flowr_root_v2.ckpt",
+    "checkpoint_sha256": "f28e863b2b208718f3d3f85f09837c2f907a71123436db6f98a25d2f1858b6a0",
+    "seed": 42,
+    "samples_per_mode": 1,
+    "integration_steps": 100,
+    "graph_initialization": "harmonic",
+    "final_inpaint": true,
+    "coordinate_source": "SynCraft source redocking pose; distinct from original raw FLOWR terminal pose"
+  },
+  "source": {
+    "sdf": "source.sdf",
+    "sa": 2.8661266424605003,
+    "binding_score_only": {
+      "status": "ok",
+      "protocol_id": "d520938ff7ff097b1a72aa63bf93e198218697d47ad3ccb8c48292ba4e8fba0c",
+      "graph_smiles": "Cc1cccc2c1[nH]c1c3ccncc3c(=O)c3c(C(N)=O)nc2c31",
+      "score_kcal_mol": -11.845,
+      "interactions": [
+        {
+          "kind": "Hydrophobic",
+          "residue": "LEU45.A",
+          "atom_maps": [
+            15
+          ]
+        },
+        {
+          "kind": "Hydrophobic",
+          "residue": "VAL53.A",
+          "atom_maps": [
+            1
+          ]
+        },
+        {
+          "kind": "Hydrophobic",
+          "residue": "PHE113.A",
+          "atom_maps": [
+            4
+          ]
+        },
+        {
+          "kind": "Hydrophobic",
+          "residue": "ILE174.A",
+          "atom_maps": [
+            6
+          ]
+        },
+        {
+          "kind": "Hydrophobic",
+          "residue": "ILE174.A",
+          "atom_maps": [
+            5
+          ]
+        },
+        {
+          "kind": "Hydrophobic",
+          "residue": "ASP175.A",
+          "atom_maps": [
+            1
+          ]
+        },
+        {
+          "kind": "HydrogenBond",
+          "residue": "VAL116.A",
+          "atom_maps": [
+            21
+          ]
+        },
+        {
+          "kind": "HydrogenBond",
+          "residue": "VAL116.A",
+          "atom_maps": [
+            22
+          ]
+        },
+        {
+          "kind": "PiStacking",
+          "residue": "HIS160.A",
+          "atom_maps": [
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ]
+        }
+      ],
+      "prompt": "[CRITICAL BIOLOGICAL CONSTRAINTS; PRESERVE]\nThe following atoms participate in directional protein-ligand contacts (hydrogen bonds, salt bridges, π-stacking, π-cation, halogen bonds). Preserve these contacts in your edits. If the synthesisability fix requires touching one of these atoms, replace it with a bioisostere that is expected to recover the same interaction geometry.\n- Atom with map number [10] (a C atom connected to [C:9, C:11, C:15]) participates in Pi-Stacking with HIS160.A.\n- Atom with map number [11] (a C atom connected to [C:10, C:12]) participates in Pi-Stacking with HIS160.A.\n- Atom with map number [12] (a C atom connected to [C:11, N:13]) participates in Pi-Stacking with HIS160.A.\n- Atom with map number [13] (a N atom connected to [C:12, C:14]) participates in Pi-Stacking with HIS160.A.\n- Atom with map number [14] (a C atom connected to [N:13, C:15]) participates in Pi-Stacking with HIS160.A.\n- Atom with map number [15] (a C atom connected to [C:14, C:16, C:10]) participates in Pi-Stacking with HIS160.A.\n- Atom with map number [21] (a N atom connected to [C:20]) forms a critical Hydrogen Bond with VAL116.A.\n- Atom with map number [22] (a O atom connected to [C:20]) forms a critical Hydrogen Bond with VAL116.A.\n\n[PREFERRED CONTACTS; soft preference]\nThe following atoms contribute weaker, geometrically less reliable contacts (hydrophobic packing, water bridges, metal coordination). Try to keep these contacts when chemically consistent, but they may be relaxed if the synthesisability fix requires it.\n- Atom with map number [1] (a C atom connected to [C:2]) is involved in a Hydrophobic contact with VAL53.A; is involved in a Hydrophobic contact with ASP175.A.\n- Atom with map number [4] (a C atom connected to [C:3, C:5]) is involved in a Hydrophobic contact with PHE113.A.\n- Atom with map number [5] (a C atom connected to [C:4, C:6]) is involved in a Hydrophobic contact with ILE174.A.\n- Atom with map number [6] (a C atom connected to [C:5, C:7, C:24]) is involved in a Hydrophobic contact with ILE174.A.\n- Atom with map number [15] (a C atom connected to [C:14, C:16, C:10]) is involved in a Hydrophobic contact with LEU45.A.",
+      "artifact_paths": [
+        "protocol.json",
+        "docked_pose.sdf",
+        "complex.pdb",
+        "worker.log",
+        "atom_alignment.json",
+        "vina_pose.log",
+        "effective_vina.cfg",
+        "request.json",
+        "input_pose.pdbqt",
+        "plip/complex_protonated.pdb",
+        "plip/complex_report.xml",
+        "plip/plipfixed.complex_5ar_di5b.pdb"
+      ],
+      "reason": null,
+      "evaluation_mode": "score_only",
+      "input_pose_sha256": "ea5f6fa500be4ef257259399bdf27feab69cb394aae5f4dc0b20afb329ebfdce"
+    },
+    "retrosynthesis": {
+      "status": "no_route_within_budget",
+      "protocol_id": "bd883bac5354184b5be84fa519a68e33949d0238b5d7a74ad1813787e34588a1",
+      "route_verified": false,
+      "elapsed_seconds": 139.82093105465174,
+      "search_statistics": {
+        "index": 0,
+        "smiles": "Cc1cccc2c1[nH]c1c3ccncc3c(=O)c3c(C(N)=O)nc2c31",
+        "rxn_model_calls_used": 79,
+        "num_nodes_in_final_tree": 5155,
+        "soln_time_rxn_model_calls": null,
+        "soln_time_wallclock": null
+      },
+      "artifact_paths": [
+        "worker.log",
+        "targets.smi",
+        "request.json",
+        "runtime/emolecules.txt",
+        "runtime/fast_filter/model.py",
+        "runtime/fast_filter/model_smoothbce.pth",
+        "runtime/fast_filter/fingerprint_base.pkl",
+        "runtime/fast_filter/compute_all_fingerprint.py",
+        "search/SimpRetro_2026-10-19T21:36:46/graph.pkl",
+        "search/SimpRetro_2026-10-19T21:36:46/stats.json"
+      ],
+      "reason": "No route reported within the fixed search budget"
+    },
+    "geometry_quality": {
+      "input_pose_sha256": "ea5f6fa500be4ef257259399bdf27feab69cb394aae5f4dc0b20afb329ebfdce",
+      "heavy_atom_count": 25,
+      "extreme_bond_lengths": [],
+      "energy": {
+        "status": "ok",
+        "method": "MMFF94s same-molecule relaxation",
+        "raw_energy_kcal_mol": 103.81246261844151,
+        "relaxed_energy_kcal_mol": 92.32532592921372,
+        "relief_kcal_mol": 11.487136689227796,
+        "relief_per_heavy_atom": 0.45948546756911185,
+        "minimization_converged": true
+      },
+      "interpretation": "Energy relief compares one graph before/after relaxation; absolute energies are not comparable across graphs. These checks do not certify physical validity."
+    }
+  },
+  "designs": [
+    {
+      "proposal_index": 0,
+      "mode": "standard",
+      "status": "rejected",
+      "edits": [
+        [
+          "DEL_ATOM",
+          1
+        ],
+        [
+          "DEL_ATOM",
+          2
+        ],
+        [
+          "DEL_ATOM",
+          3
+        ],
+        [
+          "DEL_ATOM",
+          4
+        ],
+        [
+          "DEL_ATOM",
+          5
+        ],
+        [
+          "DEL_ATOM",
+          6
+        ],
+        [
+          "DEL_ATOM",
+          7
+        ],
+        [
+          "STOP"
+        ]
+      ],
+      "rationale": "The source molecule is a large, highly fused pentacyclic system (a benzo-fused pyrido/pyrimido-quinoline-type core) bearing a primary carboxamide. The key synthetic liabilities are: (1) the very large, rigid polycyclic fused aromatic core, which is difficult to construct regioselectively and in good yield; (2) the primary amide (C(=O)NH2) at C20, which is a metabolic soft spot and adds a polar, potentially unstable handle; and (3) the overall complexity makes analog generation slow.\n\nA pragmatic simplification is to trim the peripheral fused benzene ring (atoms 2-7 region) that contributes little to the central pharmacophore while retaining the pyridine/pyrimidine hydrogen-bonding edge and the carboxamide. Removing the outer benzo ring reduces the fused ring count and simplifies the synthetic route substantially, since the remaining tricyclic core can be assembled from more accessible heteroaromatic building blocks. The carboxamide is retained because it is a plausible key H-bond donor/acceptor pharmacophore; removing it would risk losing activity. The methyl on the benzo ring is removed together with the ring.\n\nUncertainty: without a defined target, the exact pharmacophore is inferred; the modification is a conservative scaffold-trimming that preserves the heteroaromatic H-bonding pattern and the amide.",
+      "graph_reason": "SynCraft product_loading: Invalid or empty molecule"
+    },
+    {
+      "proposal_index": 1,
+      "mode": "interaction_aware",
+      "status": "accepted",
+      "edits": [
+        [
+          "DEL_ATOM",
+          1
+        ],
+        [
+          "STOP"
+        ]
+      ],
+      "rationale": "The molecule is a large, highly fused pentacyclic system (a benzo-fused pyrido/pyrimido-acridine-like core) bearing a primary carboxamide. The main synthetic liabilities are: (1) the very large, rigid, fully fused pentacyclic aromatic core, which is extremely difficult to construct regioselectively and in good yield; and (2) the primary amide (C20(=O22)NH2 21), which is a metabolic soft spot and can complicate synthesis/handling.\n\nHowever, the biological constraints are strict: atoms 10-15 form a critical pi-stacking surface with HIS160, and atoms 21 (N) and 22 (O) form critical hydrogen bonds with VAL116. The amide N21/O22 pair is therefore a key pharmacophore and must be preserved. The pi-stacking ring atoms 10-15 must also be preserved.\n\nThe most defensible synthesisability fix that respects these constraints is to simplify the peripheral fused ring system without touching the protected pharmacophore. The methyl group on the terminal benzene ring (atom 1) is a minor synthetic handle but its removal does not meaningfully simplify the core. A more impactful, conservative edit is to remove the peripheral methyl (atom 1) to reduce one regiochemical variable and eliminate a benzylic metabolic soft spot, while leaving the entire pi-stacking surface (10-15) and the carboxamide H-bond pair (21/22) intact. This is a minimal, chemically sound modification: it preserves all directional contacts and the preferred hydrophobic contacts on the core, and only relaxes the weak hydrophobic contact of the methyl with VAL53/ASP175.\n\nGiven the strict preservation requirements and the risk of disrupting the fused aromatic pi-system, I will make only this minimal, safe edit (deletion of the peripheral methyl) rather than attempting ring contraction that could alter the protected stacking geometry.",
+      "graph_reason": null
+    }
+  ],
+  "outputs": [
+    {
+      "pose_id": "graph_0000",
+      "mode": "graph",
+      "sdf": "graph_0000.sdf",
+      "smiles": "NC(=O)c1nc2c3ccccc3[nH]c3c4ccncc4c(=O)c1c23",
+      "sa": 2.726886315695703,
+      "delta_sa_auxiliary": 0.13924032676479747,
+      "vina_score_only_kcal_mol": 28.783,
+      "vina_loss_same_mode": 40.628,
+      "geometry_quality": {
+        "input_pose_sha256": "64b2441962a3dd778e1b4c1f1558bbe36966a6088450ef01bff7c9a6450b4e8f",
+        "heavy_atom_count": 24,
+        "extreme_bond_lengths": [
+          {
+            "atom_maps": [
+              4,
+              3
+            ],
+            "length_angstrom": 2.856096248378194
+          },
+          {
+            "atom_maps": [
+              7,
+              2
+            ],
+            "length_angstrom": 4.13435791991937
+          },
+          {
+            "atom_maps": [
+              11,
+              10
+            ],
+            "length_angstrom": 2.4043901201760067
+          },
+          {
+            "atom_maps": [
+              14,
+              13
+            ],
+            "length_angstrom": 3.5282154781135464
+          },
+          {
+            "atom_maps": [
+              15,
+              14
+            ],
+            "length_angstrom": 3.387178793627522
+          },
+          {
+            "atom_maps": [
+              17,
+              16
+            ],
+            "length_angstrom": 2.5677523868161454
+          },
+          {
+            "atom_maps": [
+              19,
+              18
+            ],
+            "length_angstrom": 3.1043033179765143
+          },
+          {
+            "atom_maps": [
+              24,
+              6
+            ],
+            "length_angstrom": 3.7046415764551366
+          },
+          {
+            "atom_maps": [
+              25,
+              24
+            ],
+            "length_angstrom": 2.6537794124606524
+          }
+        ],
+        "energy": {
+          "status": "ok",
+          "method": "MMFF94s same-molecule relaxation",
+          "raw_energy_kcal_mol": 108128.99286064756,
+          "relaxed_energy_kcal_mol": 88.58742500988964,
+          "relief_kcal_mol": 108040.40543563767,
+          "relief_per_heavy_atom": 4501.683559818236,
+          "minimization_converged": true
+        },
+        "interpretation": "Energy relief compares one graph before/after relaxation; absolute energies are not comparable across graphs. These checks do not certify physical validity."
+      },
+      "contact_retention": {
+        "status": "ok",
+        "source_contact_count": 9,
+        "retained_count": 1,
+        "fraction": 0.1111111111111111,
+        "paper_recall": 0.42857142857142855,
+        "paper_jaccard": 0.3333333333333333,
+        "paper_definition": "interaction type/residue sets, without ligand-atom IDs; excludes metal contacts",
+        "definition": "exact contact type/residue/source atom-map set; consistent input maps are required"
+      },
+      "retrosynthesis": {
+        "status": "no_route_within_budget",
+        "protocol_id": "bd883bac5354184b5be84fa519a68e33949d0238b5d7a74ad1813787e34588a1",
+        "route_verified": false,
+        "elapsed_seconds": 137.72710902243853,
+        "search_statistics": {
+          "index": 0,
+          "smiles": "NC(=O)c1nc2c3ccccc3[nH]c3c4ccncc4c(=O)c1c23",
+          "rxn_model_calls_used": 74,
+          "num_nodes_in_final_tree": 9266,
+          "soln_time_rxn_model_calls": null,
+          "soln_time_wallclock": null
+        },
+        "artifact_paths": [
+          "worker.log",
+          "targets.smi",
+          "request.json",
+          "runtime/emolecules.txt",
+          "runtime/fast_filter/model.py",
+          "runtime/fast_filter/model_smoothbce.pth",
+          "runtime/fast_filter/fingerprint_base.pkl",
+          "runtime/fast_filter/compute_all_fingerprint.py",
+          "search/SimpRetro_2026-10-19T21:40:58/graph.pkl",
+          "search/SimpRetro_2026-10-19T21:40:58/stats.json"
+        ],
+        "reason": "No route reported within the fixed search budget"
+      },
+      "preservation": {
+        "mode": "graph",
+        "passed": true,
+        "fixed_atom_count": 24,
+        "fixed_coordinates_required": false,
+        "max_fixed_coordinate_deviation_angstrom": 0.0,
+        "coordinate_tolerance_angstrom": 0.05,
+        "deleted_atom_maps": [
+          1
+        ],
+        "deletion_boundary_atom_maps": [
+          2
+        ],
+        "deletion_intent_scope": "fixed boundary attachment counts and bond types",
+        "boundary_constraint_scope": "actual optimized atoms and surviving deletion boundaries only",
+        "checked_optimized_boundaries": [],
+        "boundary_changes": [],
+        "free_boundary_changes": [],
+        "warnings": [],
+        "errors": []
+      }
+    },
+    {
+      "pose_id": "fragment_0000",
+      "mode": "fragment",
+      "sdf": "fragment_0000.sdf",
+      "smiles": "NS(=O)(=O)c1nc2c3ccncc3nc3n2c1Nc1cnccc1-3",
+      "sa": 3.2451799611806544,
+      "delta_sa_auxiliary": -0.37905331872015413,
+      "vina_score_only_kcal_mol": -9.176,
+      "vina_loss_same_mode": 2.6690000000000005,
+      "geometry_quality": {
+        "input_pose_sha256": "9dfdb7251c717bd35dfce06a23adcc7fe0fe166135590ac72bd5ec57ba5edc29",
+        "heavy_atom_count": 24,
+        "extreme_bond_lengths": [],
+        "energy": {
+          "status": "ok",
+          "method": "MMFF94s same-molecule relaxation",
+          "raw_energy_kcal_mol": 951.0558104975432,
+          "relaxed_energy_kcal_mol": 89.97047587706305,
+          "relief_kcal_mol": 861.0853346204801,
+          "relief_per_heavy_atom": 35.87855560918667,
+          "minimization_converged": true
+        },
+        "interpretation": "Energy relief compares one graph before/after relaxation; absolute energies are not comparable across graphs. These checks do not certify physical validity."
+      },
+      "contact_retention": {
+        "status": "ok",
+        "source_contact_count": 9,
+        "retained_count": 5,
+        "fraction": 0.5555555555555556,
+        "paper_recall": 0.42857142857142855,
+        "paper_jaccard": 0.375,
+        "paper_definition": "interaction type/residue sets, without ligand-atom IDs; excludes metal contacts",
+        "definition": "exact contact type/residue/source atom-map set; consistent input maps are required"
+      },
+      "retrosynthesis": {
+        "status": "route_found",
+        "protocol_id": "bd883bac5354184b5be84fa519a68e33949d0238b5d7a74ad1813787e34588a1",
+        "route_verified": true,
+        "elapsed_seconds": 209.27290112152696,
+        "search_statistics": {
+          "index": 0,
+          "smiles": "NS(=O)(=O)c1nc2c3ccncc3nc3n2c1Nc1cnccc1-3",
+          "rxn_model_calls_used": 68,
+          "num_nodes_in_final_tree": 3791,
+          "soln_time_rxn_model_calls": 39,
+          "soln_time_wallclock": 68.653174
+        },
+        "artifact_paths": [
+          "route.json",
+          "worker.log",
+          "route_validation.log",
+          "targets.smi",
+          "request.json",
+          "runtime/emolecules.txt",
+          "runtime/fast_filter/model.py",
+          "runtime/fast_filter/model_smoothbce.pth",
+          "runtime/fast_filter/fingerprint_base.pkl",
+          "runtime/fast_filter/compute_all_fingerprint.py",
+          "search/SimpRetro_2026-10-19T21:43:21/graph.pkl",
+          "search/SimpRetro_2026-10-19T21:43:21/stats.json"
+        ],
+        "reason": "Route graph, inventory leaves and template replay checked"
+      },
+      "preservation": {
+        "mode": "fragment",
+        "passed": true,
+        "fixed_atom_count": 12,
+        "fixed_coordinates_required": true,
+        "max_fixed_coordinate_deviation_angstrom": 0.0,
+        "coordinate_tolerance_angstrom": 0.05,
+        "deleted_atom_maps": [
+          1
+        ],
+        "deletion_boundary_atom_maps": [
+          2
+        ],
+        "deletion_intent_scope": "fixed boundary attachment counts and bond types",
+        "boundary_constraint_scope": "actual optimized atoms and surviving deletion boundaries only",
+        "checked_optimized_boundaries": [
+          {
+            "atom_map": 2,
+            "expected_bond_types": [
+              "AROMATIC",
+              "AROMATIC"
+            ],
+            "observed_bond_types": [
+              "AROMATIC",
+              "AROMATIC"
+            ],
+            "matched": true,
+            "hard_constraint": true
+          }
+        ],
+        "boundary_changes": [
+          {
+            "atom_map": 10,
+            "expected_bond_types": [
+              "AROMATIC"
+            ],
+            "observed_bond_types": [
+              "SINGLE"
+            ],
+            "matched": false,
+            "hard_constraint": false
+          },
+          {
+            "atom_map": 15,
+            "expected_bond_types": [
+              "AROMATIC"
+            ],
+            "observed_bond_types": [
+              "SINGLE"
+            ],
+            "matched": false,
+            "hard_constraint": false
+          }
+        ],
+        "free_boundary_changes": [
+          {
+            "atom_map": 10,
+            "expected_bond_types": [
+              "AROMATIC"
+            ],
+            "observed_bond_types": [
+              "SINGLE"
+            ],
+            "matched": false,
+            "hard_constraint": false
+          },
+          {
+            "atom_map": 15,
+            "expected_bond_types": [
+              "AROMATIC"
+            ],
+            "observed_bond_types": [
+              "SINGLE"
+            ],
+            "matched": false,
+            "hard_constraint": false
+          }
+        ],
+        "warnings": [
+          "External attachment changed at interaction-only fixed atom map 10; native substructure inpainting allows connections to the regenerated region to change. Original contact retention requires downstream evaluation.",
+          "External attachment changed at interaction-only fixed atom map 15; native substructure inpainting allows connections to the regenerated region to change. Original contact retention requires downstream evaluation."
+        ],
+        "errors": []
+      }
+    }
+  ],
+  "optimization_winner": null,
+  "source_run_manifest_sha256": "6a519a3a1b5611a0574ea2360862a70a623890177e504fef30a5290a72125ea7",
+  "run_summary": {
+    "schema_version": "agenticgen.inpainting-summary.v1",
+    "case_count": 1,
+    "proposal_count": 2,
+    "skipped_proposal_count": 1,
+    "failed_proposal_count": 0,
+    "measured_pose_count": 2,
+    "delivered_pose_count": 2,
+    "preservation_eligible_pose_count": 2,
+    "evaluation_infrastructure_error": false,
+    "binding_ok_count": 2,
+    "verified_route_count": 1,
+    "optimization_winner": null,
+    "interpretation": "Engineering execution; model sampling and evaluation are separate. A readable graph, mask pass, lower SA or Vina score alone does not prove synthesis or binding."
+  },
+  "scope": "A verified route means graph consistency, stock membership and template replay; no experimental conditions/yield claim. Neither generated pose is an acceptable overall improvement in this example."
+}

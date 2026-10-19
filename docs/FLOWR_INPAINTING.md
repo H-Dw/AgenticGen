@@ -33,3 +33,5 @@ SynCraft `src/extract_interaction.py::format_interactions_for_llm` 允许为合�
 逐样本 SDF 使用 V3000，避免 V2000 的三位 atom-map 字段截断新原子身份。移除 map 后重新清理立体标记，避免两个化学等价的磺酰氧因不同 map 被误认为手性差异；真实手性仍需保留。对应图哈希采用 `canonical-isomeric-clean-stereo-after-unmapping-v2`；旧版增强包需要按新规范重新导出，不能直接混用旧图哈希。
 
 单个工程例子只验证接口可运行。正式实验需要等预算无 inpainting 对照、固定掩码策略、多个采样种子，以及把结构有效率、可接受保留率、Vina/互作、SA 和固定库存路线结果分别报告。未配置库存时不能宣称完成逆合成验证。
+
+`inpainting_selection.py` 将已评价结构交给现有 SynCraft 选择策略，分开保存代理指标选择和经验证路线子集。源与产物都使用 score-only 基线比较；MMFF 指标单独报告。`summarize` 可从冻结结果重建派生选择，不重复 API、采样或路线搜索。

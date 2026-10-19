@@ -64,4 +64,6 @@ bash scripts/run_inpainting_example.sh live outputs/ck2_live_with_retro retro
 
 控制层与 FLOWR 使用 Python 3.11 环境；固定 SimpRetro 的配置 dataclass 不兼容 Python 3.11，因此逆合成使用独立 Python 3.10 CPU worker。三个 Python 路径分别配置，避免替换 DTK 依赖。上方 worker 路径以实际环境报告为准。
 
-输出包含原始提案、掩码与 map/slot 映射、模型版本/权重哈希、原始及逐样本 SDF、固定区检测、评价结果和运行日志。选择结果暂不自动宣称“优化胜出”，供后续等预算对照分析。
+输出包含原始提案、掩码与 map/slot 映射、模型版本/权重哈希、原始及逐样本 SDF、固定区检测、评价结果和运行日志。只有符合所配选择策略的结果才会进入选择清单；策略胜出也不等于实验性质得到验证。
+
+生成后复用原有 SynCraft 选择策略，以相同 score-only 模式比较源与产物；路线验证子集另行选择。MMFF 指标单独报告，不暗加到原版选择门槛中。保存结果可用 `agenticgen summarize --run RUN/inpainting` 重建派生选择，无须重复 API、模型或逆合成调用。[本次真实验收结果](../../docs/REMOTE_EXAMPLE_VALIDATION_20261019.md)同时保留未整体成功的结构与原因。

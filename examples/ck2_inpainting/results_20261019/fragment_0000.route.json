@@ -1,0 +1,98 @@
+{
+  "route_verified": true,
+  "target": "NS(=O)(=O)c1nc2c3ccncc3nc3n2c1Nc1cnccc1-3",
+  "reactions": [
+    {
+      "product": "NS(=O)(=O)c1nc2c3ccncc3nc3n2c1Nc1cnccc1-3",
+      "reactants": [
+        "COC(CN)OC",
+        "NS(=O)(=O)c1nc2cc(C=O)nc3n2c1Nc1cnccc1-3"
+      ],
+      "matching_template_index": 35972
+    },
+    {
+      "product": "NS(=O)(=O)c1nc2cc(C=O)nc3n2c1Nc1cnccc1-3",
+      "reactants": [
+        "NS(=O)(=O)c1nc2cc(Br)nc3n2c1Nc1cnccc1-3",
+        "O=CN1CCCCC1"
+      ],
+      "matching_template_index": 13481
+    },
+    {
+      "product": "NS(=O)(=O)c1nc2cc(Br)nc3n2c1Nc1cnccc1-3",
+      "reactants": [
+        "NS(=O)(=O)c1nc2cc(Br)nc(Cl)n2c1Nc1cnccc1I"
+      ],
+      "matching_template_index": 19641
+    },
+    {
+      "product": "NS(=O)(=O)c1nc2cc(Br)nc(Cl)n2c1Nc1cnccc1I",
+      "reactants": [
+        "NS(=O)(=O)c1nc2cc(Br)nc(Cl)n2c1Br",
+        "Nc1cnccc1I"
+      ],
+      "matching_template_index": 5094
+    },
+    {
+      "product": "NS(=O)(=O)c1nc2cc(Br)nc(Cl)n2c1Br",
+      "reactants": [
+        "BrBr",
+        "NS(=O)(=O)c1cn2c(Cl)nc(Br)cc2n1"
+      ],
+      "matching_template_index": 3013
+    },
+    {
+      "product": "NS(=O)(=O)c1cn2c(Cl)nc(Br)cc2n1",
+      "reactants": [
+        "Br",
+        "NS(=O)(=O)c1cn2c(Cl)nccc2n1"
+      ],
+      "matching_template_index": 2692
+    },
+    {
+      "product": "NS(=O)(=O)c1cn2c(Cl)nccc2n1",
+      "reactants": [
+        "ClC(Cl)(Cl)C(Cl)(Cl)Cl",
+        "NS(=O)(=O)c1cn2cnccc2n1"
+      ],
+      "matching_template_index": 8288
+    },
+    {
+      "product": "NS(=O)(=O)c1cn2cnccc2n1",
+      "reactants": [
+        "CCN(CC)c1ccccc1",
+        "O=S(=O)(Cl)c1cn2cnccc2n1"
+      ],
+      "matching_template_index": 24764
+    },
+    {
+      "product": "O=S(=O)(Cl)c1cn2cnccc2n1",
+      "reactants": [
+        "O=S(=O)(O)Cl",
+        "c1cc2nccn2cn1"
+      ],
+      "matching_template_index": 38987
+    },
+    {
+      "product": "O=S(=O)(O)Cl",
+      "reactants": [
+        "CCOS(=O)(=O)Cl"
+      ],
+      "matching_template_index": 346
+    }
+  ],
+  "step_count": 10,
+  "leaves": [
+    "Br",
+    "BrBr",
+    "CCN(CC)c1ccccc1",
+    "CCOS(=O)(=O)Cl",
+    "COC(CN)OC",
+    "ClC(Cl)(Cl)C(Cl)(Cl)Cl",
+    "Nc1cnccc1I",
+    "O=CN1CCCCC1",
+    "c1cc2nccn2cn1"
+  ],
+  "inventory_leaves_verified": true,
+  "verification_scope": "graph consistency, inventory membership, RDChiral template replay; no experimental conditions/yield guarantee"
+}

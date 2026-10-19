@@ -1,0 +1,84 @@
+{
+  "mode": "fragment",
+  "passed": true,
+  "fixed_atom_count": 12,
+  "fixed_coordinates_required": true,
+  "max_fixed_coordinate_deviation_angstrom": 0.0,
+  "coordinate_tolerance_angstrom": 0.05,
+  "deleted_atom_maps": [
+    1
+  ],
+  "deletion_boundary_atom_maps": [
+    2
+  ],
+  "deletion_intent_scope": "fixed boundary attachment counts and bond types",
+  "boundary_constraint_scope": "actual optimized atoms and surviving deletion boundaries only",
+  "checked_optimized_boundaries": [
+    {
+      "atom_map": 2,
+      "expected_bond_types": [
+        "AROMATIC",
+        "AROMATIC"
+      ],
+      "observed_bond_types": [
+        "AROMATIC",
+        "AROMATIC"
+      ],
+      "matched": true,
+      "hard_constraint": true
+    }
+  ],
+  "boundary_changes": [
+    {
+      "atom_map": 10,
+      "expected_bond_types": [
+        "AROMATIC"
+      ],
+      "observed_bond_types": [
+        "SINGLE"
+      ],
+      "matched": false,
+      "hard_constraint": false
+    },
+    {
+      "atom_map": 15,
+      "expected_bond_types": [
+        "AROMATIC"
+      ],
+      "observed_bond_types": [
+        "SINGLE"
+      ],
+      "matched": false,
+      "hard_constraint": false
+    }
+  ],
+  "free_boundary_changes": [
+    {
+      "atom_map": 10,
+      "expected_bond_types": [
+        "AROMATIC"
+      ],
+      "observed_bond_types": [
+        "SINGLE"
+      ],
+      "matched": false,
+      "hard_constraint": false
+    },
+    {
+      "atom_map": 15,
+      "expected_bond_types": [
+        "AROMATIC"
+      ],
+      "observed_bond_types": [
+        "SINGLE"
+      ],
+      "matched": false,
+      "hard_constraint": false
+    }
+  ],
+  "warnings": [
+    "External attachment changed at interaction-only fixed atom map 10; native substructure inpainting allows connections to the regenerated region to change. Original contact retention requires downstream evaluation.",
+    "External attachment changed at interaction-only fixed atom map 15; native substructure inpainting allows connections to the regenerated region to change. Original contact retention requires downstream evaluation."
+  ],
+  "errors": []
+}

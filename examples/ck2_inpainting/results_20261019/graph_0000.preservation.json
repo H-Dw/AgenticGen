@@ -1,0 +1,21 @@
+{
+  "mode": "graph",
+  "passed": true,
+  "fixed_atom_count": 24,
+  "fixed_coordinates_required": false,
+  "max_fixed_coordinate_deviation_angstrom": 0.0,
+  "coordinate_tolerance_angstrom": 0.05,
+  "deleted_atom_maps": [
+    1
+  ],
+  "deletion_boundary_atom_maps": [
+    2
+  ],
+  "deletion_intent_scope": "fixed boundary attachment counts and bond types",
+  "boundary_constraint_scope": "actual optimized atoms and surviving deletion boundaries only",
+  "checked_optimized_boundaries": [],
+  "boundary_changes": [],
+  "free_boundary_changes": [],
+  "warnings": [],
+  "errors": []
+}

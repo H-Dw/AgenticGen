@@ -15,6 +15,7 @@ from agenticgen.contracts import BindingResult, GraphEditResult, Observation
 from agenticgen.factory import build_retrosynthesis
 from agenticgen.inpainting import FLOWRInpaintingAdapter, plan_masks
 from agenticgen.inpainting_contracts import InpaintingConfig, InpaintingRequest
+from agenticgen.inpainting_selection import select_poses
 from agenticgen.io import read_json, sha256, utc_now, write_json
 from agenticgen.pose_quality import measure_pose
 from agenticgen.selection import contact_retention
@@ -263,6 +264,9 @@ def inpainting_run(
                 else None,
                 "proposals": records,
             }
+            if evaluation:
+                saved["selection"] = select_poses(saved, evaluation.value.selection)
+                write_json(case_folder / "selection.json", saved["selection"])
             write_json(case_folder / "result.json", saved)
             cases.append(saved)
         if not cases:
@@ -303,6 +307,16 @@ def inpainting_run(
             "optimization_winner": None,
             "interpretation": "Engineering execution; model sampling and evaluation are separate. A readable graph, mask pass, lower SA or Vina score alone does not prove synthesis or binding.",
         }
+        selected = {
+            c["case_id"]: c["selection"]["selected_pose_id"]
+            for c in cases
+            if c.get("selection", {}).get("selected_pose_id")
+        }
+        summary.update(
+            selected_pose_ids=selected,
+            selected_case_count=len(selected),
+            optimization_winner=selected or None,
+        )
         write_json(output / "summary.json", summary)
         manifest["status"] = (
             "partial"

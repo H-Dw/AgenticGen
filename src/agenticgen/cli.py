@@ -20,6 +20,7 @@ from agenticgen.dataset import load_dataset, prepare_ck2
 from agenticgen.design_runner import design_run
 from agenticgen.factory import build_components, build_retrosynthesis
 from agenticgen.inpainting_runner import inpainting_run, load_inpainting
+from agenticgen.inpainting_selection import rebuild_inpainting_selection
 from agenticgen.io import read_json
 from agenticgen.receptor import prepare_receptor
 from agenticgen.reporting import rebuild_summary
@@ -114,6 +115,18 @@ def main(argv: list[str] | None = None) -> int:
             )
             return 0
         if args.command == "summarize":
+            if (
+                read_json(args.run / "manifest.json").get("schema_version")
+                == "agenticgen.inpainting-run.v1"
+            ):
+                print(
+                    json.dumps(
+                        rebuild_inpainting_selection(args.run.resolve()),
+                        ensure_ascii=False,
+                        indent=2,
+                    )
+                )
+                return 0
             summarize = (
                 rebuild_foundation_summary
                 if read_json(args.run / "manifest.json").get("schema_version")

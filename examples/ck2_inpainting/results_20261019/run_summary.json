@@ -1,0 +1,15 @@
+{
+  "schema_version": "agenticgen.inpainting-summary.v1",
+  "case_count": 1,
+  "proposal_count": 2,
+  "skipped_proposal_count": 1,
+  "failed_proposal_count": 0,
+  "measured_pose_count": 2,
+  "delivered_pose_count": 2,
+  "preservation_eligible_pose_count": 2,
+  "evaluation_infrastructure_error": false,
+  "binding_ok_count": 2,
+  "verified_route_count": 1,
+  "optimization_winner": null,
+  "interpretation": "Engineering execution; model sampling and evaluation are separate. A readable graph, mask pass, lower SA or Vina score alone does not prove synthesis or binding."
+}

@@ -6,6 +6,8 @@ AgenticGen 研究分子生成过程中的信息，能否帮助冻结参数的 LL
 
 2026-10-19：新增完整的“SynCraft 设计 → Graph / Fragment inpainting → 实际生成结构评价”入口，以及不依赖兄弟项目路径的 `deepseek-flash` API。不可解析的图默认跳过并记录；互作替换规则与 SynCraft 一致。[可移植 CK2 示例](examples/ck2_inpainting/README.md) · [适配架构](docs/FLOWR_INPAINTING.md) · [远端环境](docs/REMOTE_ENVIRONMENT_20261019.md)。
 
+远端真实示例已完成：两条 API 设计、一条有效图、两种原生结构生成及完整评价。Fragment 找到经验证的库存路线，但未得到同时保留结合与低应力的改进候选。[实际结果与失败记录](docs/REMOTE_EXAMPLE_VALIDATION_20261019.md) · [少量结构文件](examples/ck2_inpainting/results_20261019/README.md)。
+
 ```bash
 git clone --recurse-submodules https://github.com/H-Dw/AgenticGen.git
 cd AgenticGen
