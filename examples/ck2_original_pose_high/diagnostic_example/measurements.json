@@ -1,0 +1,65 @@
+{
+  "purpose": "Fixed diagnostic case and particle_index=0; not chosen by scores; not production comparison",
+  "case_id": "single_b004_final_027",
+  "source": {
+    "sa": 2.8661266424605003,
+    "vina_score_only": -10.107,
+    "posebusters_pass": true,
+    "pic50_fixed_seed_singleton": 8.41289234161377
+  },
+  "diagnostic_first_particles": {
+    "hard_graph": {
+      "pose_id": "graph_seed2039915553_p0000",
+      "status": "measured",
+      "connected": true,
+      "sa_status": "ok",
+      "sa": 2.5636523603864205,
+      "binding_status": "ok",
+      "vina": 32.966,
+      "posebusters_status": "ok",
+      "posebusters_pass": false,
+      "strain_energy_status": "ok",
+      "lineage_present": true,
+      "displacement_status": "ok",
+      "input_sha256": "386471c7f7f8c2623605f28d78b82e986f08fbe4def6c3a37f951623b4c4a59e"
+    },
+    "soft_ce": {
+      "pose_id": "gradient_seed2039915553_p0000",
+      "status": "measured",
+      "connected": true,
+      "sa_status": "ok",
+      "sa": 2.7606137109761306,
+      "binding_status": "ok",
+      "vina": -9.146,
+      "posebusters_status": "ok",
+      "posebusters_pass": true,
+      "strain_energy_status": "ok",
+      "lineage_present": true,
+      "displacement_status": "ok",
+      "input_sha256": "71c6e0635c7966ca04866dfb8b3e29fb76b063347ae6a5f003c2e00d5675fa07"
+    }
+  },
+  "generated_pose_pic50_in_this_small_export": "not included; production worker performs actual final-pose affinity rescoring",
+  "preflight": {
+    "status": "passed",
+    "code_sha256": "eccc9dac873cc5708bc33548d87a62f707963b0bdc1bad0583563cab50223808",
+    "protocol_sha256": "2a4299c180a9aba3cd86eb107dd842019bb3a339fcef1207208264c2d0ea58fc",
+    "checks": {
+      "unguided": "passed",
+      "zero_guidance": "passed",
+      "ce_graph": "passed",
+      "brier": "passed",
+      "graph": "passed",
+      "fragment_graph": "passed",
+      "fragment_graph_pose": "passed",
+      "zero_strength_native_parity": "passed",
+      "matched_priors_and_rng": "passed",
+      "affinity_seed_order_invariance": "passed"
+    }
+  },
+  "files": {
+    "ce_particle_0000.sdf": "71c6e0635c7966ca04866dfb8b3e29fb76b063347ae6a5f003c2e00d5675fa07",
+    "graph_particle_0000.sdf": "386471c7f7f8c2623605f28d78b82e986f08fbe4def6c3a37f951623b4c4a59e",
+    "source.sdf": "e4ce5a2c03e161586579d1217d9719ec471158ecd4d4479a5e6eb19965846893"
+  }
+}

@@ -41,3 +41,11 @@ The campaign emits a durable SQLite ledger, immutable proposal/execution
 receipts, per-particle structures and scores, and coverage-first CSV reports.
 Preflight particles are stored separately and do not enter the 100-particle arm
 budgets. A passing real-checkpoint preflight is required before production.
+
+[One actual diagnostic](diagnostic_example/README.md) contains a source pose,
+the actual model proposal and two fixed-index generated structures, including a
+poor pose and its failed physical checks. It is an interface example, not an
+optimization-success claim.
+
+[执行记录](../../docs/CK2_CAMPAIGN_EXECUTION_20261020.md)记录已通过的检查、
+正式启动证据及当前质量限制；完整参数网格仍在运行。
