@@ -5,7 +5,7 @@ import pytest
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
-from agenticgen.workers.syncraft_geometry import prepare_and_score_pose
+from agenticgen.workers.syncraft_geometry import load_input_pose, prepare_and_score_pose
 
 
 def test_score_only_keeps_supplied_heavy_atoms_and_parses_vina12(tmp_path, monkeypatch):
@@ -65,3 +65,14 @@ def test_pose_graph_mismatch_is_not_silently_reembedded(tmp_path):
         prepare_and_score_pose(
             {"pose_sdf": str(pose)}, None, Chem.MolFromSmiles("[CH3:1][NH2:2]"), tmp_path, None
         )
+
+
+def test_input_pose_can_resolve_an_unspecified_stereocenter(tmp_path):
+    source = Chem.MolFromSmiles("[CH3:1][CH:2]([F:3])[Cl:4]")
+    mol = Chem.AddHs(source)
+    AllChem.EmbedMolecule(mol, randomSeed=42)
+    path = tmp_path / "pose.sdf"
+    with Chem.SDWriter(str(path)) as writer:
+        writer.write(mol)
+    pose = load_input_pose({"pose_sdf": str(path)}, source)
+    assert "@" in Chem.MolToSmiles(pose)

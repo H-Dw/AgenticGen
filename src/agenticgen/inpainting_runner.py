@@ -5,10 +5,12 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+from rdkit import Chem
+
 from agenticgen.adapters.geometry import SynCraftGeometry
 from agenticgen.adapters.properties import RDKitSAEvaluator
 from agenticgen.base_config import FoundationConfiguration
-from agenticgen.chemistry import graph_hash, similarity
+from agenticgen.chemistry import canonical_smiles, graph_hash, similarity
 from agenticgen.contracts import BindingResult, GraphEditResult, Observation
 from agenticgen.factory import build_retrosynthesis
 from agenticgen.inpainting import FLOWRInpaintingAdapter, plan_masks
@@ -16,6 +18,19 @@ from agenticgen.inpainting_contracts import InpaintingConfig, InpaintingRequest
 from agenticgen.io import read_json, sha256, utc_now, write_json
 from agenticgen.pose_quality import measure_pose
 from agenticgen.selection import contact_retention
+
+
+def _find_pose(source_run: Path, preferred: Path, mapped_smiles: str) -> Path:
+    """A deduplicated foundation evaluation may store the pose in another case."""
+    if preferred.is_file():
+        return preferred
+    expected = canonical_smiles(mapped_smiles, maps=True)
+    for path in sorted(source_run.glob("cases/*/geometry_*/docked_pose.sdf")):
+        supplier = Chem.SDMolSupplier(str(path), removeHs=True)
+        if len(supplier) == 1 and supplier[0] is not None:
+            if canonical_smiles(supplier[0], maps=True) == expected:
+                return path
+    return preferred
 
 
 def load_inpainting(path: Path) -> InpaintingConfig:
@@ -87,8 +102,20 @@ def inpainting_run(
             interactions = tuple(
                 sorted({i for c in source_binding.interactions for i in c.atom_maps})
             )
-            source_pose = source_folder / "geometry_original/docked_pose.sdf"
+            source_pose = _find_pose(
+                source_run,
+                source_folder / "geometry_original/docked_pose.sdf",
+                observation.mapped_smiles,
+            )
             source_sa = properties.evaluate(observation.source_smiles)
+            source_retro = None
+            if retro:
+                source_key = graph_hash(observation.source_smiles)
+                if source_key not in retro_cache:
+                    retro_cache[source_key] = retro.evaluate(
+                        observation.source_smiles, case_folder / "retro_source"
+                    )
+                source_retro = retro_cache[source_key]
             source_scored = None
             if geometry and source_pose.is_file():
                 source_scored = geometry.evaluate_pose(
@@ -119,7 +146,11 @@ def inpainting_run(
                 # A rejected/unreadable graph is an expected skip, not a repair input.
                 if execute and any(p.status == "ready" for p in plan_masks(request, config)):
                     try:
-                        pose = source_folder / f"geometry_product_{index:02d}/docked_pose.sdf"
+                        pose = _find_pose(
+                            source_run,
+                            source_folder / f"geometry_product_{index:02d}/docked_pose.sdf",
+                            graph.product_mapped_smiles,
+                        )
                         if not pose.is_file():
                             from agenticgen.pose_initialization import initialize_product_pose
 
@@ -155,6 +186,10 @@ def inpainting_run(
                             )
                             continue
                         pose_path = Path(pose.sdf_path)
+                        try:
+                            quality = measure_pose(pose_path)
+                        except (OSError, ValueError, RuntimeError) as error:
+                            quality = {"status": "error", "reason": str(error)}
                         measured = {
                             "pose_id": pose.pose_id,
                             "mode": pose.mode,
@@ -162,13 +197,21 @@ def inpainting_run(
                             "status": "measured",
                             "mapped_smiles": pose.mapped_smiles,
                             "properties": properties.evaluate(pose.smiles).model_dump(mode="json"),
-                            "geometry_quality": measure_pose(pose_path),
+                            "geometry_quality": quality,
                             "source_similarity": similarity(
                                 observation.source_smiles,
                                 pose.smiles,
                                 evaluation.value.selection.similarity_bits if evaluation else 2048,
                             ),
                         }
+                        product_sa = measured["properties"]
+                        measured["delta_sa_auxiliary"] = (
+                            source_sa.value - product_sa["value"]
+                            if source_sa.status == product_sa["status"] == "ok"
+                            and source_sa.value is not None
+                            and product_sa["value"] is not None
+                            else None
+                        )
                         if geometry:
                             scored = geometry.evaluate_pose(
                                 pose.mapped_smiles, pose_path, folder / f"evaluation_{pose.pose_id}"
@@ -204,6 +247,7 @@ def inpainting_run(
                     "proposal_mode": candidate.get("proposal_mode"),
                     "status": sampled.status,
                     "inpainting_result": str(folder / "inpainting/result.json"),
+                    "sampling_modes": [m.model_dump(mode="json") for m in sampled.mode_results],
                     "evaluations": evaluations,
                 }
                 write_json(folder / "result.json", record)
@@ -211,6 +255,9 @@ def inpainting_run(
             saved = {
                 "case_id": case_id,
                 "source_sa": source_sa.model_dump(mode="json"),
+                "source_retrosynthesis": source_retro.model_dump(mode="json")
+                if source_retro
+                else None,
                 "source_score_only": source_scored.model_dump(mode="json")
                 if source_scored
                 else None,
@@ -228,6 +275,10 @@ def inpainting_run(
             e.get("binding_score_only", {}).get("status") == "infrastructure_error"
             or e.get("retrosynthesis", {}).get("status") == "infrastructure_error"
             for e in measured
+        ) or any(
+            (c.get("source_score_only") or {}).get("status") == "infrastructure_error"
+            or (c.get("source_retrosynthesis") or {}).get("status") == "infrastructure_error"
+            for c in cases
         )
         summary = {
             "schema_version": "agenticgen.inpainting-summary.v1",
@@ -236,6 +287,12 @@ def inpainting_run(
             "skipped_proposal_count": sum(r["status"] == "skipped" for r in records),
             "failed_proposal_count": sum(r["status"] == "failed" for r in records),
             "measured_pose_count": len(measured),
+            "delivered_pose_count": sum(
+                m["delivered_samples"] for r in records for m in r.get("sampling_modes", [])
+            ),
+            "preservation_eligible_pose_count": sum(
+                m["eligible_samples"] for r in records for m in r.get("sampling_modes", [])
+            ),
             "evaluation_infrastructure_error": failed_eval,
             "binding_ok_count": sum(
                 e.get("binding_score_only", {}).get("status") == "ok" for e in measured

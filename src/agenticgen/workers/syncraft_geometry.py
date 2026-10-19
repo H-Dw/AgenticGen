@@ -10,8 +10,8 @@ import sys
 from pathlib import Path
 
 
-def prepare_and_score_pose(job, upstream, source, out, box):
-    """Preserve a supplied pose for score-only/local-only or seeded redocking."""
+def load_input_pose(job, source):
+    """Allow 3D to resolve unspecified stereo, but preserve every mapped graph fact."""
     from rdkit import Chem
 
     supplier = Chem.SDMolSupplier(job["pose_sdf"], removeHs=False)
@@ -20,8 +20,48 @@ def prepare_and_score_pose(job, upstream, source, out, box):
     pose = Chem.RemoveHs(supplier[0])
     if pose.GetNumConformers() != 1 or not pose.GetConformer().Is3D():
         raise ValueError("Input pose has no three-dimensional conformer")
-    if Chem.MolToSmiles(pose, isomericSmiles=True) != Chem.MolToSmiles(source, isomericSmiles=True):
+    before = {a.GetAtomMapNum(): a for a in source.GetAtoms()}
+    after = {a.GetAtomMapNum(): a for a in pose.GetAtoms()}
+    if (
+        0 in before
+        or 0 in after
+        or len(before) != source.GetNumAtoms()
+        or len(after) != pose.GetNumAtoms()
+        or before.keys() != after.keys()
+    ):
         raise ValueError("Input pose graph or atom-map identity differs from requested molecule")
+    for map_id, atom in before.items():
+        other = after[map_id]
+        if (atom.GetAtomicNum(), atom.GetFormalCharge(), atom.GetIsotope()) != (
+            other.GetAtomicNum(),
+            other.GetFormalCharge(),
+            other.GetIsotope(),
+        ):
+            raise ValueError(
+                "Input pose graph or atom-map identity differs from requested molecule"
+            )
+
+    def bonds(mol):
+        return {
+            tuple(sorted((b.GetBeginAtom().GetAtomMapNum(), b.GetEndAtom().GetAtomMapNum()))): str(
+                b.GetBondType()
+            )
+            for b in mol.GetBonds()
+        }
+
+    order = tuple(after[a.GetAtomMapNum()].GetIdx() for a in source.GetAtoms())
+    if bonds(source) != bonds(pose) or order not in pose.GetSubstructMatches(
+        source, useChirality=True, uniquify=False, maxMatches=100000
+    ):
+        raise ValueError("Input pose connectivity or specified stereochemistry differs")
+    return pose
+
+
+def prepare_and_score_pose(job, upstream, source, out, box):
+    """Preserve a supplied pose for score-only/local-only or seeded redocking."""
+    from rdkit import Chem
+
+    pose = load_input_pose(job, source)
     # Add only hydrogen coordinates. Never embed or minimize the supplied heavy atoms.
     pose = Chem.AddHs(pose, addCoords=True)
     prepared = out / "input_pose.pdbqt"
@@ -98,10 +138,12 @@ def run_job(job):
     AllChem.EmbedMolecule = seeded_embed
     if job.get("pose_sdf"):
         docked, score_value = prepare_and_score_pose(job, upstream, source, out, box)
+        source_for_alignment = load_input_pose(job, source)
     else:
         docked = upstream.run_docking(
             job["smiles"], job["receptor_pdbqt"], str(box), str(out / "docking")
         )
+        source_for_alignment = source
     if not docked:
         raise RuntimeError("Upstream Vina failed")
     text = Path(docked).read_text(encoding="utf-8")
@@ -112,7 +154,7 @@ def run_job(job):
         score_value = float(score.group(1))
     # Vina retains Meeko's SMILES IDX metadata. Use that explicit bijection
     # instead of guessing atom identity from the output line order or geometry.
-    atoms = pose_atoms(text, source)
+    atoms = pose_atoms(text, source_for_alignment)
     complex_path = out / "complex.pdb"
     serial_to_map, chain = write_complex(Path(job["receptor_pdb"]), atoms, complex_path)
     plip_out = out / "plip"
@@ -125,7 +167,7 @@ def run_job(job):
         raise ValueError("PLIP produced ambiguous corrected coordinate files")
     corrected_mapping = plip_serial_mapping(fixed[0] if fixed else complex_path, atoms, chain)
     contacts = contacts_from_xml(reports[0], corrected_mapping, chain)
-    original = Chem.RemoveHs(source)
+    original = Chem.RemoveHs(source_for_alignment)
 
     def plain(m):
         copy = Chem.Mol(m)
