@@ -389,3 +389,50 @@ def test_native_padding_and_diagonal_without_objective_are_not_categorical_targe
     conditions["fixed_bond_pairs"].append([0, 2])
     with pytest.raises(ValueError, match="absent from the native reference"):
         targets_from_conditions(conditions, model)
+
+
+def test_probe_resolves_weak_float32_charge_derivative_without_changing_sampling_math():
+    class WeakChargeFlowr(FakeFlowr):
+        def forward(self, batch, pocket_batch, t, cond_batch=None, **kwargs):
+            out = super().forward(batch, pocket_batch, t, cond_batch=cond_batch, **kwargs)
+            # A confident but wrong atom label creates a large unrelated loss.
+            # Charge labels are mostly correct and have a small genuine gradient.
+            out["atomics"] = out["atomics"] + out["atomics"].new_tensor([40.0, 0.0, 0.0])
+            wanted = torch.nn.functional.one_hot(targets().charge_labels, 2).to(out["charges"])
+            out["charges"] = out["charges"] * 0.01 + wanted.unsqueeze(0) * 8.5
+            return out
+
+    model = WeakChargeFlowr().float().eval()
+    batch, pocket = fake_state()
+    batch = {
+        key: value.float() if value.is_floating_point() else value for key, value in batch.items()
+    }
+    controller = FlowrGuidanceController(targets(torch.float32), GuidanceConfig(coordinates=True))
+    times = [torch.tensor([0.4])] * 3
+    x = batch["coords"].detach().clone().requires_grad_(True)
+    out = model({**batch, "coords": x}, pocket, times)
+    world = controller.world_coordinates(model, out, pocket)
+    value, detail = controller.reward(out, world)
+    derivative = torch.autograd.grad(value.sum(), out["charges"])[0]
+    assert float(derivative.norm()) > 1e-5
+    assert detail["charge"].max().item() < 0.001
+    assert detail["total"].min().item() > 5
+    eps = 0.001
+    direction = derivative / derivative.norm()
+    plus, minus = dict(out), dict(out)
+    plus["charges"] = out["charges"] + eps * direction
+    minus["charges"] = out["charges"] - eps * direction
+    with torch.no_grad():
+        old_plus = controller.reward(plus, world)[0].sum()
+        old_minus = controller.reward(minus, world)[0].sum()
+    # This reproduces the actual preflight failure rather than merely asserting
+    # a double dtype: float32 scalar subtraction loses the entire derivative.
+    assert float((old_plus - old_minus) / (2 * eps)) == 0
+    report = probe_model_reward(controller, model, batch, pocket, times, epsilon=eps)
+    charge = report["derivatives"]["charges"]
+    assert charge["finite_difference"] > 1e-5
+    assert charge["relative_error"] < 0.01
+    assert report["passed"]
+    assert report["finite_difference_arithmetic"]["sampling_changed"] is False
+    assert model.scalar.dtype == torch.float32
+    assert out["charges"].dtype == torch.float32

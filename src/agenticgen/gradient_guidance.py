@@ -743,17 +743,32 @@ def probe_model_reward(
                 minus_out, controller.world_coordinates(model, minus_out, pocket_batch)
             )
             compare("current_coordinate_VJP", norm, plus.sum(), minus.sum())
+            # Probe-only copies avoid cancellation of a weak head derivative
+            # inside a much larger float32 total reward. Both the perturbation
+            # and complete scalar loss use float64 on CPU; native model calls,
+            # autograd derivatives, production loss, epsilon and tolerance stay
+            # unchanged. Merely summing already-rounded float32 losses in double
+            # would not recover the missing difference.
+            logit_reference = {
+                key: value.detach().to(device="cpu", dtype=torch.float64)
+                if key in {"atomics", "charges", "bonds", "coords"}
+                else value.detach().cpu()
+                for key, value in out.items()
+                if key in {"atomics", "charges", "bonds", "coords", "mask"}
+            }
+            world_double = world.detach().to(device="cpu", dtype=torch.float64)
             for key, grad in zip(("atomics", "charges", "bonds"), grads[:3], strict=True):
-                norm = grad.norm()
+                direction_gradient = grad.detach().to(device="cpu", dtype=torch.float64)
+                norm = direction_gradient.norm()
                 if float(norm) == 0:
                     records[key] = {"passed": False, "reason": "zero_logit_gradient"}
                     continue
-                direction = grad / norm
-                plus_out, minus_out = detached(out), detached(out)
+                direction = direction_gradient / norm
+                plus_out, minus_out = dict(logit_reference), dict(logit_reference)
                 plus_out[key] = plus_out[key] + epsilon * direction
                 minus_out[key] = minus_out[key] - epsilon * direction
-                plus, _ = controller.reward(plus_out, world.detach())
-                minus, _ = controller.reward(minus_out, world.detach())
+                plus, _ = controller.reward(plus_out, world_double)
+                minus, _ = controller.reward(minus_out, world_double)
                 compare(key, norm, plus.sum(), minus.sum())
         report = {
             "schema_version": "agenticgen.guidance-model-preflight.v1",
@@ -766,6 +781,12 @@ def probe_model_reward(
             "derivatives": records,
             "passed": all(row["passed"] for row in records.values()),
             "validation_scope": "local_real_generator_VJP_and_output_logits_only",
+            "finite_difference_arithmetic": {
+                "current_coordinate_VJP": "unchanged_native_model_and_loss_dtype",
+                "output_logits": "float64_CPU_loss_and_perturbation_on_detached_copies",
+                "analytic_gradients": "unchanged_native_autograd_dtype",
+                "sampling_changed": False,
+            },
         }
         if not report["passed"]:
             raise RuntimeError(f"Guidance real-model finite-difference preflight failed: {report}")

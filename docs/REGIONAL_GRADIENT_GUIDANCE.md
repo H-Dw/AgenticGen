@@ -179,6 +179,13 @@ conditioning. It restores RNG and parameter flags. Numerical failures are not
 silently replaced with identity gradients or detached predictions. These local
 checks do not validate the scientific benefit of the reward.
 
+Endpoint-logit finite differences evaluate detached CPU float64 copies, including
+the perturbation and complete scalar loss. This prevents a weak charge derivative
+from disappearing when subtracted inside a much larger float32 total loss. Native
+model calls, analytical autograd derivatives, current-coordinate finite
+differences, the production reward dtype, epsilon and acceptance tolerance remain
+unchanged. The probe report records this validation-only arithmetic explicitly.
+
 Worker outputs include `guidance_trace.json`, active reward provenance, the
 RewardDesignIR, and a separate real-model probe result when requested. Every step
 records losses, raw logit and coordinate gradient RMS, per-head endpoint KL,
