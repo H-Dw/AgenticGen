@@ -25,7 +25,7 @@ class InpaintingConfig(Record):
     batch_cost: int = Field(default=200, ge=1)
     gpus: int = Field(default=1, ge=0, le=1)
     timeout_seconds: int = Field(default=1800, ge=1, le=86400)
-    graph_initialization: Literal["random", "conformer", "harmonic"] = "random"
+    graph_initialization: Literal["random", "conformer", "harmonic"] = "harmonic"
     cut_pocket: bool = True
     pocket_cutoff: float = Field(default=7.0, gt=0, le=20)
     coordinate_tolerance_angstrom: float = Field(default=0.05, gt=0, le=1)

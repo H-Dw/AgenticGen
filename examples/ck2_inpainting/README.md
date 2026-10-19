@@ -56,9 +56,12 @@ Graph 显式采用官方 `harmonic` 初始化。固定版本中 `random` 路径�
 export SYNCRAFT_STOCK=/workspace/materials/simpretro/emolecules.txt
 export SYNCRAFT_STOCK_INDEX=/workspace/materials/simpretro/stock.sqlite
 export SYNCRAFT_FINGERPRINT_CACHE=/workspace/materials/simpretro/fingerprint_base.pkl
+export SIMP_RETRO_PYTHON=/workspace/envs/simpretro-py310/bin/python
 bash scripts/run_inpainting_example.sh live outputs/ck2_live_with_retro retro
 ```
 
 该设置使用所有 51,720 个模板、每图 120 秒搜索预算，并检查路线图、库存叶子和模板重放；不是论文 Enamine 库存协议。`no_route_within_budget` 不能解释为不可合成。SA、Vina 和单个例子均不足以证明方法优于基线。
+
+控制层与 FLOWR 使用 Python 3.11 环境；固定 SimpRetro 的配置 dataclass 不兼容 Python 3.11，因此逆合成使用独立 Python 3.10 CPU worker。三个 Python 路径分别配置，避免替换 DTK 依赖。上方 worker 路径以实际环境报告为准。
 
 输出包含原始提案、掩码与 map/slot 映射、模型版本/权重哈希、原始及逐样本 SDF、固定区检测、评价结果和运行日志。选择结果暂不自动宣称“优化胜出”，供后续等预算对照分析。

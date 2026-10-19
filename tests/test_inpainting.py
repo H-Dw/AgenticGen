@@ -167,6 +167,7 @@ def test_native_arguments_use_regeneration_indices_without_shell_or_graph_mix(tm
     assert "--canonicalize_conformer" not in frag_args
     assert "--filter_cond_substructure" not in frag_args
     assert "--final_inpaint" in graph_args and "--final_inpaint" in frag_args
+    assert graph_args[graph_args.index("--graph_inpainting") + 1] == "harmonic"
     assert frag_args[1].endswith("pocket with spaces.pdb")
 
 
@@ -248,3 +249,61 @@ def test_moved_fixed_atom_is_reported_but_raw_pose_is_still_available(tmp_path):
     assert result.delivered_samples == 1 and result.eligible_samples == 0
     assert Path(result.poses[0].sdf_path).is_file()
     assert not read_json(Path(result.poses[0].preservation_report_path))["passed"]
+
+
+def _native_ordered_pose(smiles, reference, plan):
+    generated = pose(smiles)
+    generated_maps = {a.GetAtomMapNum(): a.GetIdx() for a in generated.GetAtoms()}
+    reference_maps = {a.GetAtomMapNum(): a.GetIdx() for a in reference.GetAtoms()}
+    fixed = sorted(
+        (slot for slot in plan.atom_slots if slot.fixed), key=lambda slot: slot.flowr_output_slot
+    )
+    for slot in fixed:
+        generated.GetConformer().SetAtomPosition(
+            generated_maps[slot.atom_map],
+            reference.GetConformer().GetAtomPosition(reference_maps[slot.atom_map]),
+        )
+    order = [generated_maps[slot.atom_map] for slot in fixed]
+    order.extend(i for i in range(generated.GetNumAtoms()) if i not in order)
+    return Chem.RenumberAtoms(generated, order)
+
+
+def test_interaction_only_external_connections_are_reported_without_hard_rejection():
+    source = "[CH3:1][CH2:2][CH2:3][CH2:4][OH:5]"
+    product = "[CH3:1][CH2:2][CH2:3][CH2:4][F:5]"
+    _, fragment = plan_masks(
+        request(source=source, product=product, interaction_atom_maps=(2, 3)), config()
+    )
+    reference = pose(product)
+    generated = _native_ordered_pose("[CH3:2][CH:3]([CH3:1])[CH2:4][F:5]", reference, fragment)
+    report = preservation_report(fragment, reference, generated, 0.05)
+    assert report["passed"]
+    assert {b["atom_map"] for b in report["free_boundary_changes"]} == {2, 3}
+    assert {b["atom_map"] for b in report["checked_optimized_boundaries"]} == {5}
+    assert all(b["matched"] for b in report["checked_optimized_boundaries"])
+    assert report["warnings"] and report["max_fixed_coordinate_deviation_angstrom"] == 0
+
+
+def test_actual_optimized_external_connections_remain_hard_constraints():
+    _, fragment = plan_masks(request(interaction_atom_maps=(91,)), config())
+    reference = pose()
+    generated = _native_ordered_pose("[CH2:91]([OH:44])[CH2:7][F:501]", reference, fragment)
+    report = preservation_report(fragment, reference, generated, 0.05)
+    assert not report["passed"]
+    assert any("Optimized boundary attachment differs at map 7" in e for e in report["errors"])
+    assert {b["atom_map"] for b in report["free_boundary_changes"]} == {91}
+    assert {b["atom_map"] for b in report["checked_optimized_boundaries"]} == {7, 501}
+
+
+def test_deletion_boundary_remains_hard_even_when_also_an_interaction_atom():
+    source = "[CH3:91][CH:7]([CH3:20])[OH:44]"
+    _, fragment = plan_masks(
+        request(source=source, product=SOURCE, interaction_atom_maps=(7,)), config()
+    )
+    reference = pose(SOURCE)
+    generated = _native_ordered_pose("[CH3:7][CH2:91][OH:44]", reference, fragment)
+    report = preservation_report(fragment, reference, generated, 0.05)
+    # A deleted-boundary atom may not regain/change an optimized attachment.
+    assert {b["atom_map"] for b in report["checked_optimized_boundaries"]} == {7}
+    assert not report["passed"]
+    assert any("Optimized boundary attachment differs at map 7" in e for e in report["errors"])

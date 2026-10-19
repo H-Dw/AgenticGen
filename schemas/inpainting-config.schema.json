@@ -97,7 +97,7 @@
       "type": "integer"
     },
     "graph_initialization": {
-      "default": "random",
+      "default": "harmonic",
       "enum": [
         "random",
         "conformer",

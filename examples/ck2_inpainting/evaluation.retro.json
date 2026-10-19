@@ -17,7 +17,7 @@
   "retro": {
     "backend": "simpretro_cli",
     "execution": "python",
-    "python": "${AGENTICGEN_PYTHON}",
+    "python": "${SIMP_RETRO_PYTHON}",
     "root": "../../external/SimpRetro",
     "inventory": "${SYNCRAFT_STOCK}",
     "inventory_index": "${SYNCRAFT_STOCK_INDEX}",

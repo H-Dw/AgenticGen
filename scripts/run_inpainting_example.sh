@@ -18,6 +18,7 @@ export VINA_BINARY="${VINA_BINARY:-$(command -v vina)}"
 : "${FLOWR_CHECKPOINT:?Set FLOWR_CHECKPOINT to the released pocket-model checkpoint}"
 evaluation=examples/ck2_inpainting/evaluation.json
 if [[ "$retro" == retro ]]; then
+  : "${SIMP_RETRO_PYTHON:?Set the independent Python 3.10 SimpRetro worker interpreter}"
   : "${SYNCRAFT_STOCK:?Set the official inventory path}"
   : "${SYNCRAFT_STOCK_INDEX:?Set its verified SQLite index path}"
   : "${SYNCRAFT_FINGERPRINT_CACHE:?Set the verified template cache path}"

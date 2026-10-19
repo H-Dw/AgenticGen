@@ -335,6 +335,11 @@ def preservation_report(
     fixed = {slot.atom_map: slot.flowr_output_slot for slot in plan.atom_slots if slot.fixed}
     errors = []
     differences = []
+    boundary_changes = []
+    free_boundary_changes = []
+    checked_optimized_boundaries = []
+    warnings = []
+    hard_boundaries = set(plan.optimized_atom_maps) | set(plan.deletion_boundary_atom_maps)
     if generated.GetNumConformers() == 0 or not generated.GetConformer().Is3D():
         errors.append("Generated molecule lacks a 3D conformer")
     if generated.GetNumConformers() and not all(
@@ -358,8 +363,27 @@ def preservation_report(
                 for b in actual.GetBonds()
                 if b.GetOtherAtomIdx(slot) not in out_fixed_slots
             )
-            if attachments != plan.fixed_attachment_bonds[map_id]:
-                differences.append(f"Fixed boundary attachment differs at map {map_id}")
+            expected_attachments = plan.fixed_attachment_bonds[map_id]
+            boundary = {
+                "atom_map": map_id,
+                "expected_bond_types": expected_attachments,
+                "observed_bond_types": attachments,
+                "matched": attachments == expected_attachments,
+                "hard_constraint": map_id in hard_boundaries,
+            }
+            if map_id in hard_boundaries:
+                checked_optimized_boundaries.append(boundary)
+            if not boundary["matched"]:
+                boundary_changes.append(boundary)
+                if map_id in hard_boundaries:
+                    differences.append(f"Optimized boundary attachment differs at map {map_id}")
+                else:
+                    free_boundary_changes.append(boundary)
+                    warnings.append(
+                        f"External attachment changed at interaction-only fixed atom map {map_id}; "
+                        "native substructure inpainting allows connections to the regenerated "
+                        "region to change. Original contact retention requires downstream evaluation."
+                    )
             if generated.GetNumConformers() and reference.GetNumConformers():
                 left = reference.GetConformer().GetAtomPosition(expected.GetIdx())
                 right = generated.GetConformer().GetAtomPosition(slot)
@@ -395,6 +419,11 @@ def preservation_report(
         "deleted_atom_maps": plan.deleted_atom_maps,
         "deletion_boundary_atom_maps": plan.deletion_boundary_atom_maps,
         "deletion_intent_scope": "fixed boundary attachment counts and bond types",
+        "boundary_constraint_scope": "actual optimized atoms and surviving deletion boundaries only",
+        "checked_optimized_boundaries": checked_optimized_boundaries,
+        "boundary_changes": boundary_changes,
+        "free_boundary_changes": free_boundary_changes,
+        "warnings": warnings,
         "errors": errors,
     }
 
