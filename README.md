@@ -11,7 +11,7 @@ AgenticGen 研究分子生成过程中的信息，能否帮助冻结参数的 LL
 ```bash
 git clone --recurse-submodules https://github.com/H-Dw/AgenticGen.git
 cd AgenticGen
-python -m pip install -e '.[syncraft]'
+python -m pip install -e '.[syncraft,dev]'
 # 模型环境、权重及受体配置见上方示例；普通笔记本可先执行无模型测试
 python -m pytest -q
 ```
