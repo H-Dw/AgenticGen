@@ -1,0 +1,52 @@
+{
+  "schema_version": "agenticgen.syncraft.v1",
+  "dataset": "cases.json",
+  "mode": "dual",
+  "pass_k": 2,
+  "syncraft": {
+    "root": "../../../../outputs/research/syncraft_flowr_20261003/SynCraft-Core",
+    "expected_revision": "557703e110b26a354afed2955ded5217837f6692",
+    "few_shot_count": 5
+  },
+  "llm": {
+    "backend": "evomolsteer_deepseek",
+    "model": "deepseek-flash",
+    "evomolsteer_root": "../../../../EvoMolSteer",
+    "max_output_tokens": 8192
+  },
+  "selection": {
+    "policy": "skill_sa_binding",
+    "similarity_threshold": 0.2,
+    "similarity_bits": 2048,
+    "vina_loss_budget": 1,
+    "require_verified_route": true
+  },
+  "enhancements": {
+    "enabled": false
+  },
+  "geometry": {
+    "backend": "syncraft_worker",
+    "execution": "docker",
+    "image": "agenticgen-syncraft-worker:20261015",
+    "receptor_pdbqt": "../../outputs/ck2_receptor_prepared/receptor.pdbqt",
+    "receptor_pdb": "../../outputs/ck2_receptor_prepared/receptor.pdb",
+    "vina_config": "../../outputs/ck2_receptor_prepared/vina.cfg",
+    "seed": 42,
+    "exhaustiveness": 8,
+    "cpu_threads": 1
+  },
+  "retro": {
+    "backend": "simpretro_cli",
+    "execution": "docker",
+    "image": "agenticgen-simpretro-worker:20261016",
+    "root": "../../external/SimpRetro",
+    "inventory": "../../data/inventories/simpretro_official/emolecules.txt",
+    "inventory_index": "../../data/inventories/simpretro_official/stock.sqlite",
+    "fingerprint_cache": "../../data/processed/simpretro/fingerprint_base.pkl",
+    "templates": "../../external/SimpRetro/SimpRetro_templates.json",
+    "expected_revision": "5abbdd12d23bec3b0c524a3f5e59d160beac00f3",
+    "time_limit_seconds": 120,
+    "process_grace_seconds": 300,
+    "cpu_threads": 1
+  }
+}

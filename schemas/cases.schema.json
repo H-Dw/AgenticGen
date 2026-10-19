@@ -1,0 +1,115 @@
+{
+  "$defs": {
+    "SourceCase": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "pattern": "^[A-Za-z0-9_-]+$",
+          "title": "Case Id",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        },
+        "smiles": {
+          "title": "Smiles",
+          "type": "string"
+        },
+        "selection_rank": {
+          "minimum": 1,
+          "title": "Selection Rank",
+          "type": "integer"
+        },
+        "source_metrics": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "title": "Source Metrics",
+          "type": "object"
+        },
+        "provenance": {
+          "additionalProperties": true,
+          "title": "Provenance",
+          "type": "object"
+        },
+        "sdf_record_index": {
+          "minimum": 0,
+          "title": "Sdf Record Index",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "case_id",
+        "target",
+        "smiles",
+        "selection_rank",
+        "source_metrics",
+        "provenance",
+        "sdf_record_index"
+      ],
+      "title": "SourceCase",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "agenticgen.cases.v1",
+      "default": "agenticgen.cases.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "purpose": {
+      "const": "engineering_example",
+      "default": "engineering_example",
+      "title": "Purpose",
+      "type": "string"
+    },
+    "selection_rule": {
+      "title": "Selection Rule",
+      "type": "string"
+    },
+    "source_files": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Source Files",
+      "type": "object"
+    },
+    "sdf_file": {
+      "title": "Sdf File",
+      "type": "string"
+    },
+    "sdf_sha256": {
+      "title": "Sdf Sha256",
+      "type": "string"
+    },
+    "cases": {
+      "items": {
+        "$ref": "#/$defs/SourceCase"
+      },
+      "title": "Cases",
+      "type": "array"
+    }
+  },
+  "required": [
+    "selection_rule",
+    "source_files",
+    "sdf_file",
+    "sdf_sha256",
+    "cases"
+  ],
+  "title": "CaseDataset",
+  "type": "object"
+}

@@ -1,0 +1,469 @@
+{
+  "$defs": {
+    "AtomSlot": {
+      "additionalProperties": false,
+      "properties": {
+        "atom_map": {
+          "title": "Atom Map",
+          "type": "integer"
+        },
+        "source_rdkit_index": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Source Rdkit Index"
+        },
+        "product_rdkit_index": {
+          "title": "Product Rdkit Index",
+          "type": "integer"
+        },
+        "input_slot": {
+          "title": "Input Slot",
+          "type": "integer"
+        },
+        "flowr_output_slot": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Flowr Output Slot"
+        },
+        "fixed": {
+          "title": "Fixed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "atom_map",
+        "source_rdkit_index",
+        "product_rdkit_index",
+        "input_slot",
+        "flowr_output_slot",
+        "fixed"
+      ],
+      "title": "AtomSlot",
+      "type": "object"
+    },
+    "InpaintingModeResult": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "graph",
+            "fragment"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "planned",
+            "completed",
+            "skipped",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "seed": {
+          "title": "Seed",
+          "type": "integer"
+        },
+        "requested_samples": {
+          "title": "Requested Samples",
+          "type": "integer"
+        },
+        "delivered_samples": {
+          "default": 0,
+          "title": "Delivered Samples",
+          "type": "integer"
+        },
+        "eligible_samples": {
+          "default": 0,
+          "title": "Eligible Samples",
+          "type": "integer"
+        },
+        "poses": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/PoseArtifact"
+          },
+          "title": "Poses",
+          "type": "array"
+        },
+        "raw_sdf_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Raw Sdf Path"
+        },
+        "artifact_paths": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Artifact Paths",
+          "type": "array"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "mode",
+        "status",
+        "seed",
+        "requested_samples"
+      ],
+      "title": "InpaintingModeResult",
+      "type": "object"
+    },
+    "MaskPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "graph",
+            "fragment"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ready",
+            "skipped"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        },
+        "warnings": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Warnings",
+          "type": "array"
+        },
+        "product_mapped_smiles": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Product Mapped Smiles"
+        },
+        "interaction_atom_maps": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Interaction Atom Maps",
+          "type": "array"
+        },
+        "interaction_policy": {
+          "default": "syncraft_compatible",
+          "enum": [
+            "syncraft_compatible",
+            "strict"
+          ],
+          "title": "Interaction Policy",
+          "type": "string"
+        },
+        "interaction_surviving_atom_maps": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Interaction Surviving Atom Maps",
+          "type": "array"
+        },
+        "interaction_deleted_atom_maps": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Interaction Deleted Atom Maps",
+          "type": "array"
+        },
+        "interaction_changed_atom_maps": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Interaction Changed Atom Maps",
+          "type": "array"
+        },
+        "optimized_atom_maps": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Optimized Atom Maps",
+          "type": "array"
+        },
+        "deleted_atom_maps": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Deleted Atom Maps",
+          "type": "array"
+        },
+        "deletion_boundary_atom_maps": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Deletion Boundary Atom Maps",
+          "type": "array"
+        },
+        "fixed_atom_maps": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Fixed Atom Maps",
+          "type": "array"
+        },
+        "fixed_input_slots": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Fixed Input Slots",
+          "type": "array"
+        },
+        "regenerate_input_slots": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Regenerate Input Slots",
+          "type": "array"
+        },
+        "atom_slots": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/AtomSlot"
+          },
+          "title": "Atom Slots",
+          "type": "array"
+        },
+        "cli_substructure_indices": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Cli Substructure Indices",
+          "type": "array"
+        },
+        "fixed_pair_bonds": {
+          "default": [],
+          "items": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "title": "Fixed Pair Bonds",
+          "type": "array"
+        },
+        "fixed_attachment_bonds": {
+          "additionalProperties": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "default": {},
+          "title": "Fixed Attachment Bonds",
+          "type": "object"
+        }
+      },
+      "required": [
+        "mode",
+        "status"
+      ],
+      "title": "MaskPlan",
+      "type": "object"
+    },
+    "PoseArtifact": {
+      "additionalProperties": false,
+      "properties": {
+        "pose_id": {
+          "title": "Pose Id",
+          "type": "string"
+        },
+        "mode": {
+          "enum": [
+            "graph",
+            "fragment"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "sdf_path": {
+          "title": "Sdf Path",
+          "type": "string"
+        },
+        "record_index": {
+          "default": 0,
+          "title": "Record Index",
+          "type": "integer"
+        },
+        "smiles": {
+          "title": "Smiles",
+          "type": "string"
+        },
+        "mapped_smiles": {
+          "title": "Mapped Smiles",
+          "type": "string"
+        },
+        "accepted_for_evaluation": {
+          "title": "Accepted For Evaluation",
+          "type": "boolean"
+        },
+        "preservation_report_path": {
+          "title": "Preservation Report Path",
+          "type": "string"
+        },
+        "coordinate_frame": {
+          "const": "pocket_input",
+          "default": "pocket_input",
+          "title": "Coordinate Frame",
+          "type": "string"
+        }
+      },
+      "required": [
+        "pose_id",
+        "mode",
+        "sdf_path",
+        "smiles",
+        "mapped_smiles",
+        "accepted_for_evaluation",
+        "preservation_report_path"
+      ],
+      "title": "PoseArtifact",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "agenticgen.inpainting.v1",
+      "default": "agenticgen.inpainting.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "proposal_id": {
+      "title": "Proposal Id",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "planned",
+        "completed",
+        "partial",
+        "skipped",
+        "failed"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "plans": {
+      "items": {
+        "$ref": "#/$defs/MaskPlan"
+      },
+      "title": "Plans",
+      "type": "array"
+    },
+    "mode_results": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/InpaintingModeResult"
+      },
+      "title": "Mode Results",
+      "type": "array"
+    },
+    "artifact_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Artifact Paths",
+      "type": "array"
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reason"
+    }
+  },
+  "required": [
+    "case_id",
+    "proposal_id",
+    "status",
+    "plans"
+  ],
+  "title": "InpaintingResult",
+  "type": "object"
+}

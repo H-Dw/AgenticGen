@@ -1,0 +1,36 @@
+{
+  "schema_version": "agenticgen.syncraft.v1",
+  "dataset": "ck2_one.json",
+  "mode": "interaction_aware",
+  "pass_k": 5,
+  "syncraft": {
+    "root": "../../../../outputs/research/syncraft_flowr_20261003/SynCraft-Core",
+    "expected_revision": "557703e110b26a354afed2955ded5217837f6692",
+    "few_shot_count": 5
+  },
+  "llm": {
+    "backend": "replay",
+    "model": "deepseek-flash",
+    "replay_file": "native_replay.json"
+  },
+  "selection": {
+    "policy": "skill_sa_binding",
+    "similarity_threshold": 0.2,
+    "similarity_bits": 2048,
+    "vina_loss_budget": 1
+  },
+  "enhancements": {
+    "enabled": false
+  },
+  "geometry": {
+    "backend": "syncraft_worker",
+    "execution": "docker",
+    "image": "agenticgen-syncraft-worker:20261015",
+    "receptor_pdbqt": "../../outputs/ck2_receptor_prepared/receptor.pdbqt",
+    "receptor_pdb": "../../outputs/ck2_receptor_prepared/receptor.pdb",
+    "vina_config": "../../outputs/ck2_receptor_prepared/vina.cfg",
+    "seed": 42,
+    "exhaustiveness": 8,
+    "cpu_threads": 1
+  }
+}

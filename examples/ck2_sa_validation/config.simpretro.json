@@ -1,0 +1,51 @@
+{
+  "schema_version": "agenticgen.run.v1",
+  "dataset": "cases.json",
+  "arm": "T",
+  "proposals_per_case": 1,
+  "syncraft": {
+    "root": "../../../../outputs/research/syncraft_flowr_20261003/SynCraft-Core",
+    "expected_revision": "557703e110b26a354afed2955ded5217837f6692",
+    "few_shot_count": 5
+  },
+  "llm": {
+    "backend": "evomolsteer_deepseek",
+    "evomolsteer_root": "../../../../EvoMolSteer",
+    "model": "deepseek-flash",
+    "timeout_seconds": 240,
+    "network_attempts": 3,
+    "max_format_repairs": 1,
+    "max_output_tokens": 4096,
+    "replay_file": null
+  },
+  "retro": {
+    "backend": "simpretro_cli",
+    "root": "${SIMPRETRO_ROOT}",
+    "python": "${SIMPRETRO_PYTHON}",
+    "inventory": "${SIMPRETRO_INVENTORY}",
+    "templates": "${SIMPRETRO_TEMPLATES}",
+    "time_limit_seconds": 1800,
+    "process_grace_seconds": 300,
+    "cpu_threads": 1,
+    "seed": 0,
+    "expected_revision": "5abbdd12d23bec3b0c524a3f5e59d160beac00f3"
+  },
+  "constraints": {
+    "max_operations": 6,
+    "max_added_atoms": 2,
+    "max_deleted_atoms": 2,
+    "min_similarity": 0.5,
+    "allowed_elements": [
+      "C",
+      "N",
+      "O",
+      "F",
+      "P",
+      "S",
+      "Cl",
+      "Br",
+      "I"
+    ],
+    "protected_atom_maps": []
+  }
+}

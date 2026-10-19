@@ -1,0 +1,53 @@
+{
+  "schema_version": "agenticgen.syncraft.v1",
+  "dataset": "cases.json",
+  "mode": "interaction_aware",
+  "pass_k": 1,
+  "syncraft": {
+    "root": "../../external/SynCraft-Core",
+    "expected_revision": "557703e110b26a354afed2955ded5217837f6692",
+    "few_shot_count": 5
+  },
+  "llm": {
+    "backend": "replay",
+    "model": "deepseek-flash",
+    "replay_file": "replay.json",
+    "max_output_tokens": 8192
+  },
+  "retro": {
+    "backend": "simpretro_cli",
+    "execution": "python",
+    "python": "${AGENTICGEN_PYTHON}",
+    "root": "../../external/SimpRetro",
+    "inventory": "${SYNCRAFT_STOCK}",
+    "inventory_index": "${SYNCRAFT_STOCK_INDEX}",
+    "fingerprint_cache": "${SYNCRAFT_FINGERPRINT_CACHE}",
+    "templates": "../../external/SimpRetro/SimpRetro_templates.json",
+    "expected_revision": "5abbdd12d23bec3b0c524a3f5e59d160beac00f3",
+    "time_limit_seconds": 120,
+    "process_grace_seconds": 300,
+    "cpu_threads": 1
+  },
+  "geometry": {
+    "backend": "syncraft_worker",
+    "execution": "python",
+    "python": "${AGENTICGEN_PYTHON}",
+    "receptor_pdbqt": "inputs/receptor.pdbqt",
+    "receptor_pdb": "inputs/receptor.pdb",
+    "vina_config": "inputs/vina.cfg",
+    "vina_binary": "${VINA_BINARY}",
+    "seed": 42,
+    "exhaustiveness": 8,
+    "cpu_threads": 1
+  },
+  "selection": {
+    "policy": "skill_sa_binding",
+    "similarity_threshold": 0.2,
+    "similarity_bits": 2048,
+    "vina_loss_budget": 1,
+    "require_verified_route": true
+  },
+  "enhancements": {
+    "enabled": false
+  }
+}

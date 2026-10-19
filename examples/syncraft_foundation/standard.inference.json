@@ -1,0 +1,23 @@
+{
+  "schema_version": "agenticgen.syncraft.v1",
+  "dataset": "ck2_one.json",
+  "mode": "standard",
+  "pass_k": 5,
+  "syncraft": {
+    "root": "../../../../outputs/research/syncraft_flowr_20261003/SynCraft-Core",
+    "expected_revision": "557703e110b26a354afed2955ded5217837f6692",
+    "few_shot_count": 5
+  },
+  "llm": {
+    "backend": "evomolsteer_deepseek",
+    "model": "deepseek-flash",
+    "evomolsteer_root": "../../../../EvoMolSteer",
+    "max_output_tokens": 8192
+  },
+  "selection": {
+    "policy": "proposal_only"
+  },
+  "enhancements": {
+    "enabled": false
+  }
+}

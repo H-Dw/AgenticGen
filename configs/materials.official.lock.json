@@ -1,0 +1,45 @@
+{
+  "schema_version": "agenticgen.materials-lock.v1",
+  "stock_identity": "SimpRetro official eMolecules; not paper Enamine",
+  "stock_source": "https://github.com/catalystforyou/SimpRetro",
+  "corpus_source": "https://doi.org/10.6084/m9.figshare.33201870",
+  "stock_count": 23081629,
+  "template_count": 51720,
+  "corpus_count": 3332,
+  "assets": {
+    "official_stock": {
+      "path": "data/inventories/simpretro_official/emolecules.txt",
+      "bytes": 896953382,
+      "sha256": "eb0ff886bcb5d2b71f935ed1658576deb7b2ead84adeffe912ed09f33efc4815"
+    },
+    "stock_index": {
+      "path": "data/inventories/simpretro_official/stock.sqlite",
+      "bytes": 1145806848,
+      "sha256": "e331541d526f2b6cf78b346bae740a226e553d70d7fb7a00f4ab1b82b7ea3fb3"
+    },
+    "template_cache": {
+      "path": "data/processed/simpretro/fingerprint_base.pkl",
+      "bytes": 646617736,
+      "sha256": "4c73c4caefdf0bcefe3667d1d9163649b6f2c5971179fa26b833159f3802ba54"
+    },
+    "templates": {
+      "path": "external/SimpRetro/SimpRetro_templates.json",
+      "bytes": 9178031,
+      "sha256": "f3a0546b1cd50c463a1df2b665ffe8d14e021f5babfc13c749601f469518a00f"
+    },
+    "filter_weights": {
+      "path": "external/SimpRetro/fast_filter/model_smoothbce.pth",
+      "bytes": 67161187,
+      "sha256": "51fe87ad60c667389efb042ad038d8b738f245f573d95430477c20c689ee43b5"
+    },
+    "reference_corpus": {
+      "path": "data/raw/syncraft_release/cliff_pairs.json",
+      "bytes": 6176692,
+      "sha256": "3e2d92d6eb6843e1fc02a6b29e9a4c122c900d8f72a9512f79008406c22b3a52"
+    }
+  },
+  "images": {
+    "agenticgen-simpretro-worker:20261016": "sha256:b74285f58129bc7970e6a378b5908021aa7364cdcc0196e11773d82cc0810afb",
+    "agenticgen-syncraft-worker:20261015": "sha256:1976c11f040cdd846baaf96196b11acae94bfae9641438685e5c58be42b1ce6e"
+  }
+}

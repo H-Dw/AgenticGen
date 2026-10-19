@@ -1,0 +1,125 @@
+{
+  "$defs": {
+    "EditConstraints": {
+      "additionalProperties": false,
+      "description": "Prompt guidance; native SynCraft reconstruction does not enforce these limits.",
+      "properties": {
+        "max_operations": {
+          "default": 6,
+          "maximum": 256,
+          "minimum": 1,
+          "title": "Max Operations",
+          "type": "integer"
+        },
+        "max_added_atoms": {
+          "default": 2,
+          "minimum": 0,
+          "title": "Max Added Atoms",
+          "type": "integer"
+        },
+        "max_deleted_atoms": {
+          "default": 2,
+          "minimum": 0,
+          "title": "Max Deleted Atoms",
+          "type": "integer"
+        },
+        "min_similarity": {
+          "default": 0.5,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Min Similarity",
+          "type": "number"
+        },
+        "allowed_elements": {
+          "default": [
+            "C",
+            "N",
+            "O",
+            "F",
+            "P",
+            "S",
+            "Cl",
+            "Br",
+            "I"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Elements",
+          "type": "array"
+        },
+        "protected_atom_maps": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Protected Atom Maps",
+          "type": "array"
+        }
+      },
+      "title": "EditConstraints",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Terminal-only v1. Historical/route labels cannot enter via arbitrary fields.",
+  "properties": {
+    "schema_version": {
+      "const": "agenticgen.observation.v1",
+      "default": "agenticgen.observation.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "target": {
+      "title": "Target",
+      "type": "string"
+    },
+    "source_smiles": {
+      "title": "Source Smiles",
+      "type": "string"
+    },
+    "mapped_smiles": {
+      "title": "Mapped Smiles",
+      "type": "string"
+    },
+    "graph_sha256": {
+      "title": "Graph Sha256",
+      "type": "string"
+    },
+    "terminal_metrics": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "string"
+          },
+          {
+            "type": "boolean"
+          }
+        ]
+      },
+      "title": "Terminal Metrics",
+      "type": "object"
+    },
+    "constraints": {
+      "$ref": "#/$defs/EditConstraints"
+    }
+  },
+  "required": [
+    "case_id",
+    "target",
+    "source_smiles",
+    "mapped_smiles",
+    "graph_sha256",
+    "terminal_metrics",
+    "constraints"
+  ],
+  "title": "Observation",
+  "type": "object"
+}

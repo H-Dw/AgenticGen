@@ -1,0 +1,126 @@
+{
+  "$defs": {
+    "Interaction": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "residue": {
+          "title": "Residue",
+          "type": "string"
+        },
+        "atom_maps": {
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 1,
+          "title": "Atom Maps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "kind",
+        "residue",
+        "atom_maps"
+      ],
+      "title": "Interaction",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "status": {
+      "enum": [
+        "ok",
+        "not_run",
+        "infrastructure_error"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "protocol_id": {
+      "title": "Protocol Id",
+      "type": "string"
+    },
+    "graph_smiles": {
+      "title": "Graph Smiles",
+      "type": "string"
+    },
+    "score_kcal_mol": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Score Kcal Mol"
+    },
+    "interactions": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Interaction"
+      },
+      "title": "Interactions",
+      "type": "array"
+    },
+    "prompt": {
+      "default": "",
+      "title": "Prompt",
+      "type": "string"
+    },
+    "artifact_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Artifact Paths",
+      "type": "array"
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reason"
+    },
+    "evaluation_mode": {
+      "default": "redock",
+      "enum": [
+        "redock",
+        "score_only",
+        "local_only"
+      ],
+      "title": "Evaluation Mode",
+      "type": "string"
+    },
+    "input_pose_sha256": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Input Pose Sha256"
+    }
+  },
+  "required": [
+    "status",
+    "protocol_id",
+    "graph_smiles"
+  ],
+  "title": "BindingResult",
+  "type": "object"
+}

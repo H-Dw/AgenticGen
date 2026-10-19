@@ -1,0 +1,14 @@
+{
+  "receptor": "CK2 3PE1 aligned receptor, inherited computational preparation; no experimental affinity claims",
+  "source_structure": "EvoMolSteer/data/reference_terminal/original/inputs/3PE1_protein_aligned.pdb",
+  "preparation": "AgenticGen prepare-ck2-receptor; published receptor includes docking box and PDBQT",
+  "files": {
+    "cases.sdf": "43cfbe9788ceb27a4e6e070ae5093df3dc7e19ded98cefc3b82bf987d034d3a3",
+    "receptor.pdb": "ec716ecf29024f5da6c19ebf605ebb17a270aee43fa14f56dbac61d88b133a04",
+    "receptor.pdbqt": "b3625b317d275859e17920578f95733b6d853239837959bd85d159056595ef17",
+    "single_b004_final_027_source_docked.sdf": "92ca6d82b86fc7e0481481b1ba945928094db7cda0df39bd674d15f66cea2fa2",
+    "single_b011_final_017_source_docked.sdf": "d31387f3e4e9d494f3eda127266ae7b3bb0cdb162572c414e14c866522af1fdd",
+    "vina.cfg": "086a960e972040ec541091b79befe77333f705b21e945ed19b01a80a9596f75f"
+  },
+  "design_replay": "All saved proposals are engineering replay, including one intentional invalid-graph regression case."
+}

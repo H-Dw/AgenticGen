@@ -1,0 +1,20 @@
+{
+  "root": "../../external/FLOWR.ROOT",
+  "python": "${FLOWR_PYTHON}",
+  "checkpoint": "${FLOWR_CHECKPOINT}",
+  "expected_revision": "739a33c2aab74d074dd24605b9a2e34dc809ae9c",
+  "modes": [
+    "graph",
+    "fragment"
+  ],
+  "interaction_policy": "syncraft_compatible",
+  "seed": 42,
+  "samples_per_mode": 1,
+  "integration_steps": 100,
+  "max_sample_iter": 0,
+  "num_workers": 0,
+  "batch_cost": 200,
+  "gpus": 1,
+  "timeout_seconds": 1800,
+  "graph_initialization": "random"
+}

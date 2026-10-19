@@ -1,0 +1,661 @@
+{
+  "$defs": {
+    "EditConstraints": {
+      "additionalProperties": false,
+      "description": "Prompt guidance; native SynCraft reconstruction does not enforce these limits.",
+      "properties": {
+        "max_operations": {
+          "default": 6,
+          "maximum": 256,
+          "minimum": 1,
+          "title": "Max Operations",
+          "type": "integer"
+        },
+        "max_added_atoms": {
+          "default": 2,
+          "minimum": 0,
+          "title": "Max Added Atoms",
+          "type": "integer"
+        },
+        "max_deleted_atoms": {
+          "default": 2,
+          "minimum": 0,
+          "title": "Max Deleted Atoms",
+          "type": "integer"
+        },
+        "min_similarity": {
+          "default": 0.5,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Min Similarity",
+          "type": "number"
+        },
+        "allowed_elements": {
+          "default": [
+            "C",
+            "N",
+            "O",
+            "F",
+            "P",
+            "S",
+            "Cl",
+            "Br",
+            "I"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Elements",
+          "type": "array"
+        },
+        "protected_atom_maps": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Protected Atom Maps",
+          "type": "array"
+        }
+      },
+      "title": "EditConstraints",
+      "type": "object"
+    },
+    "EnhancementConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "packets_file": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Packets File"
+        },
+        "allowed_kinds": {
+          "default": [
+            "flow_history"
+          ],
+          "items": {
+            "enum": [
+              "flow_history",
+              "native_exploration",
+              "case_memory"
+            ],
+            "type": "string"
+          },
+          "title": "Allowed Kinds",
+          "type": "array"
+        },
+        "max_characters": {
+          "default": 16000,
+          "maximum": 100000,
+          "minimum": 1,
+          "title": "Max Characters",
+          "type": "integer"
+        }
+      },
+      "title": "EnhancementConfig",
+      "type": "object"
+    },
+    "FoundationLLM": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {
+          "default": "deepseek_api",
+          "enum": [
+            "deepseek_api",
+            "evomolsteer_deepseek",
+            "litellm",
+            "replay"
+          ],
+          "title": "Backend",
+          "type": "string"
+        },
+        "model": {
+          "default": "deepseek-flash",
+          "title": "Model",
+          "type": "string"
+        },
+        "evomolsteer_root": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evomolsteer Root"
+        },
+        "timeout_seconds": {
+          "default": 240,
+          "maximum": 1200,
+          "minimum": 1,
+          "title": "Timeout Seconds",
+          "type": "integer"
+        },
+        "network_attempts": {
+          "default": 3,
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Network Attempts",
+          "type": "integer"
+        },
+        "max_output_tokens": {
+          "default": 8192,
+          "maximum": 65536,
+          "minimum": 512,
+          "title": "Max Output Tokens",
+          "type": "integer"
+        },
+        "temperature": {
+          "default": 0,
+          "maximum": 2,
+          "minimum": 0,
+          "title": "Temperature",
+          "type": "number"
+        },
+        "reasoning_effort": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reasoning Effort"
+        },
+        "replay_file": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Replay File"
+        }
+      },
+      "title": "FoundationLLM",
+      "type": "object"
+    },
+    "GeometryConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {
+          "default": "disabled",
+          "enum": [
+            "disabled",
+            "syncraft_worker"
+          ],
+          "title": "Backend",
+          "type": "string"
+        },
+        "execution": {
+          "default": "python",
+          "enum": [
+            "python",
+            "docker"
+          ],
+          "title": "Execution",
+          "type": "string"
+        },
+        "python": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Python"
+        },
+        "image": {
+          "default": "agenticgen-syncraft-worker:20261015",
+          "title": "Image",
+          "type": "string"
+        },
+        "receptor_pdbqt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Receptor Pdbqt"
+        },
+        "receptor_pdb": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Receptor Pdb"
+        },
+        "vina_config": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Vina Config"
+        },
+        "vina_binary": {
+          "default": "vina",
+          "title": "Vina Binary",
+          "type": "string"
+        },
+        "timeout_seconds": {
+          "default": 1200,
+          "minimum": 30,
+          "title": "Timeout Seconds",
+          "type": "integer"
+        },
+        "cpu_threads": {
+          "default": 1,
+          "maximum": 64,
+          "minimum": 1,
+          "title": "Cpu Threads",
+          "type": "integer"
+        },
+        "seed": {
+          "default": 42,
+          "maximum": 2147483647,
+          "minimum": 1,
+          "title": "Seed",
+          "type": "integer"
+        },
+        "exhaustiveness": {
+          "default": 8,
+          "minimum": 1,
+          "title": "Exhaustiveness",
+          "type": "integer"
+        }
+      },
+      "title": "GeometryConfig",
+      "type": "object"
+    },
+    "RetroConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {
+          "default": "disabled",
+          "enum": [
+            "disabled",
+            "simpretro_cli"
+          ],
+          "title": "Backend",
+          "type": "string"
+        },
+        "root": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Root"
+        },
+        "python": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Python"
+        },
+        "execution": {
+          "default": "python",
+          "enum": [
+            "python",
+            "docker"
+          ],
+          "title": "Execution",
+          "type": "string"
+        },
+        "image": {
+          "default": "agenticgen-simpretro-worker:20261016",
+          "title": "Image",
+          "type": "string"
+        },
+        "inventory": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Inventory"
+        },
+        "templates": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Templates"
+        },
+        "fingerprint_cache": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fingerprint Cache"
+        },
+        "inventory_index": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Inventory Index"
+        },
+        "time_limit_seconds": {
+          "default": 1800,
+          "minimum": 1,
+          "title": "Time Limit Seconds",
+          "type": "integer"
+        },
+        "process_grace_seconds": {
+          "default": 300,
+          "minimum": 1,
+          "title": "Process Grace Seconds",
+          "type": "integer"
+        },
+        "cpu_threads": {
+          "default": 1,
+          "maximum": 64,
+          "minimum": 1,
+          "title": "Cpu Threads",
+          "type": "integer"
+        },
+        "seed": {
+          "const": 0,
+          "default": 0,
+          "title": "Seed",
+          "type": "integer"
+        },
+        "expected_revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Revision"
+        }
+      },
+      "title": "RetroConfig",
+      "type": "object"
+    },
+    "SelectionConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "policy": {
+          "default": "paper_route_similarity",
+          "enum": [
+            "paper_route_similarity",
+            "skill_sa_binding",
+            "proposal_only"
+          ],
+          "title": "Policy",
+          "type": "string"
+        },
+        "similarity_threshold": {
+          "default": 0.5,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Similarity Threshold",
+          "type": "number"
+        },
+        "similarity_bits": {
+          "default": 4096,
+          "enum": [
+            2048,
+            4096
+          ],
+          "title": "Similarity Bits",
+          "type": "integer"
+        },
+        "vina_loss_budget": {
+          "default": 1,
+          "minimum": 0,
+          "title": "Vina Loss Budget",
+          "type": "number"
+        },
+        "require_verified_route": {
+          "default": false,
+          "title": "Require Verified Route",
+          "type": "boolean"
+        }
+      },
+      "title": "SelectionConfig",
+      "type": "object"
+    },
+    "SynCraftConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "root": {
+          "title": "Root",
+          "type": "string"
+        },
+        "examples_file": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Examples File"
+        },
+        "few_shot_count": {
+          "default": 5,
+          "maximum": 20,
+          "minimum": 0,
+          "title": "Few Shot Count",
+          "type": "integer"
+        },
+        "expected_revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Revision"
+        }
+      },
+      "required": [
+        "root"
+      ],
+      "title": "SynCraftConfig",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "agenticgen.syncraft.v1",
+      "default": "agenticgen.syncraft.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "dataset": {
+      "title": "Dataset",
+      "type": "string"
+    },
+    "mode": {
+      "default": "standard",
+      "enum": [
+        "standard",
+        "interaction_aware",
+        "dual"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "pass_k": {
+      "default": 5,
+      "maximum": 20,
+      "minimum": 1,
+      "title": "Pass K",
+      "type": "integer"
+    },
+    "syncraft": {
+      "$ref": "#/$defs/SynCraftConfig"
+    },
+    "llm": {
+      "$ref": "#/$defs/FoundationLLM"
+    },
+    "retro": {
+      "$ref": "#/$defs/RetroConfig",
+      "default": {
+        "backend": "disabled",
+        "root": null,
+        "python": null,
+        "execution": "python",
+        "image": "agenticgen-simpretro-worker:20261016",
+        "inventory": null,
+        "templates": null,
+        "fingerprint_cache": null,
+        "inventory_index": null,
+        "time_limit_seconds": 1800,
+        "process_grace_seconds": 300,
+        "cpu_threads": 1,
+        "seed": 0,
+        "expected_revision": null
+      }
+    },
+    "geometry": {
+      "$ref": "#/$defs/GeometryConfig",
+      "default": {
+        "backend": "disabled",
+        "execution": "python",
+        "python": null,
+        "image": "agenticgen-syncraft-worker:20261015",
+        "receptor_pdbqt": null,
+        "receptor_pdb": null,
+        "vina_config": null,
+        "vina_binary": "vina",
+        "timeout_seconds": 1200,
+        "cpu_threads": 1,
+        "seed": 42,
+        "exhaustiveness": 8
+      }
+    },
+    "selection": {
+      "$ref": "#/$defs/SelectionConfig",
+      "default": {
+        "policy": "paper_route_similarity",
+        "similarity_threshold": 0.5,
+        "similarity_bits": 4096,
+        "vina_loss_budget": 1.0,
+        "require_verified_route": false
+      }
+    },
+    "constraints": {
+      "$ref": "#/$defs/EditConstraints",
+      "default": {
+        "max_operations": 256,
+        "max_added_atoms": 128,
+        "max_deleted_atoms": 128,
+        "min_similarity": 0.0,
+        "allowed_elements": [
+          "C",
+          "N",
+          "O",
+          "F",
+          "P",
+          "S",
+          "Cl",
+          "Br",
+          "I"
+        ],
+        "protected_atom_maps": []
+      }
+    },
+    "editor": {
+      "const": "syncraft",
+      "default": "syncraft",
+      "title": "Editor",
+      "type": "string"
+    },
+    "enhancements": {
+      "$ref": "#/$defs/EnhancementConfig",
+      "default": {
+        "enabled": false,
+        "packets_file": null,
+        "allowed_kinds": [
+          "flow_history"
+        ],
+        "max_characters": 16000
+      }
+    }
+  },
+  "required": [
+    "dataset",
+    "syncraft",
+    "llm"
+  ],
+  "title": "FoundationConfig",
+  "type": "object"
+}

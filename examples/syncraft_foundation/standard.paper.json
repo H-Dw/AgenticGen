@@ -1,0 +1,35 @@
+{
+  "schema_version": "agenticgen.syncraft.v1",
+  "dataset": "ck2_one.json",
+  "mode": "standard",
+  "pass_k": 5,
+  "syncraft": {
+    "root": "../../../../outputs/research/syncraft_flowr_20261003/SynCraft-Core",
+    "expected_revision": "557703e110b26a354afed2955ded5217837f6692",
+    "few_shot_count": 5
+  },
+  "llm": {
+    "backend": "evomolsteer_deepseek",
+    "model": "deepseek-flash",
+    "evomolsteer_root": "../../../../EvoMolSteer",
+    "max_output_tokens": 8192
+  },
+  "selection": {
+    "policy": "paper_route_similarity",
+    "similarity_threshold": 0.5,
+    "similarity_bits": 4096
+  },
+  "enhancements": {
+    "enabled": false
+  },
+  "retro": {
+    "backend": "simpretro_cli",
+    "root": "../../external/SimpRetro",
+    "python": null,
+    "inventory": "${SIMPRETRO_INVENTORY}",
+    "templates": "../../external/SimpRetro/SimpRetro_templates.json",
+    "expected_revision": "5abbdd12d23bec3b0c524a3f5e59d160beac00f3",
+    "execution": "docker",
+    "image": "agenticgen-simpretro-worker:20261016"
+  }
+}

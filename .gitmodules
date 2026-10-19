@@ -1,0 +1,9 @@
+[submodule "external/SimpRetro"]
+	path = external/SimpRetro
+	url = https://github.com/catalystforyou/SimpRetro.git
+[submodule "external/FLOWR.ROOT"]
+	path = external/FLOWR.ROOT
+	url = https://github.com/jule-c/flowr_root.git
+[submodule "external/SynCraft-Core"]
+	path = external/SynCraft-Core
+	url = https://github.com/catalystforyou/SynCraft-Core.git

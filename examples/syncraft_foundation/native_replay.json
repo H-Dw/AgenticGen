@@ -1,0 +1,19 @@
+{
+  "kind": "engineering_native_replay",
+  "responses": {
+    "mpro_engineering_001": [
+      "[REASONING]\nEngineering fixture: test executable peripheral edits, without a route improvement claim.\n[EDITS]\n```json\n[[\"DEL_ATOM\", 6], [\"STOP\"]]\n```",
+      "[REASONING]\nEngineering fixture: test executable peripheral edits, without a route improvement claim.\n[EDITS]\n```json\n[[\"DEL_ATOM\", 16], [\"STOP\"]]\n```",
+      "[REASONING]\nEngineering fixture: test executable peripheral edits, without a route improvement claim.\n[EDITS]\n```json\n[[\"DEL_ATOM\", 6], [\"DEL_ATOM\", 16], [\"STOP\"]]\n```",
+      "[REASONING]\nEngineering fixture: test executable peripheral edits, without a route improvement claim.\n[EDITS]\n```json\n[[\"STOP\"]]\n```",
+      "[REASONING]\nEngineering fixture: test executable peripheral edits, without a route improvement claim.\n[EDITS]\n```json\n[[\"DEL_ATOM\", 6], [\"STOP\"]]\n```"
+    ],
+    "single_b004_final_027": [
+      "[REASONING]\nEngineering fixture: remove terminal methyl.\n[EDITS]\n```json\n[[\"DEL_ATOM\",1],[\"STOP\"]]\n```",
+      "[REASONING]\nEngineering fixture: remove terminal methyl.\n[EDITS]\n```json\n[[\"DEL_ATOM\",1],[\"STOP\"]]\n```",
+      "[REASONING]\nEngineering fixture: remove terminal methyl.\n[EDITS]\n```json\n[[\"DEL_ATOM\",1],[\"STOP\"]]\n```",
+      "[REASONING]\nEngineering fixture: remove terminal methyl.\n[EDITS]\n```json\n[[\"DEL_ATOM\",1],[\"STOP\"]]\n```",
+      "[REASONING]\nEngineering fixture: remove terminal methyl.\n[EDITS]\n```json\n[[\"DEL_ATOM\",1],[\"STOP\"]]\n```"
+    ]
+  }
+}

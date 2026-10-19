@@ -1,0 +1,73 @@
+{
+  "schema_version": "agenticgen.cases.v1",
+  "purpose": "engineering_example",
+  "selection_rule": "Frozen CK2 quality TOP1 plus the first previously frozen high-SA/high-strain challenge case; fixed before any new agent calls. The challenge is not a low-strain candidate.",
+  "source_files": {
+    "outputs/ck2_top10_process_analysis_20261014/selected_candidates.csv": "84e0e9a4e39b04aace23257a6d552598694230acdb5e1a6036f8496dcf5337a5",
+    "outputs/ck2_original_steer_analysis_20261013/tables/terminal_all_features.csv": "89ca9f2089be6f63e985836036a44f4e4cc4a71f98613d3b4b2913ffaee7edf5",
+    "outputs/ck2_top10_process_analysis_20261014/top10_unique_quality_graphs.sdf": "79eb7c36ab29630d09cbd87d99013cfb3c935a60fbf66b81d87c1773e1754bab",
+    "outputs/ck2_top10_process_analysis_20261014/actual_generation_seed_map.csv": "581ffa2ea41b90d8bef10046c5ca9436daf70c95e873e8ffd86dc50d7b829547",
+    "outputs/ck2_final_spatial_analysis_20261014/extracted/valid_final_000.sdf": "d61fe755e5c437f03d6a1fa07ab5fb3f33c08007a7c7129fe8262cec95eb1358",
+    "outputs/ck2_final_spatial_analysis_20261014/extracted/valid_final_004.sdf": "a4ac9dd02e76b24c1d804a7784cfccdf2cdb2629d20c30d438e1071aa77ac038",
+    "outputs/ck2_final_spatial_analysis_20261014/extracted/valid_final_011.sdf": "b97f9f6c22ff64c953486bca2620136da55f0b605bef3822ddba2d69db9651a5",
+    "outputs/ck2_final_spatial_analysis_20261014/extracted/valid_final_017.sdf": "8e82cdfa28fe13f43270f06f4ee9c89cda757bc7416dfa44a3355a230d30e8e4"
+  },
+  "sdf_file": "inputs/cases.sdf",
+  "sdf_sha256": "43cfbe9788ceb27a4e6e070ae5093df3dc7e19ded98cefc3b82bf987d034d3a3",
+  "cases": [
+    {
+      "case_id": "single_b004_final_027",
+      "target": "CK2",
+      "smiles": "Cc1cccc2c1[nH]c1c3ccncc3c(=O)c3c(C(N)=O)nc2c31",
+      "selection_rank": 1,
+      "source_metrics": {
+        "pic50_on_rescore": 8.62588882446289,
+        "pic50_off_rescore": 7.293275833129883,
+        "sa_score": 2.8661266424605003,
+        "mmff_relief_per_heavy": 0.6313176660484686,
+        "mmff_relief_kcal_mol": 15.782941651211717,
+        "strain_MMFF94s_kcal_mol": 18.044877458609704,
+        "quality_tail": true,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 4,
+        "actual_sampler_seed": 400054,
+        "root_slot": 25,
+        "cohort": "top10_unique_graphs",
+        "pose": "original raw decoded pose, coordinates unchanged",
+        "selection": "frozen unique-graph rank, not a new affinity computation",
+        "original_selection_rank": 1
+      },
+      "sdf_record_index": 0
+    },
+    {
+      "case_id": "single_b011_final_017",
+      "target": "CK2",
+      "smiles": "O=C(O)C1=CC2=c3[nH]c4ccccc4c3=Nc3cnncc3C2C=C1",
+      "selection_rank": 2,
+      "source_metrics": {
+        "pic50_on_rescore": 8.32453727722168,
+        "pic50_off_rescore": 6.725730895996094,
+        "sa_score": 4.051180018371027,
+        "mmff_relief_per_heavy": 3.0988894169871544,
+        "mmff_relief_kcal_mol": 77.47223542467886,
+        "strain_MMFF94s_kcal_mol": 108.52732731150186,
+        "quality_tail": false,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 11,
+        "actual_sampler_seed": 1100075,
+        "root_slot": 31,
+        "cohort": "high_sa_high_strain_challenge",
+        "stratum_rank": 1,
+        "pose": "original raw decoded pose, source SDF bytes unchanged",
+        "original_selection_rank": 4
+      },
+      "sdf_record_index": 1
+    }
+  ]
+}

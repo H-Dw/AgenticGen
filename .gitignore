@@ -1,0 +1,39 @@
+# Host configuration and credentials
+.env
+.env.*
+!.env.example
+**/secrets.local.*
+configs/*.local.*
+
+# Python and local environments
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+
+# External dependencies, models, private data and experiment output
+external/*
+!external/FLOWR.ROOT/
+!external/SynCraft-Core/
+!external/SimpRetro/
+checkpoints/
+data/raw/
+data/processed/
+data/private/
+data/inventories/
+outputs/
+artifacts/
+cache/
+*.pt
+*.ckpt
+*.safetensors
+
+# Host/editor files
+.DS_Store
+Thumbs.db

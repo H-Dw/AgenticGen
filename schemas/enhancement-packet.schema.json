@@ -1,0 +1,44 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "source_graph_sha256": {
+      "title": "Source Graph Sha256",
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "flow_history",
+        "native_exploration",
+        "case_memory"
+      ],
+      "title": "Kind",
+      "type": "string"
+    },
+    "text": {
+      "minLength": 1,
+      "title": "Text",
+      "type": "string"
+    },
+    "evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Evidence Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "case_id",
+    "source_graph_sha256",
+    "kind",
+    "text",
+    "evidence_ids"
+  ],
+  "title": "EnhancementPacket",
+  "type": "object"
+}

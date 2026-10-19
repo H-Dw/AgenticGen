@@ -1,0 +1,42 @@
+{
+  "schema_version": "agenticgen.syncraft.v1",
+  "dataset": "live_cases.json",
+  "mode": "dual",
+  "pass_k": 1,
+  "syncraft": {
+    "root": "../../external/SynCraft-Core",
+    "expected_revision": "557703e110b26a354afed2955ded5217837f6692",
+    "few_shot_count": 5
+  },
+  "llm": {
+    "backend": "deepseek_api",
+    "model": "deepseek-flash",
+    "max_output_tokens": 8192,
+    "network_attempts": 3
+  },
+  "retro": {
+    "backend": "disabled"
+  },
+  "geometry": {
+    "backend": "syncraft_worker",
+    "execution": "python",
+    "python": "${AGENTICGEN_PYTHON}",
+    "receptor_pdbqt": "inputs/receptor.pdbqt",
+    "receptor_pdb": "inputs/receptor.pdb",
+    "vina_config": "inputs/vina.cfg",
+    "vina_binary": "${VINA_BINARY}",
+    "seed": 42,
+    "exhaustiveness": 8,
+    "cpu_threads": 1
+  },
+  "selection": {
+    "policy": "proposal_only",
+    "similarity_threshold": 0.2,
+    "similarity_bits": 2048,
+    "vina_loss_budget": 1,
+    "require_verified_route": false
+  },
+  "enhancements": {
+    "enabled": false
+  }
+}

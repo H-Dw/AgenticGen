@@ -1,0 +1,60 @@
+{
+  "kind": "engineering_native_replay",
+  "description": "Saved real DeepSeek responses from 2026-10-18, replayed with zero new API calls. Second molecule deliberately exercises the real invalid-valence skip. Not a new optimization result.",
+  "responses": {
+    "single_b004_final_027": [
+      "[REASONING]\nThe source molecule is a large, highly fused pentacyclic system (a benzo-fused pyrido/pyrimido-quinoline-like core) bearing a primary carboxamide. The main synthetic liabilities are: (1) the very high degree of ring fusion, which makes construction of the intact pentacyclic scaffold difficult and low-yielding; and (2) the primary amide (C20(=O22)NH2 21), which is a metabolic soft spot and adds a polar, potentially reactive handle.\n\nHowever, the biological constraints are strict. Atoms 10-15 form a contiguous aromatic ring that pi-stacks with HIS160.A, and atoms 21 (N) and 22 (O) of the carboxamide form critical hydrogen bonds with VAL116.A. Therefore the carboxamide must be retained intact, and the aromatic ring containing atoms 10-15 must be preserved. The preferred hydrophobic contacts (atoms 1, 4, 5, 6, 15) are soft and can be relaxed.\n\nThe most defensible synthesisability fix that respects all hard constraints is to simplify the peripheral fused ring system without touching the protected pi-stacking ring (10-15) or the carboxamide (20-22). The methyl-substituted benzo ring (atoms 1-7) and the peripheral pyridine-like ring (atoms 23, 24, 25, 18, 19) contribute mainly to the soft hydrophobic contacts and to scaffold complexity. Removing the methyl group at atom 1 is a minimal, safe simplification that reduces a metabolic soft spot and slightly eases synthesis without affecting any hard contact. This is the conservative edit I will apply, keeping the pharmacophoric pi-stack ring and the carboxamide H-bond donor/acceptor pair intact.\n\nUncertainty: a more aggressive ring-contraction of the pentacyclic core would improve synthesizability more, but risks perturbing the geometry of the HIS160 pi-stack and the VAL116 hydrogen bonds, so I restrict to the minimal methyl removal.\n\n[EDITS]\n```json\n[[\"DEL_ATOM\", 1], [\"STOP\"]]\n```"
+    ],
+    "single_b011_final_017": [
+      "[REASONING]\nThe molecule is a large, highly fused polycyclic system (a benzo-fused carboline/quinazoline-like pentacycle) bearing a carboxylic acid. The main synthetic liability is the elaborate, rigid, multi-ring fused core: constructing this specific pentacyclic heteroaromatic framework with the correct regiochemistry and oxidation state would require a bespoke, low-yielding, multi-step route, making analog synthesis impractical.\n\nThe key pharmacophoric elements that must be preserved are: (1) the carboxylic acid (atoms 1, 2, 3) forming salt bridges with HIS115, and (2) the triazole/pyridazine-like aromatic ring (atoms 17-22) that pi-stacks with HIS160. My modification keeps the carboxylic acid intact and keeps the pi-stacking heteroaromatic ring intact, while simplifying the fused core by removing the peripheral fused benzene ring (atoms 10-14) and the bridging CH2/CH=CH segment (atoms 23-25) that create the synthetically demanding pentacyclic scaffold. This reduces the molecule to a more accessible tricyclic/bicyclic carboxylic acid bearing the required triazole ring, preserving both critical contacts while dramatically improving synthetic accessibility. The preferred hydrophobic contacts (atoms 5, 10-12, 14) are partially sacrificed, which is acceptable per the soft-preference guidance.\n\n[EDITS]\n```json\n[[\"DEL_ATOM\", 10], [\"DEL_ATOM\", 11], [\"DEL_ATOM\", 12], [\"DEL_ATOM\", 13], [\"DEL_ATOM\", 14], [\"DEL_ATOM\", 23], [\"DEL_ATOM\", 24], [\"DEL_ATOM\", 25], [\"DEL_BOND\", 9, 10], [\"DEL_BOND\", 13, 14], [\"DEL_BOND\", 14, 15], [\"DEL_BOND\", 22, 23], [\"DEL_BOND\", 23, 24], [\"DEL_BOND\", 24, 25], [\"DEL_BOND\", 25, 4], [\"ADD_BOND\", 4, 5, \"AROMATIC\"], [\"ADD_BOND\", 5, 6, \"AROMATIC\"], [\"ADD_BOND\", 6, 7, \"AROMATIC\"], [\"ADD_BOND\", 7, 9, \"AROMATIC\"], [\"ADD_BOND\", 9, 15, \"AROMATIC\"], [\"ADD_BOND\", 15, 16, \"AROMATIC\"], [\"ADD_BOND\", 16, 17, \"AROMATIC\"], [\"ADD_BOND\", 17, 22, \"AROMATIC\"], [\"ADD_BOND\", 22, 21, \"AROMATIC\"], [\"ADD_BOND\", 21, 20, \"AROMATIC\"], [\"ADD_BOND\", 20, 19, \"AROMATIC\"], [\"ADD_BOND\", 19, 18, \"AROMATIC\"], [\"ADD_BOND\", 18, 17, \"AROMATIC\"], [\"STOP\"]]\n```"
+    ]
+  },
+  "provenance": [
+    {
+      "case_id": "single_b004_final_027",
+      "source_run": "ck2_native_live_20261018",
+      "source_proposal_index": 1,
+      "native_output_file_sha256": "c664f5435dd1c160ab57cc17087759ae66809d60fe745eab91e913b14804b889",
+      "source_receipt": {
+        "finish_reason": "stop",
+        "provider_request_id": "cb51eca2-b7b4-4aea-a6d0-960f81dbc34b",
+        "requested_model": "deepseek-flash",
+        "response_sha256": "c664f5435dd1c160ab57cc17087759ae66809d60fe745eab91e913b14804b889",
+        "returned_model": "deepseek-flash",
+        "usage": {
+          "completion_tokens": 464,
+          "prompt_cache_hit_tokens": 3328,
+          "prompt_cache_miss_tokens": 554,
+          "prompt_tokens": 3882,
+          "prompt_tokens_details": {
+            "cached_tokens": 3328
+          },
+          "total_tokens": 4346
+        }
+      }
+    },
+    {
+      "case_id": "single_b011_final_017",
+      "source_run": "ck2_native_live_20261018",
+      "source_proposal_index": 1,
+      "native_output_file_sha256": "4792a478c6cd660311b3de9d5dff2d6b692da8d3b450f75174756dcab8dcbe21",
+      "source_receipt": {
+        "finish_reason": "stop",
+        "provider_request_id": "732ff387-0957-49ee-9ac7-c2419a808692",
+        "requested_model": "deepseek-flash",
+        "response_sha256": "4792a478c6cd660311b3de9d5dff2d6b692da8d3b450f75174756dcab8dcbe21",
+        "returned_model": "deepseek-flash",
+        "usage": {
+          "completion_tokens": 716,
+          "prompt_cache_hit_tokens": 3328,
+          "prompt_cache_miss_tokens": 605,
+          "prompt_tokens": 3933,
+          "prompt_tokens_details": {
+            "cached_tokens": 3328
+          },
+          "total_tokens": 4649
+        }
+      }
+    }
+  ]
+}

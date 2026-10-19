@@ -1,0 +1,10 @@
+{
+  "purpose": "Positive nonzero-route ENGINEERING control, not a CK2 optimization result",
+  "target": "CC(C)(C)c1cc(C(=O)Nc2cc(Cl)cc(C(F)(F)F)c2)cc(C(C)(C)C)c1",
+  "known_in_stock_precursors": [
+    "CC(C)(C)c1cc(C(=O)O)cc(C(C)(C)C)c1",
+    "Nc1cc(Cl)cc(C(F)(F)F)c1"
+  ],
+  "target_in_official_stock": false,
+  "selection": "First absent product from a fixed small cross-product of stock acids and amines; chosen before planner execution"
+}

@@ -1,0 +1,250 @@
+{
+  "$defs": {
+    "GraphEditResult": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "accepted",
+            "rejected",
+            "unchanged"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "source_smiles": {
+          "title": "Source Smiles",
+          "type": "string"
+        },
+        "product_smiles": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Product Smiles"
+        },
+        "product_mapped_smiles": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Product Mapped Smiles"
+        },
+        "product_graph_sha256": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Product Graph Sha256"
+        },
+        "similarity": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Similarity"
+        },
+        "operations": {
+          "default": 0,
+          "title": "Operations",
+          "type": "integer"
+        },
+        "added_atom_maps": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Added Atom Maps",
+          "type": "array"
+        },
+        "deleted_atom_maps": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Deleted Atom Maps",
+          "type": "array"
+        },
+        "changed_atom_maps": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Changed Atom Maps",
+          "type": "array"
+        },
+        "reconstruction_policy": {
+          "const": "syncraft_native",
+          "default": "syncraft_native",
+          "title": "Reconstruction Policy",
+          "type": "string"
+        },
+        "upstream_smiles": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Upstream Smiles"
+        },
+        "upstream_mapped_smiles": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Upstream Mapped Smiles"
+        },
+        "was_fragmented": {
+          "default": false,
+          "title": "Was Fragmented",
+          "type": "boolean"
+        },
+        "discarded_atom_maps": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Discarded Atom Maps",
+          "type": "array"
+        },
+        "error_stage": {
+          "anyOf": [
+            {
+              "enum": [
+                "upstream_reconstruction",
+                "product_loading"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Stage"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reason"
+        }
+      },
+      "required": [
+        "status",
+        "source_smiles"
+      ],
+      "title": "GraphEditResult",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "pattern": "^[A-Za-z0-9_-]+$",
+      "title": "Case Id",
+      "type": "string"
+    },
+    "proposal_id": {
+      "pattern": "^[A-Za-z0-9_-]+$",
+      "title": "Proposal Id",
+      "type": "string"
+    },
+    "source_mapped_smiles": {
+      "title": "Source Mapped Smiles",
+      "type": "string"
+    },
+    "graph_result": {
+      "$ref": "#/$defs/GraphEditResult"
+    },
+    "interaction_atom_maps": {
+      "default": [],
+      "items": {
+        "type": "integer"
+      },
+      "title": "Interaction Atom Maps",
+      "type": "array"
+    },
+    "llm_optimized_atom_maps": {
+      "default": [],
+      "items": {
+        "type": "integer"
+      },
+      "title": "Llm Optimized Atom Maps",
+      "type": "array"
+    },
+    "product_pose_sdf": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Product Pose Sdf"
+    },
+    "product_sdf_record_index": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Product Sdf Record Index",
+      "type": "integer"
+    },
+    "pocket_pdb": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Pocket Pdb"
+    }
+  },
+  "required": [
+    "case_id",
+    "proposal_id",
+    "source_mapped_smiles",
+    "graph_result"
+  ],
+  "title": "InpaintingRequest",
+  "type": "object"
+}

@@ -1,0 +1,92 @@
+{
+  "schema_version": "agenticgen.cases.v1",
+  "purpose": "engineering_example",
+  "selection_rule": "First three frozen TOP10 unique quality graphs; original quality gate: upper affinity decile, full PoseBusters pass, converged MMFF relaxation, relief/heavy-atom <= original valid-cohort Q75.",
+  "source_files": {
+    "outputs/ck2_top10_process_analysis_20261014/selected_candidates.csv": "84e0e9a4e39b04aace23257a6d552598694230acdb5e1a6036f8496dcf5337a5",
+    "outputs/ck2_original_steer_analysis_20261013/tables/terminal_all_features.csv": "89ca9f2089be6f63e985836036a44f4e4cc4a71f98613d3b4b2913ffaee7edf5",
+    "outputs/ck2_top10_process_analysis_20261014/top10_unique_quality_graphs.sdf": "79eb7c36ab29630d09cbd87d99013cfb3c935a60fbf66b81d87c1773e1754bab"
+  },
+  "sdf_file": "candidates.sdf",
+  "sdf_sha256": "e4d354d6da3028a4ccab7b6ce55c439cdbb0297878da5f5f1b8ace327298a78b",
+  "cases": [
+    {
+      "case_id": "single_b004_final_027",
+      "target": "CK2",
+      "smiles": "Cc1cccc2c1[nH]c1c3ccncc3c(=O)c3c(C(N)=O)nc2c31",
+      "selection_rank": 1,
+      "source_metrics": {
+        "pic50_on_rescore": 8.62588882446289,
+        "pic50_off_rescore": 7.293275833129883,
+        "sa_score": 2.8661266424605003,
+        "mmff_relief_per_heavy": 0.6313176660484686,
+        "mmff_relief_kcal_mol": 15.782941651211717,
+        "strain_MMFF94s_kcal_mol": 18.044877458609704,
+        "quality_tail": true,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 4,
+        "actual_sampler_seed": 400054,
+        "root_slot": 25,
+        "cohort": "top10_unique_graphs",
+        "pose": "original raw decoded pose, coordinates unchanged",
+        "selection": "frozen unique-graph rank, not a new affinity computation"
+      },
+      "sdf_record_index": 0
+    },
+    {
+      "case_id": "single_b017_final_021",
+      "target": "CK2",
+      "smiles": "NC(=O)c1cc2c3c(nc4cnccc4c3n1)-c1cccc(Cl)c1N2",
+      "selection_rank": 2,
+      "source_metrics": {
+        "pic50_on_rescore": 8.58439826965332,
+        "pic50_off_rescore": 6.863951206207275,
+        "sa_score": 2.978316620792027,
+        "mmff_relief_per_heavy": 0.3892330476689301,
+        "mmff_relief_kcal_mol": 9.730826191723253,
+        "strain_MMFF94s_kcal_mol": 13.538419870385567,
+        "quality_tail": true,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 17,
+        "actual_sampler_seed": 1700093,
+        "root_slot": 14,
+        "cohort": "top10_unique_graphs",
+        "pose": "original raw decoded pose, coordinates unchanged",
+        "selection": "frozen unique-graph rank, not a new affinity computation"
+      },
+      "sdf_record_index": 1
+    },
+    {
+      "case_id": "single_b007_final_026",
+      "target": "CK2",
+      "smiles": "O=C(O)c1ccc2c(c1)c1ccncc1c1ccc3cccnc3c12",
+      "selection_rank": 3,
+      "source_metrics": {
+        "pic50_on_rescore": 8.354063034057617,
+        "pic50_off_rescore": 6.133155822753906,
+        "sa_score": 2.328472100244083,
+        "mmff_relief_per_heavy": 0.5674686422729639,
+        "mmff_relief_kcal_mol": 14.186716056824096,
+        "strain_MMFF94s_kcal_mol": 23.13514892885577,
+        "quality_tail": true,
+        "pb_full_pass": true,
+        "strain_minimization_converged": true
+      },
+      "provenance": {
+        "batch": 7,
+        "actual_sampler_seed": 700063,
+        "root_slot": 49,
+        "cohort": "top10_unique_graphs",
+        "pose": "original raw decoded pose, coordinates unchanged",
+        "selection": "frozen unique-graph rank, not a new affinity computation"
+      },
+      "sdf_record_index": 2
+    }
+  ]
+}

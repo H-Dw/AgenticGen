@@ -1,0 +1,145 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "root": {
+      "title": "Root",
+      "type": "string"
+    },
+    "python": {
+      "title": "Python",
+      "type": "string"
+    },
+    "checkpoint": {
+      "title": "Checkpoint",
+      "type": "string"
+    },
+    "expected_revision": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": "739a33c2aab74d074dd24605b9a2e34dc809ae9c",
+      "title": "Expected Revision"
+    },
+    "modes": {
+      "default": [
+        "graph",
+        "fragment"
+      ],
+      "items": {
+        "enum": [
+          "graph",
+          "fragment"
+        ],
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Modes",
+      "type": "array"
+    },
+    "seed": {
+      "default": 42,
+      "maximum": 2147483647,
+      "minimum": 0,
+      "title": "Seed",
+      "type": "integer"
+    },
+    "samples_per_mode": {
+      "default": 1,
+      "maximum": 256,
+      "minimum": 1,
+      "title": "Samples Per Mode",
+      "type": "integer"
+    },
+    "integration_steps": {
+      "default": 100,
+      "maximum": 10000,
+      "minimum": 1,
+      "title": "Integration Steps",
+      "type": "integer"
+    },
+    "max_sample_iter": {
+      "default": 0,
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Max Sample Iter",
+      "type": "integer"
+    },
+    "num_workers": {
+      "default": 0,
+      "maximum": 64,
+      "minimum": 0,
+      "title": "Num Workers",
+      "type": "integer"
+    },
+    "batch_cost": {
+      "default": 200,
+      "minimum": 1,
+      "title": "Batch Cost",
+      "type": "integer"
+    },
+    "gpus": {
+      "default": 1,
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Gpus",
+      "type": "integer"
+    },
+    "timeout_seconds": {
+      "default": 1800,
+      "maximum": 86400,
+      "minimum": 1,
+      "title": "Timeout Seconds",
+      "type": "integer"
+    },
+    "graph_initialization": {
+      "default": "random",
+      "enum": [
+        "random",
+        "conformer",
+        "harmonic"
+      ],
+      "title": "Graph Initialization",
+      "type": "string"
+    },
+    "cut_pocket": {
+      "default": true,
+      "title": "Cut Pocket",
+      "type": "boolean"
+    },
+    "pocket_cutoff": {
+      "default": 7.0,
+      "exclusiveMinimum": 0,
+      "maximum": 20,
+      "title": "Pocket Cutoff",
+      "type": "number"
+    },
+    "coordinate_tolerance_angstrom": {
+      "default": 0.05,
+      "exclusiveMinimum": 0,
+      "maximum": 1,
+      "title": "Coordinate Tolerance Angstrom",
+      "type": "number"
+    },
+    "interaction_policy": {
+      "default": "syncraft_compatible",
+      "enum": [
+        "syncraft_compatible",
+        "strict"
+      ],
+      "title": "Interaction Policy",
+      "type": "string"
+    }
+  },
+  "required": [
+    "root",
+    "python",
+    "checkpoint"
+  ],
+  "title": "InpaintingConfig",
+  "type": "object"
+}

@@ -1,0 +1,12 @@
+{
+  "backend": "simpretro_cli",
+  "root": "${SIMP_RETRO_ROOT}",
+  "python": "${SIMP_RETRO_PYTHON}",
+  "inventory": "${SIMP_RETRO_INVENTORY}",
+  "templates": "${SIMP_RETRO_TEMPLATES}",
+  "time_limit_seconds": 1800,
+  "process_grace_seconds": 300,
+  "cpu_threads": 1,
+  "seed": 0,
+  "expected_revision": "5abbdd12d23bec3b0c524a3f5e59d160beac00f3"
+}

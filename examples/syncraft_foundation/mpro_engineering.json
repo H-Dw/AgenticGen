@@ -1,0 +1,21 @@
+{
+  "schema_version": "agenticgen.cases.v1",
+  "purpose": "engineering_example",
+  "selection_rule": "Single engineering molecule; no biological selection claim",
+  "source_files": {},
+  "sdf_file": "mpro_engineering.sdf",
+  "sdf_sha256": "64e91726421e2a4d0c742d5efe31f0fe807e26a66b67f3ab478c1a7fbb7701a8",
+  "cases": [
+    {
+      "case_id": "mpro_engineering_001",
+      "target": "SARS-CoV-2 Mpro engineering fixture",
+      "smiles": "O=C(O)c1c(Cl)cccc1Oc1ccc(F)cc1",
+      "selection_rank": 1,
+      "source_metrics": {},
+      "provenance": {
+        "purpose": "Infrastructure fixture from upstream example SMILES; not a measured binder or a CK2 result"
+      },
+      "sdf_record_index": 0
+    }
+  ]
+}

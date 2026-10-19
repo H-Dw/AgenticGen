@@ -1,0 +1,69 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "status": {
+      "enum": [
+        "not_run",
+        "route_found",
+        "no_route_within_budget",
+        "invalid_input",
+        "infrastructure_error"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "protocol_id": {
+      "title": "Protocol Id",
+      "type": "string"
+    },
+    "route_verified": {
+      "default": false,
+      "title": "Route Verified",
+      "type": "boolean"
+    },
+    "elapsed_seconds": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Elapsed Seconds"
+    },
+    "search_statistics": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Search Statistics",
+      "type": "object"
+    },
+    "artifact_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Artifact Paths",
+      "type": "array"
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reason"
+    }
+  },
+  "required": [
+    "status",
+    "protocol_id"
+  ],
+  "title": "RetroResult",
+  "type": "object"
+}

@@ -1,0 +1,21 @@
+name: base
+channels:
+  - pytorch
+  - conda-forge
+  - ljn917
+dependencies:
+  - python=3.10
+  - pytorch=2.5.1
+  - cpuonly
+  - rdkit=2024.09.6
+  - rdchiral_cpp
+  - numpy=1.26.4
+  - pandas=2.2.3
+  - networkx=3.4.2
+  - omegaconf=2.3.0
+  - more-itertools=10.5.0
+  - pyyaml=6.0.2
+  - tqdm=4.67.1
+  - pillow
+  - graphviz
+  - python-graphviz=0.20.3

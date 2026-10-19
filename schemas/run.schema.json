@@ -1,0 +1,396 @@
+{
+  "$defs": {
+    "EditConstraints": {
+      "additionalProperties": false,
+      "description": "Prompt guidance; native SynCraft reconstruction does not enforce these limits.",
+      "properties": {
+        "max_operations": {
+          "default": 6,
+          "maximum": 256,
+          "minimum": 1,
+          "title": "Max Operations",
+          "type": "integer"
+        },
+        "max_added_atoms": {
+          "default": 2,
+          "minimum": 0,
+          "title": "Max Added Atoms",
+          "type": "integer"
+        },
+        "max_deleted_atoms": {
+          "default": 2,
+          "minimum": 0,
+          "title": "Max Deleted Atoms",
+          "type": "integer"
+        },
+        "min_similarity": {
+          "default": 0.5,
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Min Similarity",
+          "type": "number"
+        },
+        "allowed_elements": {
+          "default": [
+            "C",
+            "N",
+            "O",
+            "F",
+            "P",
+            "S",
+            "Cl",
+            "Br",
+            "I"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Allowed Elements",
+          "type": "array"
+        },
+        "protected_atom_maps": {
+          "default": [],
+          "items": {
+            "type": "integer"
+          },
+          "title": "Protected Atom Maps",
+          "type": "array"
+        }
+      },
+      "title": "EditConstraints",
+      "type": "object"
+    },
+    "LLMConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {
+          "default": "evomolsteer_deepseek",
+          "enum": [
+            "evomolsteer_deepseek",
+            "replay"
+          ],
+          "title": "Backend",
+          "type": "string"
+        },
+        "evomolsteer_root": {
+          "title": "Evomolsteer Root",
+          "type": "string"
+        },
+        "model": {
+          "const": "deepseek-flash",
+          "default": "deepseek-flash",
+          "title": "Model",
+          "type": "string"
+        },
+        "timeout_seconds": {
+          "default": 240,
+          "maximum": 1200,
+          "minimum": 1,
+          "title": "Timeout Seconds",
+          "type": "integer"
+        },
+        "network_attempts": {
+          "default": 3,
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Network Attempts",
+          "type": "integer"
+        },
+        "max_format_repairs": {
+          "default": 1,
+          "maximum": 2,
+          "minimum": 0,
+          "title": "Max Format Repairs",
+          "type": "integer"
+        },
+        "max_output_tokens": {
+          "default": 4096,
+          "maximum": 65536,
+          "minimum": 512,
+          "title": "Max Output Tokens",
+          "type": "integer"
+        },
+        "replay_file": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Replay File"
+        }
+      },
+      "required": [
+        "evomolsteer_root"
+      ],
+      "title": "LLMConfig",
+      "type": "object"
+    },
+    "RetroConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "backend": {
+          "default": "disabled",
+          "enum": [
+            "disabled",
+            "simpretro_cli"
+          ],
+          "title": "Backend",
+          "type": "string"
+        },
+        "root": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Root"
+        },
+        "python": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Python"
+        },
+        "execution": {
+          "default": "python",
+          "enum": [
+            "python",
+            "docker"
+          ],
+          "title": "Execution",
+          "type": "string"
+        },
+        "image": {
+          "default": "agenticgen-simpretro-worker:20261016",
+          "title": "Image",
+          "type": "string"
+        },
+        "inventory": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Inventory"
+        },
+        "templates": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Templates"
+        },
+        "fingerprint_cache": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fingerprint Cache"
+        },
+        "inventory_index": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Inventory Index"
+        },
+        "time_limit_seconds": {
+          "default": 1800,
+          "minimum": 1,
+          "title": "Time Limit Seconds",
+          "type": "integer"
+        },
+        "process_grace_seconds": {
+          "default": 300,
+          "minimum": 1,
+          "title": "Process Grace Seconds",
+          "type": "integer"
+        },
+        "cpu_threads": {
+          "default": 1,
+          "maximum": 64,
+          "minimum": 1,
+          "title": "Cpu Threads",
+          "type": "integer"
+        },
+        "seed": {
+          "const": 0,
+          "default": 0,
+          "title": "Seed",
+          "type": "integer"
+        },
+        "expected_revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Revision"
+        }
+      },
+      "title": "RetroConfig",
+      "type": "object"
+    },
+    "SynCraftConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "root": {
+          "title": "Root",
+          "type": "string"
+        },
+        "examples_file": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Examples File"
+        },
+        "few_shot_count": {
+          "default": 5,
+          "maximum": 20,
+          "minimum": 0,
+          "title": "Few Shot Count",
+          "type": "integer"
+        },
+        "expected_revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Revision"
+        }
+      },
+      "required": [
+        "root"
+      ],
+      "title": "SynCraftConfig",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "agenticgen.run.v1",
+      "default": "agenticgen.run.v1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "dataset": {
+      "title": "Dataset",
+      "type": "string"
+    },
+    "arm": {
+      "const": "T",
+      "default": "T",
+      "title": "Arm",
+      "type": "string"
+    },
+    "proposals_per_case": {
+      "default": 1,
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Proposals Per Case",
+      "type": "integer"
+    },
+    "syncraft": {
+      "$ref": "#/$defs/SynCraftConfig"
+    },
+    "llm": {
+      "$ref": "#/$defs/LLMConfig"
+    },
+    "retro": {
+      "$ref": "#/$defs/RetroConfig",
+      "default": {
+        "backend": "disabled",
+        "root": null,
+        "python": null,
+        "execution": "python",
+        "image": "agenticgen-simpretro-worker:20261016",
+        "inventory": null,
+        "templates": null,
+        "fingerprint_cache": null,
+        "inventory_index": null,
+        "time_limit_seconds": 1800,
+        "process_grace_seconds": 300,
+        "cpu_threads": 1,
+        "seed": 0,
+        "expected_revision": null
+      }
+    },
+    "constraints": {
+      "$ref": "#/$defs/EditConstraints",
+      "default": {
+        "max_operations": 6,
+        "max_added_atoms": 2,
+        "max_deleted_atoms": 2,
+        "min_similarity": 0.5,
+        "allowed_elements": [
+          "C",
+          "N",
+          "O",
+          "F",
+          "P",
+          "S",
+          "Cl",
+          "Br",
+          "I"
+        ],
+        "protected_atom_maps": []
+      }
+    }
+  },
+  "required": [
+    "dataset",
+    "syncraft",
+    "llm"
+  ],
+  "title": "RunConfig",
+  "type": "object"
+}

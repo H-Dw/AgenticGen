@@ -1,0 +1,261 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "case_id": {
+      "title": "Case Id",
+      "type": "string"
+    },
+    "action": {
+      "enum": [
+        "edit",
+        "abstain"
+      ],
+      "title": "Action",
+      "type": "string"
+    },
+    "edits": {
+      "items": {
+        "oneOf": [
+          {
+            "type": "array",
+            "prefixItems": [
+              {
+                "const": "STOP"
+              }
+            ],
+            "minItems": 1,
+            "maxItems": 1
+          },
+          {
+            "type": "array",
+            "prefixItems": [
+              {
+                "const": "DEL_ATOM"
+              },
+              {
+                "type": "integer",
+                "minimum": 1
+              }
+            ],
+            "minItems": 2,
+            "maxItems": 2
+          },
+          {
+            "type": "array",
+            "prefixItems": [
+              {
+                "const": "MUTATE_ATOM"
+              },
+              {
+                "type": "integer",
+                "minimum": 1
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "C",
+                  "N",
+                  "O",
+                  "F",
+                  "P",
+                  "S",
+                  "Cl",
+                  "Br",
+                  "I"
+                ]
+              }
+            ],
+            "minItems": 3,
+            "maxItems": 3
+          },
+          {
+            "type": "array",
+            "prefixItems": [
+              {
+                "const": "ADD_ATOM"
+              },
+              {
+                "type": "integer",
+                "minimum": 500
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "C",
+                  "N",
+                  "O",
+                  "F",
+                  "P",
+                  "S",
+                  "Cl",
+                  "Br",
+                  "I"
+                ]
+              }
+            ],
+            "minItems": 3,
+            "maxItems": 3
+          },
+          {
+            "type": "array",
+            "prefixItems": [
+              {
+                "const": "DEL_BOND"
+              },
+              {
+                "type": "integer",
+                "minimum": 1
+              },
+              {
+                "type": "integer",
+                "minimum": 1
+              }
+            ],
+            "minItems": 3,
+            "maxItems": 3
+          },
+          {
+            "type": "array",
+            "prefixItems": [
+              {
+                "const": "ADD_BOND"
+              },
+              {
+                "type": "integer",
+                "minimum": 1
+              },
+              {
+                "type": "integer",
+                "minimum": 1
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "SINGLE",
+                  "DOUBLE",
+                  "TRIPLE",
+                  "AROMATIC"
+                ]
+              }
+            ],
+            "minItems": 4,
+            "maxItems": 4
+          },
+          {
+            "type": "array",
+            "prefixItems": [
+              {
+                "const": "CHANGE_BOND"
+              },
+              {
+                "type": "integer",
+                "minimum": 1
+              },
+              {
+                "type": "integer",
+                "minimum": 1
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "SINGLE",
+                  "DOUBLE",
+                  "TRIPLE",
+                  "AROMATIC"
+                ]
+              }
+            ],
+            "minItems": 4,
+            "maxItems": 4
+          },
+          {
+            "type": "array",
+            "prefixItems": [
+              {
+                "const": "SET_CHIRAL"
+              },
+              {
+                "type": "integer",
+                "minimum": 1
+              },
+              {
+                "enum": [
+                  "CW",
+                  "CCW"
+                ]
+              }
+            ],
+            "minItems": 3,
+            "maxItems": 3
+          },
+          {
+            "type": "array",
+            "prefixItems": [
+              {
+                "const": "SET_BOND_STEREO"
+              },
+              {
+                "type": "integer",
+                "minimum": 1
+              },
+              {
+                "type": "integer",
+                "minimum": 1
+              },
+              {
+                "enum": [
+                  "E",
+                  "Z"
+                ]
+              },
+              {
+                "type": "integer",
+                "minimum": 1
+              },
+              {
+                "type": "integer",
+                "minimum": 1
+              }
+            ],
+            "minItems": 6,
+            "maxItems": 6
+          }
+        ]
+      },
+      "maxItems": 257,
+      "minItems": 1,
+      "title": "Edits",
+      "type": "array"
+    },
+    "rationale": {
+      "maxLength": 262144,
+      "minLength": 1,
+      "title": "Rationale",
+      "type": "string"
+    },
+    "expected_effect": {
+      "maxLength": 1000,
+      "minLength": 1,
+      "title": "Expected Effect",
+      "type": "string"
+    },
+    "risks": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 10,
+      "title": "Risks",
+      "type": "array"
+    }
+  },
+  "required": [
+    "case_id",
+    "action",
+    "edits",
+    "rationale",
+    "expected_effect",
+    "risks"
+  ],
+  "title": "Proposal",
+  "type": "object"
+}

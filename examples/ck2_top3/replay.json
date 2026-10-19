@@ -1,0 +1,27 @@
+{
+  "kind": "engineering_replay",
+  "description": "Manually specified N-to-C graph edits for adapter integration tests. These are not LLM predictions or evidence of improved synthesizability.",
+  "responses": {
+    "single_b004_final_027": [{
+      "case_id": "single_b004_final_027", "action": "edit",
+      "edits": [["MUTATE_ATOM", 13, "C"], ["STOP"]],
+      "rationale": "Engineering fixture: replace one aromatic nitrogen to exercise mapped graph reconstruction.",
+      "expected_effect": "No validated synthetic improvement is asserted by this test fixture.",
+      "risks": ["May remove an important binding acceptor; no product pose or route is evaluated."]
+    }],
+    "single_b017_final_021": [{
+      "case_id": "single_b017_final_021", "action": "edit",
+      "edits": [["MUTATE_ATOM", 9, "C"], ["STOP"]],
+      "rationale": "Engineering fixture: replace one aromatic nitrogen to exercise mapped graph reconstruction.",
+      "expected_effect": "No validated synthetic improvement is asserted by this test fixture.",
+      "risks": ["May remove an important binding acceptor; no product pose or route is evaluated."]
+    }],
+    "single_b007_final_026": [{
+      "case_id": "single_b007_final_026", "action": "edit",
+      "edits": [["MUTATE_ATOM", 13, "C"], ["STOP"]],
+      "rationale": "Engineering fixture: replace one aromatic nitrogen to exercise mapped graph reconstruction.",
+      "expected_effect": "No validated synthetic improvement is asserted by this test fixture.",
+      "risks": ["May remove an important binding acceptor; no product pose or route is evaluated."]
+    }]
+  }
+}
