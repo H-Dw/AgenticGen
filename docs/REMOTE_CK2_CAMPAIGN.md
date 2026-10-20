@@ -146,3 +146,33 @@ consistent with PDB/PDBQT coordinate rounding. No coordinate alignment or
 redocking was used. Machine-readable evidence is under
 `environment/source-geometry-frame-audit.json`; original case artifacts remain
 under `results/cases/single_b003_final_025/source_geometry/`.
+
+## Recovery after the SSH outage on 2026-10-20
+
+SSH checks failed between 00:56 and 02:26 UTC. When access returned at
+02:56 UTC, the old production controller and GPU worker were absent and the
+controller lock was free. The new container's PID 1 started at approximately
+02:51:37 UTC. The available logs contain neither the old controller's exit code
+nor an exception explaining the interruption; they do not establish its trigger.
+
+The ledger contained 979 completed generation batches and one interrupted batch:
+`generation:single_b017_final_021:gradient_ce_graph_pose_w0p25:batch_004`.
+That batch had already saved its final tensors and all four particle records.
+Recovery verified the frozen task and input hashes, original execution and code
+fingerprints, final tensor fingerprint, particle indices, and saved SDFs. It
+retained all four original particles and committed the durable generation result
+without resampling. The original `runtime.json` remains unchanged; the new
+`result.json` explicitly records its recovery provenance. Its missing affinity
+receipt is handled by the existing affinity recovery queue during evaluation.
+
+The ledger backup, original controller status, validation hashes, and restoration
+receipt are retained under
+`environment/recovery/interruption_20261020T030259Z/`. Production code,
+checkpoint, frozen inputs, prompts, seeds, experiment grid, and guidance window
+were unchanged. Previously completed design jobs remain completed and are reused.
+
+The replacement controller is `all-1792465385963952567`, launched at
+03:03:07 UTC with the same source snapshot
+`71a893cdbab3ae7021baa7ad5b68839150eb219a617d7062ec252a9e5585058c`.
+Monitor the latest `all-*.launch.json` together with its matching status and log;
+the interrupted controller's historical status is not current process liveness.
