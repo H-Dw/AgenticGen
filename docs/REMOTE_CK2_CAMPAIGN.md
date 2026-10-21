@@ -176,3 +176,56 @@ The replacement controller is `all-1792465385963952567`, launched at
 `71a893cdbab3ae7021baa7ad5b68839150eb219a617d7062ec252a9e5585058c`.
 Monitor the latest `all-*.launch.json` together with its matching status and log;
 the interrupted controller's historical status is not current process liveness.
+
+## Recovery after the host reboot on 2026-10-21
+
+SSH was unavailable in the checks from 00:26 through 06:26 UTC. Access returned
+at approximately 07:06 UTC. Host uptime and boot ID establish a reboot at
+01:10:38 UTC (09:10:38 Asia/Shanghai); the available evidence does not establish
+what triggered that reboot or the previous controller's exit code. The old
+controller and worker were absent and the operating-system lock was free.
+
+The surviving ledger initially contained 4,669 completed generation batches and
+one running row, while some saved execution directories were newer than their
+ledger states. Recovery verified and committed the existing complete result for
+`single_b007_final_028 / gradient_brier_graph_w0p25 / batch_019`. An initial
+restart then exited with `FileExistsError` when it reached the already existing
+`batch_020/execution_001` directory. This restart did not sample that batch.
+
+A full scan of all remaining ledger rows found three additional complete
+executions (`batch_020` through `batch_022`) and one incomplete execution
+(`batch_023`). For the complete executions, recovery checked frozen input and
+payload hashes, execution/code fingerprints, final tensor fingerprints, particle
+indices and SDFs, and the final-pose affinity receipts before restoring their
+ledger entries. Existing results, tensors, poses, and scores were retained byte
+for byte. The original completed results were not regenerated.
+
+For `batch_023`, the surviving runtime receipt reported generation completion,
+but its referenced `raw_final.pt`, particle records, SDFs, and final result were
+absent. The runtime flag alone was insufficient evidence of a durable result.
+Recovery preserved `execution_001`, registered it as an infrastructure
+interruption, and queued the identical frozen seed (`86940000`) in
+`execution_002`. This is distinct from an invalid molecular decoding result and
+does not add attempts beyond the planned scientific batch.
+
+The original ledger/status/log backups, artifact hashes, and recovery receipts
+are retained under both of these remote directories:
+
+- `environment/recovery/interruption_20261021T071307Z/`
+- `environment/recovery/reconciliation_20261021T072241Z/`
+
+Reconciliation brought the ledger to 4,673 completed and 3,327 pending generation
+batches. The replacement controller is `all-1792567365741013153`, launched at
+07:22:47 UTC with the same source snapshot
+`71a893cdbab3ae7021baa7ad5b68839150eb219a617d7062ec252a9e5585058c`.
+Production Python code, checkpoint, frozen inputs, prompts, grid, and guidance
+window were unchanged. All 20 completed design jobs are reused, with no repeated
+LLM requests. The historical failed launch and both recovery records remain
+available for audit.
+
+At 07:24:31 UTC, the replacement controller was live with no failed ledger jobs.
+Both the resumed `batch_023/execution_002` and the next, previously unstarted
+`batch_024/execution_001` had completed: all eight particles decoded and obtained
+native final-pose pIC50 scores. The controller had advanced to
+`gradient_brier_graph_w1p0 / batch_000`. This verifies productive continuation,
+beyond merely checking that a launch receipt exists.
