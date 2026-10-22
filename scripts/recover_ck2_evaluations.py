@@ -17,7 +17,6 @@ import traceback
 from pathlib import Path
 from types import SimpleNamespace
 
-from agenticgen.adapters.geometry import SynCraftGeometry
 from agenticgen.campaign import Campaign, code_fingerprint
 from agenticgen.campaign_ledger import campaign_lock
 from agenticgen.io import object_hash, read_json, sha256, utc_now, write_json
@@ -40,13 +39,33 @@ def eligible_failure(job: dict) -> bool:
         return False
     rows = read_json(receipt)["particles"]
     errors = [row for row in rows if row["status"] == "infrastructure_error"]
-    return bool(errors) and all(
-        (work / row["pose_id"] / "score_only/worker.log").is_file()
-        and any(
-            error in (work / row["pose_id"] / "score_only/worker.log").read_text()
-            for error in (ERROR, METADATA_ERROR)
-        )
-        for row in errors
+    return bool(errors) and all(eligible_particle(work, row) for row in errors)
+
+
+def eligible_particle(work: Path, row: dict) -> bool:
+    directory = work / row["pose_id"] / "score_only"
+    log = directory / "worker.log"
+    if not log.is_file():
+        return False
+    if any(error in log.read_text() for error in (ERROR, METADATA_ERROR)):
+        return True
+    if (row.get("binding") or {}).get("reason") != (
+        "Geometry response molecular identity/protocol mismatch"
+    ):
+        return False
+    # This scope requires a successful original worker with matching protocol,
+    # unchanged input bytes, and equal graphs under the corrected comparison.
+    from agenticgen.adapters.geometry import response_identity_matches
+    from agenticgen.chemistry import molecule
+
+    request = read_json(directory / "request.json")
+    response = read_json(directory / "response.json")
+    return (
+        response.get("status") == "ok"
+        and response.get("protocol_id") == request["protocol_id"]
+        and response.get("input_pose_sha256") == request["input_pose_sha256"]
+        and sha256(Path(request["pose_sdf"])) == request["input_pose_sha256"]
+        and response_identity_matches(molecule(request["smiles"]), response["graph_smiles"])
     )
 
 
@@ -87,6 +106,10 @@ def run(args) -> None:
             original_alignment = importlib.import_module("agenticgen.workers.plip_alignment")
             original_alignment.pose_graph_smiles = alignment.pose_graph_smiles
             original_alignment.pose_request_smiles = alignment.pose_request_smiles
+            geometry_module = import_overlay("ck2_recovery_geometry", args.overlay / "geometry.py")
+            importlib.import_module("agenticgen.adapters.geometry").response_identity_matches = (
+                geometry_module.response_identity_matches
+            )
             evaluation = import_overlay(
                 "ck2_recovery_evaluation", args.overlay / "campaign_evaluation.py"
             )
@@ -101,12 +124,14 @@ def run(args) -> None:
             }
             if config_hashes != release["config_hashes"]:
                 raise ValueError("Frozen configuration changed")
-            geometry = SynCraftGeometry(campaign.foundation)
-            geometry.worker = args.overlay / "syncraft_geometry.py"
+            geometry = geometry_module.SynCraftGeometry(
+                campaign.foundation, worker=args.overlay / "syncraft_geometry.py"
+            )
             geometry.protocol = {
                 **geometry.protocol,
                 "worker_sha256": sha256(geometry.worker),
                 "alignment_sha256": sha256(args.overlay / "plip_alignment.py"),
+                "adapter_sha256": sha256(args.overlay / "geometry.py"),
                 "pose_identity_serialization": "explicit_h_graph_copy_v3_heavy_atom_request",
             }
             geometry.protocol_id = object_hash(geometry.protocol)
@@ -117,7 +142,7 @@ def run(args) -> None:
                 "recovery_driver_sha256": sha256(Path(__file__)),
                 "geometry_protocol_id": geometry.protocol_id,
                 "config_hashes": config_hashes,
-                "reason": "SDF/request/Meeko stereochemistry serialization; non-tetrahedral H retained implicitly in requests",
+                "reason": "SDF/request/Meeko serialization and symmetric response identity normalization",
             }
             with campaign.ledger.connect() as source:
                 with sqlite3.connect(directory / "ledger.before.sqlite") as backup:

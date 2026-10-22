@@ -342,3 +342,45 @@ both status histories remain visible to the heartbeat inspector.
 At 15:18:19 UTC all four newly blocked batches had completed recovery; the ledger
 showed 5,593/8,000 evaluations completed, four main evaluations running, and no
 failed jobs. The v3 watcher returned to watching for future matching errors.
+
+### 2026-10-22 17:35 UTC: response identity normalization
+
+The main controller remained healthy at 6,780/8,000 completed evaluation batches.
+The v3 watcher had recovered five batches, then stopped at 17:01 UTC on a new
+failure signature in `single_b004_final_010 / fragment_graph_pose / batch_022`.
+The original worker had actually completed Vina score-only and PLIP successfully;
+the adapter rejected the returned result as a molecular identity/protocol mismatch.
+
+Read-only inspection verified matching protocol/input hashes and identical
+canonical source/response strings. Under remote RDKit 2026.03.6, parsing that
+unmapped SMILES again changes the aromatic/Kekule representation of its unusual
+fused ring. The adapter previously parsed the response but compared it against
+the source only after unmapping. `response_identity_matches` now parses the same
+unmapped representation on both sides before comparison. Charge, isotope,
+connectivity and specified stereochemistry remain part of this comparison;
+protocol and PLIP atom-map checks are unchanged. The strict input-pose and Meeko
+identity worker is unchanged. Other blocked jobs still showed the previously
+verified stereochemical serialization signature.
+
+The replacement immutable evaluation overlay includes the adapter as well as the
+worker/alignment/evaluation/maintenance files:
+`environment/evaluation_identity_v4_b74d9455b7c8/`. Prior v2/v3 statuses and
+executions remain intact. Response-mismatch recovery is permitted only when the
+old worker response was successful, request/response protocol and input hashes
+match, the actual SDF hash still matches, and the corrected equal-parsing identity
+comparison succeeds. Arbitrary response mismatches remain outside repair scope.
+
+The local full suite passed 228 tests; regression tests cover the real fused-ring
+example and rejection of altered connectivity, opposite stereo, and charge.
+Ruff and diff checks passed. The first isolated remote validation exceeded its
+deployment helper's 55-second wrapper limit; the validation worker's files were
+retained, no process remained alive, and a fresh isolated validation was started
+with an extended wrapper wait. This did not interrupt the campaign or regenerate
+any scientific particle.
+
+The extended validation passed at 17:43:27 UTC: all 22 historical/new SDF identity
+probes passed, actual opposite specified stereo was rejected, and the triggering
+pose completed the corrected full adapter/worker Vina score-only plus PLIP path
+with Vina -10.836 kcal/mol, identical to its earlier raw worker response. The
+actual input SDF hash was unchanged. The local validation receipt is
+`evaluation-identity-20261022T174328Z-validation.json`.

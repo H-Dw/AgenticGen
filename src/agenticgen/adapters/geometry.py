@@ -22,10 +22,10 @@ class DisabledGeometry:
 
 
 class SynCraftGeometry:
-    def __init__(self, config: FoundationConfiguration):
+    def __init__(self, config: FoundationConfiguration, *, worker: Path | None = None):
         self.config, self.settings = config, config.value.geometry
         self.root = config.resolve(config.value.syncraft.root)
-        self.worker = Path(__file__).resolve().parents[1] / "workers/syncraft_geometry.py"
+        self.worker = worker or Path(__file__).resolve().parents[1] / "workers/syncraft_geometry.py"
         self.files = {
             "receptor_pdbqt": config.resolve(self.settings.receptor_pdbqt),
             "receptor_pdb": config.resolve(self.settings.receptor_pdb),
@@ -152,9 +152,9 @@ class SynCraftGeometry:
                 raise RuntimeError("SynCraft geometry worker failed; inspect worker.log")
             response = read_json(output / "response.json")
             binding = BindingResult.model_validate(response)
-            if binding.protocol_id != protocol_id or canonical_smiles(
-                binding.graph_smiles
-            ) != canonical_smiles(original):
+            if binding.protocol_id != protocol_id or not response_identity_matches(
+                original, binding.graph_smiles
+            ):
                 raise ValueError("Geometry response molecular identity/protocol mismatch")
             maps = {a.GetAtomMapNum() for a in original.GetAtoms()}
             if any(not set(i.atom_maps) <= maps for i in binding.interactions):
@@ -171,3 +171,14 @@ class SynCraftGeometry:
                 evaluation_mode=mode,
                 input_pose_sha256=protocol.get("input_pose_sha256"),
             )
+
+
+def response_identity_matches(original, response_smiles: str) -> bool:
+    """Compare equally parsed, unmapped graphs, retaining charge and stereochemistry.
+
+    The worker emits the canonical unmapped source string. Parse that same
+    representation on both sides: comparing a parsed response against an only
+    unmapped source can disagree for unusual fused aromatic ring systems.
+    """
+    expected = canonical_smiles(original)
+    return canonical_smiles(response_smiles) == canonical_smiles(expected)
