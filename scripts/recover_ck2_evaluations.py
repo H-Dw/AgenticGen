@@ -23,6 +23,7 @@ from agenticgen.campaign_ledger import campaign_lock
 from agenticgen.io import object_hash, read_json, sha256, utc_now, write_json
 
 ERROR = "ValueError: Input pose connectivity or specified stereochemistry differs"
+METADATA_ERROR = "ValueError: Docking preparation changed source identity/stereochemistry"
 
 
 def import_overlay(name: str, path: Path):
@@ -41,7 +42,10 @@ def eligible_failure(job: dict) -> bool:
     errors = [row for row in rows if row["status"] == "infrastructure_error"]
     return bool(errors) and all(
         (work / row["pose_id"] / "score_only/worker.log").is_file()
-        and ERROR in (work / row["pose_id"] / "score_only/worker.log").read_text()
+        and any(
+            error in (work / row["pose_id"] / "score_only/worker.log").read_text()
+            for error in (ERROR, METADATA_ERROR)
+        )
         for row in errors
     )
 
@@ -82,6 +86,7 @@ def run(args) -> None:
             alignment = import_overlay("ck2_recovery_alignment", args.overlay / "plip_alignment.py")
             original_alignment = importlib.import_module("agenticgen.workers.plip_alignment")
             original_alignment.pose_graph_smiles = alignment.pose_graph_smiles
+            original_alignment.pose_request_smiles = alignment.pose_request_smiles
             evaluation = import_overlay(
                 "ck2_recovery_evaluation", args.overlay / "campaign_evaluation.py"
             )
@@ -102,7 +107,7 @@ def run(args) -> None:
                 **geometry.protocol,
                 "worker_sha256": sha256(geometry.worker),
                 "alignment_sha256": sha256(args.overlay / "plip_alignment.py"),
-                "pose_identity_serialization": "explicit_h_graph_copy_v2",
+                "pose_identity_serialization": "explicit_h_graph_copy_v3_heavy_atom_request",
             }
             geometry.protocol_id = object_hash(geometry.protocol)
             campaign._components = SimpleNamespace(geometry=geometry)
@@ -112,7 +117,7 @@ def run(args) -> None:
                 "recovery_driver_sha256": sha256(Path(__file__)),
                 "geometry_protocol_id": geometry.protocol_id,
                 "config_hashes": config_hashes,
-                "reason": "Mapped SMILES traversal-root implicit-H stereochemistry round trip",
+                "reason": "SDF/request/Meeko stereochemistry serialization; non-tetrahedral H retained implicitly in requests",
             }
             with campaign.ledger.connect() as source:
                 with sqlite3.connect(directory / "ledger.before.sqlite") as backup:

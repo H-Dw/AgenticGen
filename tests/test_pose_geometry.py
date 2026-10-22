@@ -136,3 +136,27 @@ def test_meeko_identity_uses_the_actual_root_stereo(tmp_path):
         for a in pose.GetAtoms()
     )
     assert {a["map"] for a in pose_atoms("\n".join(lines), pose)} == set(serials)
+
+
+def test_non_tetrahedral_request_preserves_heavy_atom_maps_and_stereo():
+    from agenticgen.workers.plip_alignment import pose_request_smiles
+
+    pose = Chem.MolFromSmiles("[S@SP2H:1]([F:2])([Cl:3])[Br:4]")
+    original = Chem.MolToSmiles(pose)
+    request = pose_request_smiles(pose)
+    parsed = Chem.MolFromSmiles(request)
+    assert parsed.GetNumAtoms() == pose.GetNumAtoms() == 4
+    assert {a.GetAtomMapNum() for a in parsed.GetAtoms()} == {1, 2, 3, 4}
+    assert request == original == pose_request_smiles(parsed)
+    assert Chem.MolToSmiles(pose) == original
+
+
+def test_request_serializer_still_preserves_sdf_root_stereo(tmp_path):
+    from agenticgen.workers.plip_alignment import pose_request_smiles
+
+    path, pose = root_stereocenter_pose(tmp_path)
+    request = Chem.MolFromSmiles(pose_request_smiles(pose))
+    assert load_input_pose({"pose_sdf": str(path)}, request).GetNumAtoms() == 4
+    request.GetAtomWithIdx(0).InvertChirality()
+    with pytest.raises(ValueError, match="stereochemistry"):
+        load_input_pose({"pose_sdf": str(path)}, request)

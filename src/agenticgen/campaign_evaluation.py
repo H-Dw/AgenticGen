@@ -15,7 +15,7 @@ from agenticgen.contracts import BindingResult
 from agenticgen.io import read_json, sha256, write_json
 from agenticgen.pose_quality import measure_pose
 from agenticgen.selection import contact_retention
-from agenticgen.workers.plip_alignment import pose_graph_smiles
+from agenticgen.workers.plip_alignment import pose_request_smiles
 
 
 def posebusters(path: Path, receptor: Path) -> dict:
@@ -164,7 +164,7 @@ def evaluate_particles(
             row["reason"] = "SDF parsing failed"
             continue
         before_hash = sha256(path)
-        smiles, maps = canonical_smiles(mol), pose_graph_smiles(mol)
+        smiles, maps = canonical_smiles(mol), pose_request_smiles(mol)
         folder = output / pose_id
         folder.mkdir(parents=True, exist_ok=True)
         row.update(

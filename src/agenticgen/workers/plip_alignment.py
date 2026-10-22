@@ -31,6 +31,30 @@ def pose_graph_smiles(mol, *, maps=True):
     return Chem.MolToSmiles(normalized, isomericSmiles=True)
 
 
+def pose_request_smiles(mol):
+    """Serialize a heavy-atom request without adding unmapped non-tetrahedral H.
+
+    RDKit retains H vertices beside non-tetrahedral centers when parsing SMILES.
+    Expanding those centers would introduce atom-map zero into an otherwise
+    heavy-atom-only request. Leave their original implicit-H representation in
+    place; still normalize ordinary/tetrahedral centers through explicit H.
+    Identity comparison with Meeko uses pose_graph_smiles independently.
+    """
+    from rdkit import Chem
+
+    ordinary = {
+        Chem.ChiralType.CHI_UNSPECIFIED,
+        Chem.ChiralType.CHI_TETRAHEDRAL_CW,
+        Chem.ChiralType.CHI_TETRAHEDRAL_CCW,
+    }
+    indices = [a.GetIdx() for a in mol.GetAtoms() if a.GetChiralTag() in ordinary]
+    explicit = Chem.AddHs(Chem.Mol(mol), onlyOnAtoms=indices)
+    normalized = Chem.MolFromSmiles(Chem.MolToSmiles(explicit, isomericSmiles=True))
+    if normalized is None:
+        raise ValueError("Pose request graph could not be serialized")
+    return Chem.MolToSmiles(normalized, isomericSmiles=True)
+
+
 def pose_atoms(text, source):
     from rdkit import Chem
 

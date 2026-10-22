@@ -294,3 +294,37 @@ sets. The local receipt is
 `outputs/ck2_original_pose_20261020_high/environment/evaluation-recovery-audit-20261022T045722Z.json`.
 This verifies an actual completed repair; remaining same-error jobs continue
 through the maintenance queue without restarting the healthy controller.
+
+### 2026-10-22 15:16 UTC: non-tetrahedral request serialization recovery
+
+At 15:10 UTC the main controller was healthy with 5,506/8,000 evaluation
+batches completed. The v2 maintenance process had recovered 80 batches, then
+stopped at 13:20 UTC because a Meeko metadata identity exception was outside its
+verified scope. Four failed evaluation batches remained; their original logs and
+execution directories were retained.
+
+The new case (`single_b007_final_028 / fragment_graph_pose / batch_024`) has a
+non-tetrahedral sulfur center. Meeko retains an explicit H in its SMILES metadata.
+The corrected v2 metadata comparison already recognized the same source graph,
+but reusing that explicit-H representation as a request introduced an unmapped H
+vertex and failed the unchanged heavy-atom identity check. The request serializer
+now leaves non-tetrahedral hydrogens implicit while still normalizing ordinary
+and tetrahedral centers. Metadata comparisons retain the explicit-H graph copy;
+the strict geometry worker remains unchanged. No stereochemical constraint was
+relaxed, and no coordinates, generated graph, affinity result, or grid changed.
+
+An immutable replacement overlay is
+`environment/evaluation_identity_v3_c6167b4ce685/`, with launch/status/log/ledger
+backup under `environment/jobs/evaluation_identity_v3_c6167b4ce685/`. It was
+launched at 15:16 UTC (initial PID 14373) only after confirming no maintenance
+process remained alive. The old v2 overlay, failure status, logs, and all 80
+repaired results are preserved. The new watcher recognizes only the two verified
+identity exception signatures and retains the one-repair limit per evaluation.
+
+Validation passed all 12 old/new real input identity probes, rejected genuinely
+opposite specified stereo, and completed actual Vina score-only plus PLIP on the
+new triggering pose (Vina -7.312 kcal/mol); its input SDF hash was unchanged.
+Receipts are `evaluation-identity-20261022T151534Z-validation.json` and
+`evaluation-identity-20261022T151616Z-launch.json` in the local experiment's
+`environment/` directory. The full local suite passed 226 tests, including the
+new non-tetrahedral request and root-stereo regressions; Ruff passed.
