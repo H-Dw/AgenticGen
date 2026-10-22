@@ -384,3 +384,14 @@ pose completed the corrected full adapter/worker Vina score-only plus PLIP path
 with Vina -10.836 kcal/mol, identical to its earlier raw worker response. The
 actual input SDF hash was unchanged. The local validation receipt is
 `evaluation-identity-20261022T174328Z-validation.json`.
+
+The v4 maintenance launcher started at 17:44:18 UTC (initial PID 23062); after
+imports it entered repair at 17:45:26 UTC. Its first task is the verified fused
+ring response case. At 17:46:04 UTC the main controller was still healthy, with
+6,854 evaluations completed, nine failed batches waiting for the maintenance
+queue, and five active evaluations (four main plus one repair). The local launch
+receipt is `evaluation-identity-20261022T174418Z-launch.json`. The heartbeat
+inspector now also distinguishes a maintenance launcher still importing from a
+launcher that exited before writing its status; it does not restart a live one.
+The campaign source snapshot, checkpoint, configuration, generated particles,
+DeepSeek results, and 150-minute heartbeat interval remain unchanged.
