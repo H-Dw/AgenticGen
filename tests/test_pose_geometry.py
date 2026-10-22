@@ -5,6 +5,7 @@ import pytest
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
+from agenticgen.workers.plip_alignment import pose_graph_smiles
 from agenticgen.workers.syncraft_geometry import load_input_pose, prepare_and_score_pose
 
 
@@ -76,3 +77,62 @@ def test_input_pose_can_resolve_an_unspecified_stereocenter(tmp_path):
         writer.write(mol)
     pose = load_input_pose({"pose_sdf": str(path)}, source)
     assert "@" in Chem.MolToSmiles(pose)
+
+
+def root_stereocenter_pose(tmp_path):
+    mol = Chem.AddHs(Chem.MolFromSmiles("[C@H:1]([CH3:2])([F:3])[Cl:4]"))
+    AllChem.EmbedMolecule(mol, randomSeed=42)
+    path = tmp_path / "root_stereo.sdf"
+    with Chem.SDWriter(str(path)) as writer:
+        writer.SetForceV3000(True)
+        writer.write(Chem.RemoveHs(mol))
+    return path, Chem.SDMolSupplier(str(path), removeHs=True)[0]
+
+
+def test_sdf_root_stereocenter_matches_its_own_serialized_request(tmp_path):
+    path, pose = root_stereocenter_pose(tmp_path)
+    source = Chem.MolFromSmiles(pose_graph_smiles(pose))
+    original_bytes = path.read_bytes()
+    coordinates = pose.GetConformer().GetPositions().copy()
+    assert source.GetAtomWithIdx(0).GetNumExplicitHs() == 1
+    assert pose.GetAtomWithIdx(0).GetNumImplicitHs() == 1
+
+    loaded = load_input_pose({"pose_sdf": str(path)}, source)
+
+    assert np.array_equal(loaded.GetConformer().GetPositions(), coordinates)
+    assert path.read_bytes() == original_bytes
+
+
+def test_opposite_specified_root_stereochemistry_still_fails(tmp_path):
+    path, pose = root_stereocenter_pose(tmp_path)
+    source = Chem.MolFromSmiles(pose_graph_smiles(pose))
+    source.GetAtomWithIdx(0).InvertChirality()
+    with pytest.raises(ValueError, match="stereochemistry"):
+        load_input_pose({"pose_sdf": str(path)}, source)
+
+
+def test_changed_mapped_connectivity_still_fails(tmp_path):
+    path, _ = root_stereocenter_pose(tmp_path)
+    source = Chem.MolFromSmiles("[CH3:1][CH:2]([F:3])[Cl:4]")
+    with pytest.raises(ValueError, match="connectivity"):
+        load_input_pose({"pose_sdf": str(path)}, source)
+
+
+def test_meeko_identity_uses_the_actual_root_stereo(tmp_path):
+    from test_binding_alignment import atom_line
+
+    from agenticgen.workers.plip_alignment import pose_atoms
+
+    _, pose = root_stereocenter_pose(tmp_path)
+    metadata = pose_graph_smiles(pose)
+    template = Chem.MolFromSmiles(metadata)
+    serials = {a.GetAtomMapNum(): a.GetIdx() + 1 for a in pose.GetAtoms()}
+    pairs = " ".join(
+        f"{a.GetIdx() + 1} {serials[a.GetAtomMapNum()]}" for a in template.GetAtoms()
+    )
+    lines = ["REMARK SMILES " + metadata, "REMARK SMILES IDX " + pairs]
+    lines.extend(
+        atom_line(a.GetIdx() + 1, a.GetSymbol(), a.GetIdx(), a.GetSymbol())
+        for a in pose.GetAtoms()
+    )
+    assert {a["map"] for a in pose_atoms("\n".join(lines), pose)} == set(serials)

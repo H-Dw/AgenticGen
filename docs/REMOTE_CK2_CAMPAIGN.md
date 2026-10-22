@@ -229,3 +229,68 @@ Both the resumed `batch_023/execution_002` and the next, previously unstarted
 native final-pose pIC50 scores. The controller had advanced to
 `gradient_brier_graph_w1p0 / batch_000`. This verifies productive continuation,
 beyond merely checking that a launch receipt exists.
+
+## Evaluation-only identity repair on 2026-10-22
+
+All 8,000 generation batches completed at 02:18:50 UTC (10:18:50 Asia/Shanghai),
+and the previously missing affinity batch completed through the standard recovery
+queue. The controller then entered the CPU evaluation phase. At 04:38:56 UTC,
+1,472 evaluation batches had completed and eight had failed while the four-worker
+evaluation queue continued making progress.
+
+The eight failures shared the same pre-Vina error:
+`Input pose connectivity or specified stereochemistry differs`. Read-only probes
+found identical mapped atom/bond identities, but a SMILES traversal-root chiral
+atom with an implicit H could serialize from the SDF into the opposite parsed
+stereo representation. A small synthetic root-stereocenter example reproduced
+this behavior; it was not evidence of a Vina crash or grounds to alter a generated
+pose. Some chemically symmetric centers additionally carried map-induced stereo.
+
+`pose_graph_smiles` now normalizes an independent graph copy through explicit H
+atoms before producing the mapped request, and PLIP metadata checks use the same
+normalization. The supplied SDF and heavy-atom coordinates are untouched. The
+original strict `load_input_pose` atom-map, element, charge, isotope, bond, and
+specified-stereo checks remain unchanged. Tests confirm that opposite real
+stereochemistry and changed mapped connectivity still fail.
+
+Validation passed 224 local tests and Ruff. On the remote RDKit 2026.03.6
+environment, all eight original failing inputs passed the unchanged strict check
+with corrected serialization, a true opposite stereoisomer was rejected, and a
+real previously failing input completed Vina score-only plus PLIP with an
+unchanged input SDF hash. Validation receipts are retained in
+`environment/evaluation_identity_v2_037a13119148/validation.json`.
+
+The healthy production controller and its source snapshot/configuration remain
+unchanged. An immutable evaluation-only overlay and separate maintenance process
+were installed under:
+
+- Code and file hashes: `environment/evaluation_identity_v2_037a13119148/`.
+- Maintenance launch, log, status, and ledger backup:
+  `environment/jobs/evaluation_identity_v2_037a13119148/`.
+- Original main controller: `all-1792567365741013153`.
+- Maintenance PID at launch: `26339` (use status plus liveness, not this PID alone).
+
+The maintenance driver is `scripts/recover_ck2_evaluations.py`. It holds its own
+OS lock, works only on failed evaluation jobs with the verified serialization
+error, and re-evaluates the same four saved poses in a new execution directory.
+It retains the original failure, logs, results, and protocol provenance. It
+neither launches generation/LLM calls nor claims the healthy pending queue. It
+checks for newly occurring instances of this same error while the old controller
+finishes its queue; other errors or a second failure require investigation.
+
+Every repaired result identifies the overlay files and geometry protocol hash.
+The driver finalizes the manifest only after all 8,000 evaluation jobs complete,
+the main controller exits successfully, and the global controller lock is free.
+The heartbeat inspector also reads this maintenance process's status and errors.
+Keep the user's current 150-minute inspection interval; the maintenance driver's
+internal queue check is separate from the Codex heartbeat schedule.
+
+The first corrected batch (`single_b004_final_027 / gradient_ce_graph_pose_w0p25 /
+batch_015`) completed in `execution_002`. All four geometry results succeeded.
+A read-only comparison at 04:57:22 UTC confirmed unchanged actual SDF hashes and
+affinity parent receipts; all three particles that already had successful Vina
+and PLIP measurements in the old execution retained identical scores and contact
+sets. The local receipt is
+`outputs/ck2_original_pose_20261020_high/environment/evaluation-recovery-audit-20261022T045722Z.json`.
+This verifies an actual completed repair; remaining same-error jobs continue
+through the maintenance queue without restarting the healthy controller.

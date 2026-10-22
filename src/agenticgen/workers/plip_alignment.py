@@ -11,6 +11,26 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
+def pose_graph_smiles(mol, *, maps=True):
+    """Serialize SDF stereo through explicit H atoms without changing its coordinates.
+
+    A traversal-root chiral atom with an implicit H can otherwise produce mapped
+    SMILES whose parsed stereochemistry is opposite to the SDF. Normalizing an
+    independent graph copy through explicit H atoms preserves the actual stereo.
+    """
+    from rdkit import Chem
+
+    explicit = Chem.AddHs(Chem.Mol(mol))
+    normalized = Chem.MolFromSmiles(Chem.MolToSmiles(explicit, isomericSmiles=True))
+    if normalized is None:
+        raise ValueError("Pose graph could not be serialized")
+    if not maps:
+        for atom in normalized.GetAtoms():
+            atom.SetAtomMapNum(0)
+        Chem.AssignStereochemistry(normalized, cleanIt=True, force=True)
+    return Chem.MolToSmiles(normalized, isomericSmiles=True)
+
+
 def pose_atoms(text, source):
     from rdkit import Chem
 
@@ -31,18 +51,9 @@ def pose_atoms(text, source):
     if template is None:
         raise ValueError("Invalid pose SMILES metadata")
 
-    def identity(mol):
-        copy = Chem.Mol(mol)
-        for atom in copy.GetAtoms():
-            atom.SetAtomMapNum(0)
-        Chem.AssignStereochemistry(copy, cleanIt=True, force=True)
-        return Chem.MolToSmiles(copy, isomericSmiles=True)
-
-    if identity(template) != identity(source):
+    if pose_graph_smiles(template, maps=False) != pose_graph_smiles(source, maps=False):
         raise ValueError("Docking preparation changed source identity/stereochemistry")
-    if Chem.MolToSmiles(template, isomericSmiles=True) != Chem.MolToSmiles(
-        source, isomericSmiles=True
-    ):
+    if pose_graph_smiles(template) != pose_graph_smiles(source):
         raise ValueError("Docking preparation changed source atom-map connectivity")
     source_atoms = {a.GetAtomMapNum(): a for a in source.GetAtoms() if a.GetAtomicNum() > 1}
     metadata = []
