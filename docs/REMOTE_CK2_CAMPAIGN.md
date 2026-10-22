@@ -328,3 +328,17 @@ Receipts are `evaluation-identity-20261022T151534Z-validation.json` and
 `evaluation-identity-20261022T151616Z-launch.json` in the local experiment's
 `environment/` directory. The full local suite passed 226 tests, including the
 new non-tetrahedral request and root-stereo regressions; Ruff passed.
+
+At 15:17:30 UTC the read-only recovery audit confirmed 83 completed repaired
+batches, including the non-tetrahedral triggering batch. Every actual SDF hash
+and affinity parent receipt was unchanged; all previously successful Vina scores
+and PLIP contact sets remained identical. The audit receipt is
+`evaluation-recovery-audit-20261022T151730Z.json`. The main controller had reached
+5,584 completed evaluations, with no failed backlog and five running jobs
+(four main evaluations plus the remaining maintenance evaluation). The v2
+historical failed status is superseded by the healthy v3 maintenance process;
+both status histories remain visible to the heartbeat inspector.
+
+At 15:18:19 UTC all four newly blocked batches had completed recovery; the ledger
+showed 5,593/8,000 evaluations completed, four main evaluations running, and no
+failed jobs. The v3 watcher returned to watching for future matching errors.
