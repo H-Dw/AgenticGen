@@ -395,3 +395,25 @@ inspector now also distinguishes a maintenance launcher still importing from a
 launcher that exited before writing its status; it does not restart a live one.
 The campaign source snapshot, checkpoint, configuration, generated particles,
 DeepSeek results, and 150-minute heartbeat interval remain unchanged.
+
+### 2026-10-23 01:10 UTC: completed and audited
+
+The main controller exited successfully at 2026-10-22 22:39:10 UTC with exit
+code 0. The ledger has 8,000 completed generation jobs and 8,000 completed
+evaluation jobs, plus all baseline/design/affinity jobs completed; no pending,
+running, or failed jobs remain. The v4 maintenance process completed manifest
+finalization and exited. Historical failed v2/v3 process statuses remain as audit
+evidence, superseded by v4 completion.
+
+The final read-only recovery audit covers 102 repaired batches (80 v2, five v3,
+17 v4). All actual SDF hashes and affinity parent records were unchanged. All
+previously successful Vina scores and PLIP contact sets were identical after
+re-evaluation. Receipt: `evaluation-recovery-audit-20261023T011040Z.json` in the
+local experiment environment folder.
+
+The frozen reporting command generated complete 32,000-row attempt tables under
+`results/report/`, downloaded to the local experiment's `final_report/`. There
+are 28,117 decoded particles, 3,883 decode failures, and 27,516 affinity/Vina-scored
+particles. Missing scientific measurements were retained, not topped up.
+See `docs/CK2_CAMPAIGN_COMPLETION_20261023.md` for denominator-aware arm summaries,
+quality limitations, and artifact paths. Monitoring is now no longer needed.
